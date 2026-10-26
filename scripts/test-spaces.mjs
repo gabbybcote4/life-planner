@@ -31,7 +31,7 @@ test('page save refuses an unavailable parent before writing',async()=>{
 test('page edits filter owner, parent, id and revision',async()=>{
  const h=harness('../src/app/spaces/page-actions.ts',[{data:{id:parent}},{data:{id,revision:3}}]);const result=await h.saveSpacePage({},data());assert.equal(result.revision,3);
  for(const filter of [['eq','user_id','owner-a'],['eq','space_id',parent],['eq','id',id],['eq','revision',2]])assert.ok(h.calls.some(c=>JSON.stringify(c)===JSON.stringify(filter)));
- assert.deepEqual(h.invalidations,['/spaces']);
+ assert.deepEqual(h.invalidations,['/spaces','/notes']);
 });
 test('stale page save reports conflict without success',async()=>{
  const h=harness('../src/app/spaces/page-actions.ts',[{data:{id:parent}},{data:null,error:null}]);assert.match((await h.saveSpacePage({},data())).error,/changed elsewhere/);assert.deepEqual(h.invalidations,[]);

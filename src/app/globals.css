@@ -296,3 +296,19 @@ h2 { font-family: Georgia, "Times New Roman", serif; font-size: 1.7rem; line-hei
 .space-links a[aria-current="page"] { font-weight: 700; text-decoration-thickness: 3px; }
 .space-form { display: grid; gap: .65rem; max-width: 34rem; min-width: 0; }
 .space-form button { justify-self: start; }
+.knowledge-panel { margin-top: 1rem; padding: 1rem; border: 1px solid var(--border); border-radius: 9px; background: var(--panel); min-width: 0; }
+.knowledge-panel summary { cursor: pointer; color: var(--primary); font-weight: 600; }
+.knowledge-panel summary:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; }
+.link-search { display: grid; gap: .75rem; margin-top: 1rem; }
+.link-search > button { justify-self: start; }
+.knowledge-list { padding-left: 1.2rem; overflow-wrap: anywhere; }
+.knowledge-list li { margin: .6rem 0; }
+.knowledge-list button { text-align: left; white-space: normal; overflow-wrap: anywhere; }
+.knowledge-connections { margin-top: 1.5rem; min-width: 0; }
+.notes-layout > div { min-width: 0; }
+.text-view-controls { display: flex; flex-wrap: wrap; gap: .6rem; margin: 1rem 0; }
+.text-view-controls [aria-pressed="true"] { outline: 2px solid var(--focus); outline-offset: 2px; }
+.text-reading-view { margin: 1rem 0; }
+.linked-text { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.8; }
+.linked-text a { color: var(--primary); text-decoration: underline; text-underline-offset: 3px; }
+.note-form[hidden] { display: none; }

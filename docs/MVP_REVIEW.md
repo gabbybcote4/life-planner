@@ -56,3 +56,15 @@ Focused manual checks for this increment:
 - [ ] Repeat sign-in/out and verify two real accounts remain separate.
 
 This increment changes no database schema or permission policies.
+
+## Knowledge links review
+
+- [ ] Insert a note link in a space page and a page link in a note; save/reload.
+- [ ] Follow outgoing links and verify reciprocal Linked from entries.
+- [ ] Rename target/space; identity stays valid and Connections shows current names.
+- [ ] Remove the full marker and save; the old backlink disappears.
+- [ ] Failed/stale saves retain the draft and do not create saved backlinks.
+- [ ] Search and paginate with duplicate titles and more than 20 items.
+- [ ] Another account's items/titles/backlinks remain inaccessible.
+- [ ] Picker, cursor insertion, errors, and lists work by keyboard/on phone/in themes.
+- [ ] Existing note/page saves, plain-text escaping, and navigation still work.

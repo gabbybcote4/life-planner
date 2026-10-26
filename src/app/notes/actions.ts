@@ -47,5 +47,6 @@ export async function saveNote(_previous: NoteState, formData: FormData): Promis
     return { error: "We couldn't reach your notes. Your draft is still here. Please try again." };
   }
   revalidatePath("/notes");
+  revalidatePath("/spaces");
   return { message: "Note saved.", id, revision: savedRevision };
 }
