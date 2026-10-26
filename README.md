@@ -348,3 +348,27 @@ helper. Use [MVP_REVIEW.md](docs/MVP_REVIEW.md) for the regression checklist.
 `npm test` runs all feature suites and the shared UI/account-context checks.
 `npm run test:components` runs only those new regressions. No new packages or
 database setup are required for the shared-component refactor.
+
+## Private spaces and pages
+
+Visit `/spaces` to create or rename a private space, then create/edit plain-text
+pages within it. Space names allow 100 Unicode code points; pages use the shared
+200-character title and 20,000-character body limits. Both lists paginate at 20
+items. Save drafts explicitly before navigating. There is no autosave, hierarchy,
+sharing, deletion, page movement, or database builder in this increment.
+
+Apply `supabase/migrations/20261026000600_create_spaces.sql` once, then run
+`supabase/tests/spaces_rls.sql` and verify the final PASS result. The assertions
+create temporary test users/records inside a rolled-back transaction. Use a test
+project where possible. Manual SQL Editor setup does not register CLI history.
+
+Spaces and pages have owner RLS and restricted column grants. A composite foreign
+key ensures page and parent space have the same owner. Revisions protect edits
+from stale overwrites; users cannot assign owners, parents, or revisions on update.
+Stable create IDs allow confirmation of identical retried writes. Conflicting
+retries keep the draft and ask the user to check the saved record.
+
+Run npm test, lint, TypeScript, and build. Manually verify create/rename, page
+create/edit/reload, two tabs with stale revisions, offline save/retry, keyboard,
+phone layouts, all themes, and two real accounts. Existing Notes reuse the same
+PlainTextEditor; verify ordinary note creation/editing as a regression check.
