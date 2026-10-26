@@ -90,3 +90,11 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
   backgrounds that break Midnight. Check main text, muted text, controls, and focus.
 - Keep theme preferences account-scoped. Refresh the layout after auth changes,
   and do not put user preferences into a shared cache or persistent browser storage.
+
+### Dashboard layout checks
+
+- Run `npm run test:dashboard` and `supabase/tests/dashboard_layouts_rls.sql`.
+- Keep saved layouts restricted to known widget ids and half/full widths, one
+  instance per type. Removing a widget must never delete source records.
+- Preserve revision checks, explicit save/cancel, keyboard controls, and responsive
+  stacking without changing the account's saved widget widths.
