@@ -6,7 +6,7 @@ and [AGENTS.md](AGENTS.md) for development conventions.
 
 ## Current increment
 
-Supabase email/password accounts and a private task planner. Signed-in users can
+Supabase email/password accounts, a live dashboard, and a private task planner. Signed-in users can
 add tasks, edit their titles, complete/reopen them, and reload saved results.
 The database migration must be applied separately before tasks can be loaded.
 Social sign-in, calendar, notes, and advanced planning remain future increments.
@@ -109,7 +109,7 @@ forged ownership, cross-account reads/updates, and input constraints. Its change
 are rolled back. If using a hosted SQL Editor for this test, review it first and
 verify the final PASS result; stop if any assertion fails.
 
-The planner shows the 200 most recent tasks and labels that limit when older
+The Tasks page at `/tasks` shows the 200 most recent tasks and labels that limit when older
 records exist. Task titles allow 1-200 characters. Completion and title changes
 are saved separately so one action does not overwrite the other field. Add-task
 retries reuse a client-generated UUID to avoid duplicate creation after a lost
@@ -130,3 +130,32 @@ The UI waits for a confirmed database response before showing saved state. This
 increment does not implement offline persistence or claim that an unsent draft is
 saved. No task data is placed in localStorage.
 
+
+## Dashboard
+
+`/` is the signed-in dashboard. `/tasks` retains the full task workflow. Both
+routes verify the session, refresh cookies through the proxy, and use the same
+per-user RLS-protected task storage. No new migration or dependency is required.
+
+The dashboard shows exact counts for open/completed tasks across the whole account,
+a completion progress indicator, a quick-add form, and the five most recently added
+tasks. Counts are not derived from the limited recent list. Titles and completion
+can be changed from either page; successful mutations refresh both routes.
+
+All-time counts and progress are labeled as covering all saved tasks, not daily
+goals. Empty and failed-load states are distinct. The current dashboard has a fixed
+layout; widget add/remove/reorder/resize remains a future increment toward the MVP.
+Calendar and notes are not displayed as working features before implementation.
+
+Dashboard review checks:
+
+1. Add a task from the dashboard: To do and Total tasks each increase by one,
+   and the task appears in Recently added and on the Tasks page.
+2. Complete it from either page: To do decreases by one, Completed increases by
+   one, and Total tasks is unchanged. Navigate between both pages and reload.
+3. Reopen and rename the task. Confirm the result remains consistent across pages.
+4. With more than five tasks, verify totals include tasks outside Recently added.
+5. Check the empty dashboard and a completed-only list. Progress must remain valid
+   with zero tasks. A failed load must not show zero counts as if loading succeeded.
+6. Verify both routes redirect after sign-out and show only the signed-in account's
+   data. Check keyboard navigation and narrow layouts.

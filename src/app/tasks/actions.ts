@@ -39,6 +39,7 @@ export async function addTask(_previous: TaskActionState, formData: FormData): P
     return saveError;
   }
   revalidatePath("/");
+  revalidatePath("/tasks");
   return { message: "Task saved." };
 }
 
@@ -58,6 +59,7 @@ export async function renameTask(_previous: TaskActionState, formData: FormData)
     return saveError;
   }
   revalidatePath("/");
+  revalidatePath("/tasks");
   return { message: "Changes saved." };
 }
 
@@ -79,5 +81,7 @@ export async function setTaskCompleted(_previous: TaskActionState, formData: For
     return { error: "We couldn't confirm this change. Refresh to check the saved status, then try again." };
   }
   revalidatePath("/");
+  revalidatePath("/tasks");
   return { message: completed === "true" ? "Task completed and saved." : "Task reopened and saved." };
 }
+
