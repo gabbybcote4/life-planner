@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "test:tasks": "node --experimental-strip-types --test scripts/test-task-validation.mjs",
-    "test:calendar": "node --experimental-strip-types --test scripts/test-calendar.mjs"
+    "test:calendar": "node --experimental-strip-types --test scripts/test-calendar.mjs",
+    "test:notes": "node --experimental-strip-types --test scripts/test-notes.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
@@ -28,5 +29,6 @@
     "typescript": "^5"
   }
 }
+
 
 

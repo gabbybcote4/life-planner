@@ -6,10 +6,10 @@ and [AGENTS.md](AGENTS.md) for development conventions.
 
 ## Current increment
 
-Supabase email/password accounts, a live dashboard, a private task planner, and an all-day calendar. Signed-in users can
+Supabase email/password accounts, a live dashboard, a private task planner, an all-day calendar, and plain-text notes. Signed-in users can
 add tasks, edit their titles, complete/reopen them, and reload saved results.
 The database migration must be applied separately before tasks can be loaded.
-Social sign-in, notes, timed events, and advanced planning remain future increments.
+Social sign-in, timed events, rich-text/linked notes, and advanced planning remain future increments.
 
 ## Local setup (Windows PowerShell)
 
@@ -211,3 +211,46 @@ instead of misleading partial counts. Unsaved drafts are not persisted across
 date/page navigation. Concurrent edits use the last successful write. Timed and
 multi-day events, recurrence, reminders, deletion, calendar integrations, and
 Dashboard event widgets are separate future increments.
+
+## Notes
+
+`/notes` is a private plain-text library and editor. Save a title (1–200 characters)
+and body (up to 20,000 characters, including line breaks). An empty body is allowed.
+Markup stays literal text; it is never rendered as HTML. Save is explicit, with
+unsaved/pending/error states. Drafts are not stored offline or autosaved; save
+before opening another note, changing pages, or signing out.
+
+The library is paginated in groups of 20, most recently updated first. Only note
+summaries are loaded for the list; a selected note's body is fetched separately
+with ownership filtering and RLS. Direct links use `/notes?note=UUID`, while
+`/notes?note=new` opens a fresh page. Invalid/unavailable references do not reveal
+other users' notes. Save returns to page one with the saved note selected.
+
+Apply `supabase/migrations/20261026000300_create_notes.sql` once in a new target,
+then run `supabase/tests/notes_rls.sql` in a test database. It verifies own reads/
+writes, cross-account isolation, anonymous denial, input constraints, and the
+server-maintained revision. Temporary fixtures are rolled back. Existing task
+and calendar storage is not modified. Manual SQL Editor setup does not register
+Supabase CLI migration history; reconcile history before automated deployment.
+
+Notes use per-user SELECT/INSERT/UPDATE RLS plus restricted column grants. Only
+title/body can be updated by clients; owner/id/revision/timestamps are protected.
+Every save verifies the session. Existing-note updates include the editor's saved
+revision, so stale-tab saves report a conflict and retain the draft instead of
+overwriting a newer revision. Create retries reuse an ID to avoid duplicate notes.
+A failed/lost update response can require copying the draft and reloading to check
+which revision was saved. This is conflict protection, not version history.
+
+Run `npm run test:notes`, existing task/calendar tests, lint, and build. Check:
+
+1. Create a titled multi-line note, save, reload, and sign out/in; content remains.
+2. Edit and save again; the title updates in the library and the body stays intact.
+3. Open another note and return; saved notes keep their separate content.
+4. Open the same saved note in two tabs. Save a change in one; saving a different
+   change from the stale tab must retain its draft and report a conflict.
+5. Verify privacy assertions and a second browser account. Signed-out direct
+   access to `/notes` must redirect to login. Check literal markup, keyboard use,
+   narrow layouts, and failed saves without losing the current draft.
+
+Rich text, linked knowledge, autosave/offline drafts, deletion, history, sharing,
+and dashboard note widgets remain future increments.

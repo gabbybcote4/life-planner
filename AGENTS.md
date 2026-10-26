@@ -59,7 +59,6 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - Report what changed, checks performed, any limits, and the branch/PR. Keep docs
   aligned with actual setup; do not describe planned capabilities as implemented.
 
-
 ### Task checks
 
 - Run `npm run test:tasks` for task input validation (Node.js 22.18+).
@@ -75,3 +74,11 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
   in a test database. Verify its final PASS result before claiming isolation.
 - Only call `localToday()` in browser effects/events; do not read a live clock
   during prerendering. Keep Supabase server access behind its request-time boundary.
+
+### Notes checks
+
+- Run `npm run test:notes` and `supabase/tests/notes_rls.sql` for note changes.
+- Keep note bodies plain text and preserve line breaks. Never render stored text
+  as unsanitized HTML. Keep the explicit-save contract visible to users.
+- Preserve revision checks on existing-note saves; a stale tab must not silently
+  overwrite another saved revision. Report conflicts while retaining the draft.
