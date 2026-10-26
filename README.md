@@ -143,8 +143,7 @@ tasks. Counts are not derived from the limited recent list. Titles and completio
 can be changed from either page; successful mutations refresh both routes.
 
 All-time counts and progress are labeled as covering all saved tasks, not daily
-goals. Empty and failed-load states are distinct. The current dashboard has a fixed
-layout; widget add/remove/reorder/resize remains a future increment toward the MVP.
+goals. Empty and failed-load states are distinct. The dashboard supports saved widget customization as described below.
 Calendar and notes are not displayed as working features before implementation.
 
 Dashboard review checks:
@@ -294,4 +293,48 @@ existing task/calendar/notes tests, TypeScript/lint/build. Manually review:
 
 The loading shell uses the default Sage appearance until the request-time theme
 arrives. This is a saved palette setting, not a custom theme editor, theme importer,
-or dashboard widget customization. Contrast tests are not a full accessibility audit.
+or custom dashboard widget creation. Contrast tests are not a full accessibility audit.
+
+
+## Dashboard widget customization
+
+Choose Customize dashboard on `/` to arrange Task overview, Quick add, Task
+progress, and Recent tasks, one instance each. Remove widgets, add missing ones
+back, move up/down, and choose half/full width. Wide screens use two columns;
+narrow screens stack both sizes. Saved array order is reading/visual order.
+Keyboard controls are supported; drag/drop and free pixel/height resizing are not.
+
+Changes preview locally until Save layout confirms the database write. Cancel
+restores the last saved layout. Restore default layout is a draft change that
+also needs Save. An empty dashboard is valid; Customize remains accessible.
+Removing a widget never deletes source tasks. Save task drafts before removing
+their widget, because unsaved input may be discarded. Layout drafts do not persist
+when leaving/reloading the page.
+
+Apply `supabase/migrations/20261026000500_create_dashboard_layouts.sql` once in a
+new target, then verify `supabase/tests/dashboard_layouts_rls.sql`. The migration
+creates only layout metadata, shape validation, revision maintenance, and owner
+policies. Existing themes/task/event/note data and policies are unchanged. Manual
+SQL Editor setup does not register CLI migration history automatically.
+
+Per-user RLS protects reads/inserts/updates; clients may update only layout, not
+owner/revision/timestamps. App and database reject duplicate/unknown widgets,
+invalid widths, extra content fields, and malformed shapes. Revision checks prevent
+stale-tab overwrites. If an earlier response was lost, reload to check the saved
+revision before making further changes.
+
+Run `npm run test:dashboard`, existing tests, lint, and build. Manually check:
+
+1. Remove/add/reorder/resize, Save layout, reload, and sign out/in. The account's
+   arrangement must return. Check wide-screen half/full and stacked mobile widths.
+2. Cancel draft changes. Restore default + Save must restore all four widgets.
+3. Save an empty dashboard, reload, and add widgets again. Verify source tasks
+   remain on `/tasks` throughout removal and restoration.
+4. Add/edit/complete tasks and navigate to `/tasks`; content/counts must update
+   without discarding an unsaved layout draft.
+5. Run privacy assertions, check a second account's layout, and test two tabs on
+   one saved revision: a stale save must report a conflict without overwriting.
+6. Check keyboard controls, all themes, narrow screens, and failed-save feedback.
+
+Only the four existing task widgets are in the first library. Calendar/notes
+widgets, custom widgets, drag/drop, free resizing, and custom spaces are later work.

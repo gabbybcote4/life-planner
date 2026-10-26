@@ -10,7 +10,8 @@
     "test:tasks": "node --experimental-strip-types --test scripts/test-task-validation.mjs",
     "test:calendar": "node --experimental-strip-types --test scripts/test-calendar.mjs",
     "test:notes": "node --experimental-strip-types --test scripts/test-notes.mjs",
-    "test:themes": "node --experimental-strip-types --test scripts/test-themes.mjs"
+    "test:themes": "node --experimental-strip-types --test scripts/test-themes.mjs",
+    "test:dashboard": "node --experimental-strip-types --test scripts/test-dashboard-layout.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
@@ -30,6 +31,7 @@
     "typescript": "^5"
   }
 }
+
 
 
 
