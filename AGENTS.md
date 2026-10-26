@@ -98,3 +98,15 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
   instance per type. Removing a widget must never delete source records.
 - Preserve revision checks, explicit save/cancel, keyboard controls, and responsive
   stacking without changing the account's saved widget widths.
+
+### Reuse and refactoring
+
+- Read docs/ARCHITECTURE.md before adding another page or control. Reuse
+  PlannerPage/PlannerHeading, the shared UI primitives, and semantic theme tokens.
+- Register navigation in src/lib/navigation.ts and preserve the static proxy
+  matcher list. The shared test suite checks coverage.
+- Use requireAccount for protected pages and getAccountContext inside mutations.
+  Do not replace per-action authorization with page gating or cache identities.
+- Keep feature validation, owner filters, revision checks, and save/retry semantics
+  in feature modules. Reuse presentation without merging unrelated data operations.
+- Run npm test, lint/build, and docs/MVP_REVIEW.md before confirming a refactor.

@@ -1,15 +1,9 @@
 "use server";
 
+import { isRecordId as isTaskId } from "@/lib/shared/validation";
 import { revalidatePath } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
-import { isTaskId, parseTaskTitle, type TaskActionState } from "@/lib/tasks/types";
-
-async function getTaskContext() {
-  const supabase = await createClient();
-  const { data, error } = await supabase.auth.getClaims();
-  if (error || !data?.claims?.sub) return null;
-  return { supabase, userId: data.claims.sub };
-}
+import { getAccountContext } from "@/lib/auth/account";
+import { parseTaskTitle, type TaskActionState } from "@/lib/tasks/types";
 
 const sessionError = { error: "Your session has expired. Sign in again before saving your tasks." };
 const saveError = { error: "We couldn't confirm the save. Your changes are still here. Please try again." };
@@ -22,7 +16,7 @@ export async function addTask(_previous: TaskActionState, formData: FormData): P
   if (!isTaskId(id)) return { error: "Please refresh your planner before adding this task." };
 
   try {
-    const context = await getTaskContext();
+    const context = await getAccountContext();
     if (!context) return sessionError;
     const { supabase, userId } = context;
     const { data, error } = await supabase.from("tasks")
@@ -48,7 +42,7 @@ export async function renameTask(_previous: TaskActionState, formData: FormData)
   const title = parseTaskTitle(formData.get("title"));
   if (!isTaskId(id) || !title) return { error: "Give your task a title between 1 and 200 characters." };
   try {
-    const context = await getTaskContext();
+    const context = await getAccountContext();
     if (!context) return sessionError;
     const { supabase, userId } = context;
     const { data, error } = await supabase.from("tasks").update({ title })
@@ -70,7 +64,7 @@ export async function setTaskCompleted(_previous: TaskActionState, formData: For
     return { error: "Please refresh your planner before updating this task." };
   }
   try {
-    const context = await getTaskContext();
+    const context = await getAccountContext();
     if (!context) return sessionError;
     const { supabase, userId } = context;
     const { data, error } = await supabase.from("tasks").update({ completed: completed === "true" })

@@ -1,5 +1,9 @@
 "use client";
 
+import { EmptyState } from "@/components/ui/empty-state";
+import { FormFeedback } from "@/components/ui/feedback";
+import { TextInput } from "@/components/ui/fields";
+import { Button } from "@/components/ui/button";
 import { useActionState, useId, useRef, useState } from "react";
 import { addTask, renameTask, setTaskCompleted } from "./actions";
 import { TASK_TITLE_LIMIT, type Task, type TaskActionState } from "@/lib/tasks/types";
@@ -12,10 +16,7 @@ export function TaskBoard({ tasks, hasMore }: { tasks: Task[]; hasMore: boolean 
       <span className="task-count">{remaining} to do{hasMore ? " shown" : ""}</span>
     </header>
     <AddTaskForm />
-    {tasks.length === 0 ? <div className="task-empty">
-      <p className="empty-title">A little room to begin.</p>
-      <p className="muted">Add your first task above. Small steps count.</p>
-    </div> : <TaskList tasks={tasks} />}
+    {tasks.length === 0 ? <EmptyState title="A little room to begin.">Add your first task above. Small steps count.</EmptyState> : <TaskList tasks={tasks} />}
     {hasMore && <p className="muted">Showing your 200 most recent tasks. Older tasks remain saved.</p>}
   </section>;
 }
@@ -38,14 +39,12 @@ export function AddTaskForm() {
   return <form action={action} className="add-task-form" aria-busy={pending}>
     <label htmlFor={inputId}>What would you like to get done?</label>
     <div className="add-task-controls">
-      <input id={inputId} name="title" value={title} onChange={(event) => setTitle(event.target.value)}
+      <TextInput id={inputId} name="title" value={title} onChange={(event) => setTitle(event.target.value)}
         placeholder="A small step for today..." required maxLength={TASK_TITLE_LIMIT}
         readOnly={pending} autoComplete="off" />
-      <button className="primary-button" type="submit" disabled={pending || !title.trim()}>
-        {pending ? "Saving..." : "Add task"}
-      </button>
+      <Button variant="primary" type="submit" disabled={pending || !title.trim()} pending={pending} pendingLabel="Saving...">Add task</Button>
     </div>
-    <TaskFeedback state={state} pending={pending} />
+    <FormFeedback {...state} pending={pending} className="task-feedback" />
   </form>;
 }
 
@@ -59,21 +58,21 @@ function TaskRow({ task }: { task: Task }) {
       <form action={action} aria-busy={pending} onSubmit={() => setEditMessage("")}>
         <input type="hidden" name="id" value={task.id} />
         <input type="hidden" name="completed" value={String(!task.completed)} />
-        <button type="submit" role="checkbox" aria-checked={task.completed}
+        <Button type="submit" role="checkbox" aria-checked={task.completed}
           aria-label={`${task.completed ? "Reopen" : "Complete"} task: ${task.title}`}
           className="task-checkbox" disabled={pending || editing}>
           <span aria-hidden="true">{pending ? "…" : task.completed ? "✓" : ""}</span>
-        </button>
+        </Button>
       </form>
       {editing ? <EditTaskForm task={task} onCancel={() => setEditing(false)}
         onSaved={() => { setEditing(false); setEditMessage("Changes saved."); }} /> : <>
         <span className="task-title">{task.title}</span>
-        <button className="task-edit-button" type="button" disabled={pending}
+        <Button variant="text" type="button" disabled={pending}
           aria-label={`Edit task: ${task.title}`}
-          onClick={() => { setEditMessage(""); setEditing(true); }}>Edit</button>
+          onClick={() => { setEditMessage(""); setEditing(true); }}>Edit</Button>
       </>}
     </div>
-    {!editing && <TaskFeedback state={editMessage ? { message: editMessage } : state} pending={pending} />}
+    {!editing && <FormFeedback {...(editMessage ? { message: editMessage } : state)} pending={pending} className="task-feedback" />}
   </li>;
 }
 
@@ -91,23 +90,16 @@ function EditTaskForm({ task, onCancel, onSaved }: {
   return <form action={action} className="edit-task-form" aria-busy={pending}>
     <input type="hidden" name="id" value={task.id} />
     <label htmlFor={inputId}>Edit task</label>
-    <input id={inputId} name="title" value={title} onChange={(event) => setTitle(event.target.value)}
+    <TextInput id={inputId} name="title" value={title} onChange={(event) => setTitle(event.target.value)}
       required maxLength={TASK_TITLE_LIMIT} readOnly={pending} autoFocus />
     <div className="edit-task-controls">
-      <button type="submit" className="primary-button" disabled={pending || !title.trim()}>{pending ? "Saving..." : "Save changes"}</button>
-      <button type="button" className="task-edit-button" disabled={pending} onClick={onCancel}>Cancel</button>
+      <Button type="submit" variant="primary" disabled={pending || !title.trim()} pending={pending} pendingLabel="Saving...">Save changes</Button>
+      <Button type="button" variant="text" disabled={pending} onClick={onCancel}>Cancel</Button>
     </div>
-    <TaskFeedback state={state} pending={pending} />
+    <FormFeedback {...state} pending={pending} className="task-feedback" />
   </form>;
 }
 
-function TaskFeedback({ state, pending }: { state: TaskActionState; pending: boolean }) {
-  return <div className="task-feedback" aria-live="polite" aria-atomic="true">
-    {pending ? <p className="muted">Saving...</p> : state.error ?
-      <p className="form-error" role="alert">{state.error}</p> : state.message ?
-        <p className="save-message">{state.message}</p> : null}
-  </div>;
-}
 export function TaskList({ tasks }: { tasks: Task[] }) {
   return <ul className="task-list" aria-label="Saved tasks">
     {tasks.map((task) => <TaskRow key={task.id} task={task} />)}

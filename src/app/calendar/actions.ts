@@ -1,8 +1,8 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
-import { isTaskId as isEventId } from "@/lib/tasks/types";
+import { getAccountContext } from "@/lib/auth/account";
+import { isRecordId as isEventId } from "@/lib/shared/validation";
 import { parseCalendarDate, parseEventTitle, type CalendarActionState } from "@/lib/calendar/dates";
 
 export async function saveCalendarEvent(_previous: CalendarActionState, formData: FormData): Promise<CalendarActionState> {
@@ -16,10 +16,10 @@ export async function saveCalendarEvent(_previous: CalendarActionState, formData
 
   const failure = { error: "We couldn't confirm the save. Your changes are still here. Please try again." };
   try {
-    const supabase = await createClient();
-    const { data: auth, error: authError } = await supabase.auth.getClaims();
-    if (authError || !auth?.claims?.sub) return { error: "Your session has expired. Sign in again before saving events." };
-    const userId = auth.claims.sub;
+    const account = await getAccountContext();
+    if (!account) return { error: "Your session has expired. Sign in again before saving events." };
+    const { supabase, userId } = account;
+
     if (mode === "create") {
       const { data, error } = await supabase.from("calendar_events")
         .insert({ id, user_id: userId, title, event_date: eventDate }).select("id").single();

@@ -1,5 +1,7 @@
 "use client";
 
+import { FormFeedback } from "@/components/ui/feedback";
+import { Button } from "@/components/ui/button";
 import type { CSSProperties } from "react";
 import { useActionState, useState } from "react";
 import { saveTheme } from "./actions";
@@ -28,11 +30,7 @@ export function ThemePicker({ savedTheme }: { savedTheme: Theme }) {
       </label>)}</div>
     </fieldset>
     <p className="muted theme-save-hint">Your choice applies across the planner after saving and follows your account when you sign in again.</p>
-    <button className="primary-button" type="submit" disabled={pending || choice === confirmed}>
-      {pending ? "Saving..." : "Save theme"}
-    </button>
-    <div aria-live="polite" aria-atomic="true">
-      {state.error ? <p className="form-error" role="alert">{state.error}</p> : state.message && choice === confirmed && <p className="save-message">{state.message}</p>}
-    </div>
+    <Button variant="primary" type="submit" disabled={pending || choice === confirmed} pending={pending} pendingLabel="Saving...">Save theme</Button>
+    <FormFeedback error={state.error} message={choice === confirmed ? state.message : undefined} />
   </form>;
 }

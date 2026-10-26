@@ -7,11 +7,13 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "test": "npm run test:tasks && npm run test:calendar && npm run test:notes && npm run test:themes && npm run test:dashboard && npm run test:components",
     "test:tasks": "node --experimental-strip-types --test scripts/test-task-validation.mjs",
     "test:calendar": "node --experimental-strip-types --test scripts/test-calendar.mjs",
     "test:notes": "node --experimental-strip-types --test scripts/test-notes.mjs",
     "test:themes": "node --experimental-strip-types --test scripts/test-themes.mjs",
-    "test:dashboard": "node --experimental-strip-types --test scripts/test-dashboard-layout.mjs"
+    "test:dashboard": "node --experimental-strip-types --test scripts/test-dashboard-layout.mjs",
+    "test:components": "node --experimental-strip-types --test scripts/test-shared-components.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
@@ -31,6 +33,8 @@
     "typescript": "^5"
   }
 }
+
+
 
 
 

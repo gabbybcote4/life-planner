@@ -1,8 +1,8 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
-import { isTaskId as isNoteId } from "@/lib/tasks/types";
+import { getAccountContext } from "@/lib/auth/account";
+import { isRecordId as isNoteId } from "@/lib/shared/validation";
 import { parseNote, parseRevision, type NoteState } from "@/lib/notes/types";
 
 export async function saveNote(_previous: NoteState, formData: FormData): Promise<NoteState> {
@@ -16,10 +16,10 @@ export async function saveNote(_previous: NoteState, formData: FormData): Promis
   }
   let savedRevision: number;
   try {
-    const supabase = await createClient();
-    const { data: auth, error: authError } = await supabase.auth.getClaims();
-    if (authError || !auth?.claims?.sub) return { error: "Your session expired. Copy your draft before signing in again." };
-    const userId = auth.claims.sub;
+    const account = await getAccountContext();
+    if (!account) return { error: "Your session expired. Copy your draft before signing in again." };
+    const { supabase, userId } = account;
+
     if (mode === "create") {
       const { data, error } = await supabase.from("notes").insert({ id, user_id: userId, ...values })
         .select("id,revision").single();
