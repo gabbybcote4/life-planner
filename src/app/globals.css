@@ -1,22 +1,15 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f4efe5;
+  --foreground: #343b35;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-sans: Arial, Helvetica, sans-serif;
+  --font-mono: Consolas, monospace;
 }
 
 body {
@@ -24,3 +17,55 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.planner-shell {
+  display: grid;
+  flex: 1;
+  place-items: center;
+  min-height: 100svh;
+  padding: 3rem 1.25rem;
+  background-image: radial-gradient(#64745b18 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.paper-card {
+  width: 100%;
+  max-width: 32rem;
+  padding: clamp(1.5rem, 5vw, 3rem);
+  background: #fffcf7;
+  border: 1px solid #d9d6c9;
+  border-top: 5px solid #738167;
+  border-radius: 4px 18px 18px 4px;
+  box-shadow: 5px 6px 0 #e9e3d8, 0 20px 60px #343b350d;
+}
+
+.brand {
+  display: inline-block;
+  margin: 0 0 2.5rem;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #3d533f;
+}
+
+.eyebrow { margin-bottom: 0.75rem; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #59664f; }
+h1 { font-family: Georgia, "Times New Roman", serif; font-size: clamp(2rem, 6vw, 2.65rem); line-height: 1.12; letter-spacing: -0.035em; }
+.intro { margin: 1rem 0 1.75rem; line-height: 1.7; color: #596057; overflow-wrap: anywhere; }
+.muted { font-size: 0.85rem; line-height: 1.6; color: #63685f; }
+.auth-form { display: grid; gap: 0.6rem; }
+.auth-form label { margin-top: 0.6rem; font-size: 0.9rem; font-weight: 600; }
+.auth-form input:not([type="hidden"]) { width: 100%; min-height: 46px; border: 1px solid #a8afa0; border-radius: 7px; padding: 0.7rem 0.8rem; background: #fffefa; font-size: 1rem; }
+.auth-switch { display: flex; gap: 0.5rem; padding: 0.3rem; border-radius: 9px; background: #eceee4; margin-bottom: 1.3rem; }
+.auth-switch button { flex: 1; min-height: 44px; padding: 0.5rem; font-size: 0.9rem; border-radius: 6px; }
+.auth-switch button[aria-pressed="true"] { background: #fffcf7; box-shadow: 0 1px 3px #343b351f; font-weight: 600; }
+button { cursor: pointer; }
+button:disabled { cursor: wait; opacity: 0.65; }
+a:focus-visible, button:focus-visible, input:focus-visible { outline: 3px solid #6d7b51; outline-offset: 3px; }
+.primary-button, .secondary-button { min-height: 46px; border-radius: 7px; padding: 0.75rem 1.25rem; font-weight: 600; }
+.primary-button { margin-top: 0.8rem; background: #42583e; color: #fffdf7; }
+.primary-button:hover:not(:disabled) { background: #32442e; }
+.secondary-button { margin-top: 1.5rem; border: 1px solid #87927e; background: #f1f1e8; }
+.form-error, .form-message { padding: 0.8rem 1rem; margin-top: 0.8rem; border-radius: 7px; font-size: 0.9rem; line-height: 1.6; }
+.form-error { color: #852e23; background: #f9ebe5; border: 1px solid #e1b5a9; }
+.form-message { color: #344d31; background: #edf1e5; border: 1px solid #bcc9ac; }
+
