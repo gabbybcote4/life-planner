@@ -15,14 +15,12 @@ export function TaskBoard({ tasks, hasMore }: { tasks: Task[]; hasMore: boolean 
     {tasks.length === 0 ? <div className="task-empty">
       <p className="empty-title">A little room to begin.</p>
       <p className="muted">Add your first task above. Small steps count.</p>
-    </div> : <ul className="task-list" aria-label="Saved tasks">
-      {tasks.map((task) => <TaskRow key={task.id} task={task} />)}
-    </ul>}
+    </div> : <TaskList tasks={tasks} />}
     {hasMore && <p className="muted">Showing your 200 most recent tasks. Older tasks remain saved.</p>}
   </section>;
 }
 
-function AddTaskForm() {
+export function AddTaskForm() {
   const inputId = useId();
   const [title, setTitle] = useState("");
   const requestId = useRef<string | null>(null);
@@ -110,4 +108,8 @@ function TaskFeedback({ state, pending }: { state: TaskActionState; pending: boo
         <p className="save-message">{state.message}</p> : null}
   </div>;
 }
-
+export function TaskList({ tasks }: { tasks: Task[] }) {
+  return <ul className="task-list" aria-label="Saved tasks">
+    {tasks.map((task) => <TaskRow key={task.id} task={task} />)}
+  </ul>;
+}
