@@ -6,15 +6,15 @@ and [AGENTS.md](AGENTS.md) for development conventions.
 
 ## Current increment
 
-Supabase email/password account creation, sign-in, sign-out, and a protected
-account welcome page. Tasks, planner data tables, and social sign-in are not
-implemented yet. No application data tables or live Supabase settings are changed
-by installing this increment.
+Supabase email/password accounts and a private task planner. Signed-in users can
+add tasks, edit their titles, complete/reopen them, and reload saved results.
+The database migration must be applied separately before tasks can be loaded.
+Social sign-in, calendar, notes, and advanced planning remain future increments.
 
 ## Local setup (Windows PowerShell)
 
 Requirements: a supported Node.js release for the installed Next.js version,
-npm, and a Supabase project.
+npm, and a Supabase project. The focused Node test command needs Node.js 22.18 or newer.
 
 ```powershell
 npm ci
@@ -70,10 +70,9 @@ Manual acceptance checks:
 5. Check wrong-password and expired/missing confirmation-link feedback.
 6. Use two separate browser profiles/accounts to verify account identity stays
    separate, and test keyboard navigation and a narrow viewport.
-7. Before adding planner tables, introduce migrations with per-user RLS and verify
-   direct cross-user read/write attempts. There are no planner tables in this increment.
+7. Apply the task migration and run the direct privacy assertions described below.
 
-No test framework is currently configured. The authenticated UI reads verified
+Task input checks run with `npm run test:tasks` using the built-in Node test runner. No third-party test framework is installed. The authenticated UI reads verified
 claims behind Suspense boundaries for the existing Cache Components setup.
 Session responses are private/no-store. Never cache authenticated responses at a
 CDN or trust an unverified session cookie for data access.
@@ -87,3 +86,47 @@ CDN or trust an unverified session cookie for data access.
 
 Implementation follows the official [Supabase SSR guide](https://supabase.com/docs/guides/auth/server-side/creating-a-client)
 and the installed Next.js documentation under `node_modules/next/dist/docs/`.
+
+## Task storage and privacy
+
+Apply `supabase/migrations/20261026000100_create_tasks.sql` once in the target
+project, using the Supabase SQL Editor or your migration workflow. Review it before
+running it: it creates only `public.tasks`, an index, an update timestamp trigger,
+and ownership policies. It fails if that table already exists; stop and inspect
+any existing table instead of dropping/replacing it. The transaction ensures the
+table and its protections become available together.
+
+The migration revokes default client grants, enables and forces RLS, then allows
+signed-in users to select/insert/update their own rows only. Insert grants cover
+id/owner/title; update grants cover title/completed only. Anonymous requests,
+changing ownership/timestamps, and deletion are not supported. No service-role key
+is needed by the application.
+
+Run `supabase/tests/tasks_rls.sql` against a disposable local/test database after
+applying the migration. It tests direct database access under authenticated and
+anonymous roles, including two fictional user identities, valid own writes,
+forged ownership, cross-account reads/updates, and input constraints. Its changes
+are rolled back. If using a hosted SQL Editor for this test, review it first and
+verify the final PASS result; stop if any assertion fails.
+
+The planner shows the 200 most recent tasks and labels that limit when older
+records exist. Task titles allow 1-200 characters. Completion and title changes
+are saved separately so one action does not overwrite the other field. Add-task
+retries reuse a client-generated UUID to avoid duplicate creation after a lost
+response. Concurrent edits to the same title use the last successful write.
+
+Before confirming this increment:
+
+1. Run `npm run test:tasks`, `npm run lint`, and `npm run build`.
+2. Verify the database privacy tests pass.
+3. Sign in and add a task, rename it, complete it, reload, reopen it, and sign out/in.
+   Confirm each saved result survives. Cancel an edit and check that it is unchanged.
+4. Use a second account in a separate browser profile. Its list must not show the
+   first account's tasks. Also verify `/` redirects after signing out.
+5. Test keyboard/phone layouts and a failed save. Unsaved input must remain visible;
+   a failed load must show an error, never a misleading empty task list.
+
+The UI waits for a confirmed database response before showing saved state. This
+increment does not implement offline persistence or claim that an unsent draft is
+saved. No task data is placed in localStorage.
+

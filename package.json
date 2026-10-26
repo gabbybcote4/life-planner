@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:tasks": "node --experimental-strip-types --test scripts/test-task-validation.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
@@ -26,3 +27,4 @@
     "typescript": "^5"
   }
 }
+
