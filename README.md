@@ -6,10 +6,10 @@ and [AGENTS.md](AGENTS.md) for development conventions.
 
 ## Current increment
 
-Supabase email/password accounts, a live dashboard, and a private task planner. Signed-in users can
+Supabase email/password accounts, a live dashboard, a private task planner, and an all-day calendar. Signed-in users can
 add tasks, edit their titles, complete/reopen them, and reload saved results.
 The database migration must be applied separately before tasks can be loaded.
-Social sign-in, calendar, notes, and advanced planning remain future increments.
+Social sign-in, notes, timed events, and advanced planning remain future increments.
 
 ## Local setup (Windows PowerShell)
 
@@ -159,3 +159,55 @@ Dashboard review checks:
    with zero tasks. A failed load must not show zero counts as if loading succeeded.
 6. Verify both routes redirect after sign-out and show only the signed-in account's
    data. Check keyboard navigation and narrow layouts.
+
+## Calendar (all-day events)
+
+`/calendar` shows a month grid and events for the selected day. Add events, rename
+them, or move them to another date. All saved records are private to their owner.
+The first visit chooses today's date in the browser's local time after hydration;
+subsequent selection is stored in the URL as `/calendar?date=YYYY-MM-DD`.
+
+Dates are date-only Postgres values. Fixed UTC formatting preserves the literal
+event date across time zones. The range is 1900-01-01 through 2100-12-31; invalid
+URLs return to today's local date. Month navigation clamps the selected day to
+the new month's final day. Calendar weeks start on Sunday in this increment.
+
+Apply `supabase/migrations/20261026000200_create_calendar_events.sql` once to a new
+target, then verify `supabase/tests/calendar_events_rls.sql` in a test database.
+The direct assertions use two fictional identities and roll back their records.
+The migration creates only calendar event storage/index/trigger/policies and
+leaves tasks unchanged. Review any existing table before proceeding if creation
+fails; do not drop/replace existing data. A manually applied SQL Editor migration
+does not register itself in Supabase CLI migration history; reconcile history
+before adopting CLI deployment.
+
+Only authenticated owners can select, insert, or update their events. Writable
+columns are limited to title/date (and id/owner on insert). Anonymous access,
+changing ownership/timestamps, and deletion are denied. Every save verifies the
+session and filters by owner in addition to database RLS. Add retries reuse the
+same UUID to avoid duplicates after a lost response.
+
+Run `npm run test:calendar` for date/title validation, leap years, month alignment,
+month/year boundary navigation, and time-zone-independent formatting. Also run
+`npm run test:tasks`, lint, and build. No new packages are needed.
+
+Calendar acceptance checks:
+
+1. Open Calendar and verify it selects the browser's current local date. Move to
+   another month, pick a date, and reload; that selection must remain in the URL.
+2. Add an all-day event and refresh. Its title and date must remain saved.
+3. Edit its title, then move it to a date in another month. Use the View date link
+   to verify it appears on the new date and no longer appears on the old date.
+4. Cancel an edit, and check that no saved values changed. Check a failed save
+   retains input and a failed load never masquerades as an empty event list.
+5. Verify the database privacy assertions pass, and use another account in a
+   separate browser profile to confirm that lists stay private. Sign out and
+   check that direct access to `/calendar` redirects to login.
+6. Check keyboard controls, a narrow screen, February in leap/non-leap years,
+   and December/January navigation. Today should use browser-local time.
+
+A month query supports up to 1,000 events; a larger result shows an explicit error
+instead of misleading partial counts. Unsaved drafts are not persisted across
+date/page navigation. Concurrent edits use the last successful write. Timed and
+multi-day events, recurrence, reminders, deletion, calendar integrations, and
+Dashboard event widgets are separate future increments.

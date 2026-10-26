@@ -14,8 +14,8 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
   implementing product work. Keep confirmed decisions distinct from open questions.
 - Keep the default planner simple; make advanced spaces, widgets, databases, and
   life modules optional. Build custom spaces/pages before general databases.
-- The next feature priority is working add/edit/complete/save tasks with real
-  accounts and persistence. Do not implement roadmap features during documentation work.
+- Deliver each agreed feature with real accounts and persistence before advancing
+  to the next scoped increment. Do not implement features during documentation work.
 - Work in small increments: scope, code, test, show the result, confirm with the
   owner, then commit. Honor authorization already given for the specific change.
   Prefer a branch and PR; do not push to main or merge without approval.
@@ -59,9 +59,19 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - Report what changed, checks performed, any limits, and the branch/PR. Keep docs
   aligned with actual setup; do not describe planned capabilities as implemented.
 
+
 ### Task checks
 
 - Run `npm run test:tasks` for task input validation (Node.js 22.18+).
 - For task schema/permission changes, run `supabase/tests/tasks_rls.sql` after the
   migration in a test database and verify its final PASS result. Do not claim RLS
   isolation was verified until the database assertions actually run.
+
+### Calendar checks
+
+- Run `npm run test:calendar` for date validation, month boundaries, leap years,
+  and date-only formatting. Keep event dates independent of the server time zone.
+- Run `supabase/tests/calendar_events_rls.sql` after applying the event migration
+  in a test database. Verify its final PASS result before claiming isolation.
+- Only call `localToday()` in browser effects/events; do not read a live clock
+  during prerendering. Keep Supabase server access behind its request-time boundary.
