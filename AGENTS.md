@@ -82,3 +82,11 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
   as unsanitized HTML. Keep the explicit-save contract visible to users.
 - Preserve revision checks on existing-note saves; a stale tab must not silently
   overwrite another saved revision. Report conflicts while retaining the draft.
+
+### Theme checks
+
+- Run `npm run test:themes` and the preference RLS assertions for theme changes.
+- Use shared semantic palette tokens for new controls; do not hard-code light
+  backgrounds that break Midnight. Check main text, muted text, controls, and focus.
+- Keep theme preferences account-scoped. Refresh the layout after auth changes,
+  and do not put user preferences into a shared cache or persistent browser storage.

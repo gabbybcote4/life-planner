@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 
 export type AuthState = { error?: string; message?: string };
@@ -34,6 +35,7 @@ export async function authenticate(_previous: AuthState, formData: FormData): Pr
   } catch {
     return { error: "We couldn't reach the sign-in service. Please try again." };
   }
+  revalidatePath("/", "layout");
   redirect("/");
 }
 
@@ -45,5 +47,6 @@ export async function signOut(): Promise<AuthState> {
   } catch {
     return { error: "We couldn't sign you out. Please try again." };
   }
+  revalidatePath("/", "layout");
   redirect("/login");
 }

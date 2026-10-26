@@ -6,7 +6,7 @@ and [AGENTS.md](AGENTS.md) for development conventions.
 
 ## Current increment
 
-Supabase email/password accounts, a live dashboard, a private task planner, an all-day calendar, and plain-text notes. Signed-in users can
+Supabase email/password accounts, a live dashboard, a private task planner, an all-day calendar, plain-text notes, and saved account themes. Signed-in users can
 add tasks, edit their titles, complete/reopen them, and reload saved results.
 The database migration must be applied separately before tasks can be loaded.
 Social sign-in, timed events, rich-text/linked notes, and advanced planning remain future increments.
@@ -254,3 +254,44 @@ Run `npm run test:notes`, existing task/calendar tests, lint, and build. Check:
 
 Rich text, linked knowledge, autosave/offline drafts, deletion, history, sharing,
 and dashboard note widgets remain future increments.
+
+## Saved themes and settings
+
+`/settings` offers Sage (warm stationery), Rose (soft pink), and Midnight (dark).
+Select a theme and save it. Shared semantic colour variables apply it across
+Dashboard, Tasks, Calendar, Notes, and Settings. Previews use the same palette
+values as the live theme. Native form controls inherit the appropriate colour
+scheme; major text/action/focus pairs have automated contrast checks.
+
+The choice belongs to the signed-in account. A request-time theme wrapper reads
+`planner_preferences` under that user's session without shared caching. Theme
+saves refresh the root layout; sign-in/sign-out also refresh it to avoid carrying
+one account's appearance into another. Signed-out users use Sage. No localStorage
+or theme cookie is used. Existing users without a preference row default to Sage.
+If preference loading fails, the planner stays usable with Sage; Settings reports
+load/save failures instead of claiming the selection was saved.
+
+Apply `supabase/migrations/20261026000400_create_planner_preferences.sql` once in a
+new target and verify `supabase/tests/planner_preferences_rls.sql`. The assertions
+use fictional identities and roll back their records. The table allows only owner
+reads/inserts/theme updates. Owner reassignment, timestamp edits, unknown themes,
+anonymous access, and deletion are denied. Existing tasks/events/notes are not
+modified. SQL Editor setup does not register CLI migration history automatically.
+
+Theme saves use update-then-insert with a duplicate-row retry, rather than an upsert
+that would require granting permission to rewrite the owner key. Concurrent theme
+saves use the last successful write. No secret/service-role key is required.
+
+Run `npm run test:themes` for allowed values and palette contrast checks, plus
+existing task/calendar/notes tests, TypeScript/lint/build. Manually review:
+
+1. Save Rose, visit every planner page, and reload. The saved palette persists.
+2. Save Midnight and review text, inputs, buttons, calendar selection, progress,
+   note editing, and error messages. Check keyboard focus and a narrow viewport.
+3. Sign out: login uses Sage. Sign back into the same account: its choice returns.
+4. Sign into a second account: preferences stay separate. Confirm the database
+   assertions pass, and verify failed saves keep the selection available to retry.
+
+The loading shell uses the default Sage appearance until the request-time theme
+arrives. This is a saved palette setting, not a custom theme editor, theme importer,
+or dashboard widget customization. Contrast tests are not a full accessibility audit.
