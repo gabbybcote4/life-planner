@@ -338,3 +338,13 @@ Run `npm run test:dashboard`, existing tests, lint, and build. Manually check:
 
 Only the four existing task widgets are in the first library. Calendar/notes
 widgets, custom widgets, drag/drop, free resizing, and custom spaces are later work.
+
+## Shared components and maintenance
+
+See [ARCHITECTURE.md](docs/ARCHITECTURE.md) for the reusable page frame, headings,
+form controls/feedback, navigation registry, feature widgets, and verified account
+helper. Use [MVP_REVIEW.md](docs/MVP_REVIEW.md) for the regression checklist.
+
+`npm test` runs all feature suites and the shared UI/account-context checks.
+`npm run test:components` runs only those new regressions. No new packages or
+database setup are required for the shared-component refactor.

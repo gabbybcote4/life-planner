@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { localToday } from "@/lib/calendar/dates";
@@ -15,6 +16,6 @@ export function CalendarStart() {
 
 export function CalendarTodayButton() {
   const router = useRouter();
-  return <button className="calendar-today-button" type="button"
-    onClick={() => router.push(`/calendar?date=${localToday()}`)}>Today</button>;
+  return <Button className="calendar-today-button" type="button"
+    onClick={() => router.push(`/calendar?date=${localToday()}`)}>Today</Button>;
 }

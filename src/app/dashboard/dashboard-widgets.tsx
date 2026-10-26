@@ -1,5 +1,8 @@
 "use client";
 
+import { EmptyState } from "@/components/ui/empty-state";
+import { FormFeedback } from "@/components/ui/feedback";
+import { Button } from "@/components/ui/button";
 import type { ReactNode } from "react";
 import { useActionState, useState } from "react";
 import { saveDashboardLayout } from "./actions";
@@ -32,40 +35,39 @@ export function DashboardWidgets({ savedLayout, savedRevision, canCustomize, slo
   return <div className="dashboard-customization">
     <div className="dashboard-customize-heading">
       <p className="muted">{editing && dirty ? "Unsaved layout changes" : "Your dashboard, arranged your way"}</p>
-      {!editing && <button className="secondary-button" type="button" disabled={!canCustomize}
-        onClick={() => { setEditing(true); setAnnouncement(""); }}>Customize dashboard</button>}
+      {!editing && <Button variant="secondary" type="button" disabled={!canCustomize}
+        onClick={() => { setEditing(true); setAnnouncement(""); }}>Customize dashboard</Button>}
     </div>
     {editing && <section className="widget-library" aria-labelledby="widget-library-heading">
       <h2 id="widget-library-heading">Arrange your dashboard</h2>
       <p className="muted">Add a widget, move it up or down, and choose half or full width. Removing a widget keeps your saved tasks safe.</p>
       <div className="widget-library-options">{missing.length === 0 ? <p className="muted">All available widgets are on your dashboard.</p> :
-        missing.map((id) => <button className="secondary-button" key={id} type="button" disabled={pending || !canCustomize}
+        missing.map((id) => <Button variant="secondary" key={id} type="button" disabled={pending || !canCustomize}
           onClick={() => change([...draft, { id, width: "half" }], `${WIDGETS[id].label} added.`)}>
           Add {WIDGETS[id].label}
-        </button>)}</div>
+        </Button>)}</div>
       <div className="layout-save-controls">
         <form action={action}>
-          <button className="primary-button" type="submit" disabled={pending || !dirty || !canCustomize}>{pending ? "Saving..." : "Save layout"}</button>
+          <Button variant="primary" type="submit" disabled={pending || !dirty || !canCustomize} pending={pending} pendingLabel="Saving...">Save layout</Button>
         </form>
-        <button className="task-edit-button" type="button" disabled={pending || !canCustomize}
-          onClick={() => { setDraft(saved); setEditing(false); setAnnouncement("Saved layout restored."); }}>Cancel</button>
-        <button className="task-edit-button" type="button" disabled={pending || !canCustomize}
-          onClick={() => change(DEFAULT_LAYOUT.map((widget) => ({ ...widget })), "Default layout restored. Save to keep it.")}>Restore default layout</button>
+        <Button variant="text" type="button" disabled={pending || !canCustomize}
+          onClick={() => { setDraft(saved); setEditing(false); setAnnouncement("Saved layout restored."); }}>Cancel</Button>
+        <Button variant="text" type="button" disabled={pending || !canCustomize}
+          onClick={() => change(DEFAULT_LAYOUT.map((widget) => ({ ...widget })), "Default layout restored. Save to keep it.")}>Restore default layout</Button>
       </div>
       <p className="muted">Save before leaving this page. Layout changes are not saved automatically.</p>
-      {state.error && <p className="form-error" role="alert">{state.error}</p>}
+      <FormFeedback error={state.error} />
     </section>}
     <p className="layout-announcement" role="status" aria-live="polite">{pending ? "Saving your layout..." : announcement}</p>
-    {draft.length === 0 && <div className="task-empty"><p className="empty-title">A little breathing room.</p>
-      <p className="muted">Use Customize dashboard to add widgets. Your saved tasks are still on the Tasks page.</p></div>}
+    {draft.length === 0 && <EmptyState title="A little breathing room.">Use Customize dashboard to add widgets. Your saved tasks are still on the Tasks page.</EmptyState>}
     <div className="custom-widget-grid">{draft.map((widget, index) => <article key={widget.id}
       className={`dashboard-widget widget-${widget.width}`} aria-label={WIDGETS[widget.id].label}>
       {editing && <div className="widget-controls">
         <span className="widget-control-title">{WIDGETS[widget.id].label}</span>
-        <button type="button" disabled={pending || !canCustomize || index === 0} aria-label={`Move ${WIDGETS[widget.id].label} up`}
-          onClick={() => change(moveWidget(draft, widget.id, -1), `${WIDGETS[widget.id].label} moved up.`)}>↑</button>
-        <button type="button" disabled={pending || !canCustomize || index === draft.length - 1} aria-label={`Move ${WIDGETS[widget.id].label} down`}
-          onClick={() => change(moveWidget(draft, widget.id, 1), `${WIDGETS[widget.id].label} moved down.`)}>↓</button>
+        <Button type="button" disabled={pending || !canCustomize || index === 0} aria-label={`Move ${WIDGETS[widget.id].label} up`}
+          onClick={() => change(moveWidget(draft, widget.id, -1), `${WIDGETS[widget.id].label} moved up.`)}>↑</Button>
+        <Button type="button" disabled={pending || !canCustomize || index === draft.length - 1} aria-label={`Move ${WIDGETS[widget.id].label} down`}
+          onClick={() => change(moveWidget(draft, widget.id, 1), `${WIDGETS[widget.id].label} moved down.`)}>↓</Button>
         <label className="widget-size-label">Width
           <select value={widget.width} disabled={pending || !canCustomize} aria-label={`Width of ${WIDGETS[widget.id].label}`}
             onChange={(event) => { const width = event.target.value === "full" ? "full" : "half";
@@ -73,8 +75,8 @@ export function DashboardWidgets({ savedLayout, savedRevision, canCustomize, slo
             <option value="half">Half</option><option value="full">Full</option>
           </select>
         </label>
-        <button type="button" disabled={pending || !canCustomize} aria-label={`Remove ${WIDGETS[widget.id].label} widget`}
-          onClick={() => change(draft.filter((item) => item.id !== widget.id), `${WIDGETS[widget.id].label} removed from the dashboard.`)}>Remove</button>
+        <Button type="button" disabled={pending || !canCustomize} aria-label={`Remove ${WIDGETS[widget.id].label} widget`}
+          onClick={() => change(draft.filter((item) => item.id !== widget.id), `${WIDGETS[widget.id].label} removed from the dashboard.`)}>Remove</Button>
       </div>}
       {slots[widget.id]}
     </article>)}</div>

@@ -1,15 +1,14 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { getAccountContext } from "@/lib/auth/account";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { AuthForm } from "./auth-form";
 
 async function LoginContent({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
   if (!isSupabaseConfigured()) return <p className="form-message">Sign-in is being set up. Please check back soon.</p>;
-  const supabase = await createClient();
-  const { data } = await supabase.auth.getClaims();
-  if (data?.claims?.sub) redirect("/");
+  const account = await getAccountContext();
+  if (account) redirect("/");
   const { error } = await searchParams;
   return <>
     {error === "confirmation" && <p className="form-error" role="alert">

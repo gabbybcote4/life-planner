@@ -1,5 +1,8 @@
 "use client";
 
+import { FormFeedback } from "@/components/ui/feedback";
+import { TextInput } from "@/components/ui/fields";
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useActionState, useId, useRef, useState } from "react";
 import { saveCalendarEvent } from "./actions";
@@ -28,8 +31,8 @@ export function CalendarEvents({ events, selectedDate }: { events: CalendarEvent
           {editingId === event.id ? <EventForm event={event} selectedDate={selectedDate}
             onSaved={onSaved} onCancel={() => setEditingId(null)} /> : <div className="calendar-event-summary">
             <span className="calendar-event-title">{event.title}</span>
-            <button className="task-edit-button" type="button" aria-label={`Edit event: ${event.title}`}
-              onClick={() => { setNotice({}); setEditingId(event.id); }}>Edit</button>
+            <Button variant="text" type="button" aria-label={`Edit event: ${event.title}`}
+              onClick={() => { setNotice({}); setEditingId(event.id); }}>Edit</Button>
           </div>}
         </li>)}
       </ul>}
@@ -62,21 +65,19 @@ function EventForm({ event, selectedDate, onSaved, onCancel }: {
   return <form action={action} className="calendar-event-form" aria-busy={pending}>
     <input type="hidden" name="mode" value={event ? "edit" : "create"} />
     <label htmlFor={`${fieldId}-title`}>Event title</label>
-    <input id={`${fieldId}-title`} name="title" value={title} onChange={(e) => setTitle(e.target.value)}
+    <TextInput id={`${fieldId}-title`} name="title" value={title} onChange={(e) => setTitle(e.target.value)}
       maxLength={EVENT_TITLE_LIMIT} required readOnly={pending} autoComplete="off"
       placeholder="Something to look forward to..." />
     <label htmlFor={`${fieldId}-date`}>Date</label>
-    <input id={`${fieldId}-date`} name="event_date" type="date" value={date} onChange={(e) => setDate(e.target.value)}
+    <TextInput id={`${fieldId}-date`} name="event_date" type="date" value={date} onChange={(e) => setDate(e.target.value)}
       min="1900-01-01" max="2100-12-31" required readOnly={pending} />
     <div className="edit-task-controls">
-      <button className="primary-button" type="submit" disabled={pending || !title.trim() || !date}>
+      <Button variant="primary" type="submit" disabled={pending || !title.trim() || !date}>
         {pending ? "Saving..." : event ? "Save changes" : "Save event"}
-      </button>
-      {onCancel && <button className="task-edit-button" type="button" disabled={pending} onClick={onCancel}>Cancel</button>}
+      </Button>
+      {onCancel && <Button variant="text" type="button" disabled={pending} onClick={onCancel}>Cancel</Button>}
     </div>
-    <div aria-live="polite" aria-atomic="true">
-      {pending ? <p className="muted">Saving...</p> : state.error && <p className="form-error" role="alert">{state.error}</p>}
-    </div>
+    <FormFeedback error={state.error} pending={pending} />
   </form>;
 }
 

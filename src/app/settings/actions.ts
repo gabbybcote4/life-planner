@@ -1,17 +1,17 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
+import { getAccountContext } from "@/lib/auth/account";
 import { parseTheme, type ThemeState } from "@/lib/themes/themes";
 
 export async function saveTheme(_previous: ThemeState, formData: FormData): Promise<ThemeState> {
   const theme = parseTheme(formData.get("theme"));
   if (!theme) return { error: "Choose one of the available themes." };
   try {
-    const supabase = await createClient();
-    const { data: auth, error: authError } = await supabase.auth.getClaims();
-    if (authError || !auth?.claims?.sub) return { error: "Your session expired. Sign in again before changing your theme." };
-    const userId = auth.claims.sub;
+    const account = await getAccountContext();
+    if (!account) return { error: "Your session expired. Sign in again before changing your theme." };
+    const { supabase, userId } = account;
+
     const update = () => supabase.from("planner_preferences").update({ theme })
       .eq("user_id", userId).select("theme").maybeSingle();
     const result = await update();

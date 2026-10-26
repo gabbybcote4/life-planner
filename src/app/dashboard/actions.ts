@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
+import { getAccountContext } from "@/lib/auth/account";
 import { parseLayout, parseLayoutRevision, type LayoutState } from "@/lib/dashboard/layout";
 
 export async function saveDashboardLayout(_previous: LayoutState, formData: FormData): Promise<LayoutState> {
@@ -13,18 +13,18 @@ export async function saveDashboardLayout(_previous: LayoutState, formData: Form
   if (!layout) return { error: "Choose valid widgets and sizes before saving." };
   let nextRevision: number;
   try {
-    const supabase = await createClient();
-    const { data: auth, error: authError } = await supabase.auth.getClaims();
-    if (authError || !auth?.claims?.sub) return { error: "Your session expired. Sign in again before saving your dashboard." };
+    const account = await getAccountContext();
+    if (!account) return { error: "Your session expired. Sign in again before saving your dashboard." };
+    const { supabase, userId } = account;
     if (revision === 0) {
-      const { data, error } = await supabase.from("dashboard_layouts").insert({ user_id: auth.claims.sub, layout })
+      const { data, error } = await supabase.from("dashboard_layouts").insert({ user_id: userId, layout })
         .select("revision").single();
       if (error?.code === "23505") return { error: "A layout was saved in another tab or an earlier attempt. Reload to check it before making more changes." };
       if (error || !data) return { error: "We couldn't confirm the save. Your layout changes are still here. Please try again." };
       nextRevision = data.revision;
     } else {
       const { data, error } = await supabase.from("dashboard_layouts").update({ layout })
-        .eq("user_id", auth.claims.sub).eq("revision", revision).select("revision").maybeSingle();
+        .eq("user_id", userId).eq("revision", revision).select("revision").maybeSingle();
       if (error) return { error: "We couldn't confirm the save. Your layout changes are still here. Please try again." };
       if (!data) return { error: "This layout changed elsewhere or an earlier save succeeded. Reload to check the saved layout; your draft has not overwritten it." };
       nextRevision = data.revision;

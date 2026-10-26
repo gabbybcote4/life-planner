@@ -1,5 +1,8 @@
 "use client";
 
+import { FormFeedback } from "@/components/ui/feedback";
+import { TextInput, TextArea } from "@/components/ui/fields";
+import { Button } from "@/components/ui/button";
 import { useActionState, useId, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { saveNote } from "./actions";
@@ -34,18 +37,14 @@ export function NoteEditor({ note }: { note: Note | null }) {
     <form action={action} className="note-form" aria-busy={pending}>
       <input type="hidden" name="mode" value={note ? "edit" : "create"} />
       <label htmlFor={`${fieldId}-title`}>Title</label>
-      <input id={`${fieldId}-title`} name="title" value={title} onChange={(event) => setTitle(Array.from(event.target.value).slice(0, NOTE_TITLE_LIMIT).join(""))}
+      <TextInput id={`${fieldId}-title`} name="title" value={title} onChange={(event) => setTitle(Array.from(event.target.value).slice(0, NOTE_TITLE_LIMIT).join(""))}
         required maxLength={NOTE_TITLE_LIMIT * 2} readOnly={pending} placeholder="Give this thought a name..." autoComplete="off" />
       <label htmlFor={`${fieldId}-body`}>Note</label>
-      <textarea id={`${fieldId}-body`} name="body" value={body} onChange={(event) => setBody(Array.from(event.target.value).slice(0, NOTE_BODY_LIMIT).join(""))}
+      <TextArea id={`${fieldId}-body`} name="body" value={body} onChange={(event) => setBody(Array.from(event.target.value).slice(0, NOTE_BODY_LIMIT).join(""))}
         maxLength={NOTE_BODY_LIMIT * 2} readOnly={pending} rows={16} placeholder="Ideas, plans, little reminders. This space is yours." />
       <p className="muted note-save-hint">Save before opening another note or leaving this page. Drafts are not saved automatically.</p>
-      <button className="primary-button" type="submit" disabled={pending || !title.trim() || (Boolean(note) && !dirty)}>
-        {pending ? "Saving..." : "Save note"}
-      </button>
-      <div aria-live="polite" aria-atomic="true">
-        {state.error ? <p className="form-error" role="alert">{state.error}</p> : state.message && !dirty && <p className="save-message">{state.message}</p>}
-      </div>
+      <Button variant="primary" type="submit" disabled={pending || !title.trim() || (Boolean(note) && !dirty)} pending={pending} pendingLabel="Saving...">Save note</Button>
+      <FormFeedback error={state.error} message={!dirty ? state.message : undefined} />
     </form>
   </section>;
 }

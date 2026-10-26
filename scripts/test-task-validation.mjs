@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { parseTaskTitle, isTaskId } from "../src/lib/tasks/types.ts";
+import { parseTaskTitle } from "../src/lib/tasks/types.ts";
+import { isRecordId as isTaskId } from "../src/lib/shared/validation.ts";
 
 test("rejects empty, whitespace-only, missing, and non-text titles", () => {
   for (const value of [null, "", "  ", "\t\n", "\u00a0", new File(["task"], "task.txt")]) {
