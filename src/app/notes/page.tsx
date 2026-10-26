@@ -1,3 +1,4 @@
+import { KnowledgeConnections } from "@/app/knowledge/connections";
 import Link from "next/link";
 import { requireAccount } from "@/lib/auth/account";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
@@ -50,7 +51,7 @@ async function NotesContent({ searchParams }: { searchParams: NotesSearch }) {
       {selectedError ? <section className="task-load-error"><h2>This note isn’t available.</h2>
         <p className="muted">Try opening a note from your list, or start a new one.</p>
         <Link className="text-link" href="/notes?note=new">New note</Link></section> :
-        <NoteEditor key={`${userId}:${selected?.id ?? "new"}`} note={selected} />}
+        <div><NoteEditor key={`${userId}:${selected?.id ?? "new"}`} note={selected} />{selected && <KnowledgeConnections kind="note" id={selected.id}/>}</div>}
     </div>}
   </>;
 }

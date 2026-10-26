@@ -128,3 +128,15 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
   live privacy verification until its final PASS result is confirmed.
 - Preserve same-owner parent constraints, immutable ownership/parent fields,
   revision checks, explicit saves, and stable IDs for create retries.
+
+### Knowledge link checks
+
+- Reuse the shared picker/editor and current-title Connections lists. Keep link
+  insertion draft-only until the feature's existing save confirms persistence.
+- Run npm run test:links plus Notes/Spaces regressions. Run the linked-knowledge
+  migration and privacy assertions before claiming live account isolation.
+- Preserve security-invoker functions, owner filters, RLS, authenticated-only
+  execute grants, and source/target validation. Never accept a caller-supplied owner.
+- Keep JS/SQL marker parsing aligned: note/page kind, UUID identity, one-line label
+  of 1–200 Unicode characters, deduplicated identities, and body limit 20,000.
+- Do not render stored text/labels as HTML or resolve arbitrary external URLs.

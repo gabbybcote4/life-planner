@@ -372,3 +372,33 @@ Run npm test, lint, TypeScript, and build. Manually verify create/rename, page
 create/edit/reload, two tabs with stale revisions, offline save/retry, keyboard,
 phone layouts, all themes, and two real accounts. Existing Notes reuse the same
 PlainTextEditor; verify ordinary note creation/editing as a regression check.
+
+## Linked notes and pages
+
+The shared editor's Insert a link control searches account-owned notes/pages by
+literal title or space-name text. Choose an item to insert a stable plain-text
+reference at the current text selection. Save explicitly. The Connections panel
+shows clickable saved targets and backlinks, with current titles and space names.
+Removing the whole reference from the text and saving removes the connection.
+Saved notes/pages open in Read view with clickable inline links. Edit shows the
+plain-text markers; saving returns to Read. No rich-text editing is introduced.
+Rename-safe identity comes from kind plus UUID, not the old display label.
+
+Apply `supabase/migrations/20261026000700_linked_knowledge.sql` once after the
+Notes and Spaces migrations. Then run `supabase/tests/knowledge_links_rls.sql`
+and verify its final PASS row. Existing bodies and permission policies are not
+rewritten. No separate link index or link write permission is introduced.
+
+Searches and connection lists paginate in sets of 20 using one lookahead row.
+Backlinks are derived from saved text, so failed/stale saves cannot leave a
+separately updated link index. Missing/foreign targets are omitted without exposing
+private titles or backlinks. These read-only SQL functions use security invoker,
+explicit auth.uid owner filters, existing RLS, and authenticated-only execution.
+See the [Supabase function security guidance](https://supabase.com/docs/guides/database/functions)
+and [PostgreSQL regex documentation](https://www.postgresql.org/docs/current/functions-matching.html).
+
+Run npm run test:links and all regressions. Unit checks mock RPC results and do
+not establish live privacy guarantees. Manually verify both note/page directions,
+renames, removal, same-title choices, paging, two accounts, failed requests, stale
+saves, keyboard controls, phone layouts, and all themes. No public/external links,
+graph view, automatic title matching, rich text, or sharing is added here.

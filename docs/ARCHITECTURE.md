@@ -116,3 +116,35 @@ Notes keeps a thin wrapper with its own action and destination.
 `src/app/spaces/space-form.tsx` handles create/rename drafts. The spaces page loads
 only the selected owner's space and selected page, with separate paginated lists.
 Do not replace the database's composite owner/parent foreign key with UI filtering.
+
+## Knowledge links
+
+src/lib/knowledge/links.ts defines typed link targets, stable plain-text markers,
+selection insertion, and safe planner destinations. PlainTextEditor composes
+LinkPicker outside its save form to avoid nested forms. Insertion only changes
+the draft; established feature actions retain ownership/revision/save checks.
+
+KnowledgeConnections loads saved outgoing/backlink lists; ConnectionList supplies
+read-only refresh and pagination. Server actions always re-check account context
+and call authenticated SQL functions. Nothing is stored in browser persistence or
+shared caches. Notes/page saves revalidate both areas so connections can refresh.
+
+The database reads the current user's Notes and Spaces through security-invoker
+helpers. The marker parser deduplicates kind/UUID references and joins only owned
+targets. Backlinks are computed from saved bodies, avoiding dual-write/index drift.
+An unavailable target returns no metadata; an inaccessible source cannot enumerate
+links. Searches use literal substring matching and deterministic title/kind/id
+ordering. List queries return 21 rows for a 20-item page, not an unreported cap.
+
+The first implementation scans the owner's saved bodies for backlinks. For large
+libraries, profile before adding a transactionally maintained index; do not add a
+client-updated link table that can drift from saved text or bypass ownership.
+
+
+TextDocumentEditor resolves initial owned link targets for PlainTextEditor. Read
+mode renders body segments through LinkedText: literal text stays escaped, and
+only resolved account-owned targets become Next links. Unknown targets display
+an unavailable label. The shared marker parser handles reading and insertion.
+ResolveLinkPreview performs fresh account checks and owner-filtered target reads
+in batches of 50. It accepts no owner parameter and makes no writes. Preview
+failures never turn a confirmed save into a failed save or discard text.

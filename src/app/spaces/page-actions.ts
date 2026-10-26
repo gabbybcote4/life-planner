@@ -51,5 +51,6 @@ export async function saveSpacePage(_previous: NoteState, formData: FormData): P
     return { error: "We couldn't reach your pages. Your draft is still here. Please try again." };
   }
   revalidatePath("/spaces");
+  revalidatePath("/notes");
   return { message: "Page saved.", id, revision: savedRevision };
 }

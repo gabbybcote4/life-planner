@@ -1,3 +1,4 @@
+import { KnowledgeConnections } from "@/app/knowledge/connections";
 import Link from "next/link";
 import { requireAccount } from "@/lib/auth/account";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
@@ -5,7 +6,7 @@ import { isRecordId } from "@/lib/shared/validation";
 import { parseNotesPage, type Note } from "@/lib/notes/types";
 import { type Space } from "@/lib/spaces/types";
 import { PlannerPage, PlannerHeading, SetupNotice, LoadError } from "@/app/components/planner-page";
-import { PlainTextEditor } from "@/app/components/plain-text-editor";
+import { TextDocumentEditor } from "@/app/components/text-document-editor";
 import { SpaceForm } from "./space-form";
 import { saveSpacePage } from "./page-actions";
 type Search = Promise<{space?:string; entry?:string; spacesPage?:string; pagesPage?:string}>;
@@ -47,7 +48,7 @@ async function SpacesContent({searchParams}:{searchParams:Search}) {
  <ul className="notes-list">{pages?.data?.map(page=><li key={page.id}><Link href={base+'&pagesPage='+pagesPage+'&entry='+page.id} aria-current={selected?.id===page.id?'page':undefined}>{page.title}</Link></li>)}</ul>
  {!pages?.data?.length&&<p className="muted">Start with a fresh page.</p>}
  <nav className="notes-pagination" aria-label="Pages in this space">{pagesPage>1&&<Link href={base+'&pagesPage='+(pagesPage-1)}>Previous</Link>}{(pages?.count??0)>pagesPage*SIZE&&pagesPage<9999&&<Link href={base+'&pagesPage='+(pagesPage+1)}>Next</Link>}</nav></aside>
- {entryError ? <LoadError title="This page is unavailable." description="Choose a page from this space." action={base}/> : <PlainTextEditor key={userId+space.id+(selected?.id??'new')} note={selected} spaceId={space.id} saveAction={saveSpacePage} destination={base+'&entry='}/>}
+ {entryError ? <LoadError title="This page is unavailable." description="Choose a page from this space." action={base}/> : <div><TextDocumentEditor key={userId+space.id+(selected?.id??'new')} note={selected} spaceId={space.id} saveAction={saveSpacePage} destination={base+'&entry='}/>{selected && <KnowledgeConnections kind="page" id={selected.id}/>}</div>}
  </div>}</> : null}
  </>}
  </>;
