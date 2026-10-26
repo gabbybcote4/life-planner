@@ -59,11 +59,9 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - Report what changed, checks performed, any limits, and the branch/PR. Keep docs
   aligned with actual setup; do not describe planned capabilities as implemented.
 
-
 ### Task checks
 
 - Run `npm run test:tasks` for task input validation (Node.js 22.18+).
 - For task schema/permission changes, run `supabase/tests/tasks_rls.sql` after the
   migration in a test database and verify its final PASS result. Do not claim RLS
   isolation was verified until the database assertions actually run.
-
