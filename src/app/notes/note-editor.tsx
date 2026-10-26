@@ -1,5 +1,9 @@
 "use client";
 
+import { createRequestId } from "@/lib/shared/request-id";
+
+import { runAction, UNCONFIRMED_SAVE } from "@/lib/shared/client-actions";
+
 import { FormFeedback } from "@/components/ui/feedback";
 import { TextInput, TextArea } from "@/components/ui/fields";
 import { Button } from "@/components/ui/button";
@@ -18,10 +22,12 @@ export function NoteEditor({ note }: { note: Note | null }) {
   const requestId = useRef<string | null>(null);
   const dirty = title !== saved.title || body !== saved.body;
   const [state, action, pending] = useActionState<NoteState, FormData>(async (previous, data) => {
-    requestId.current ??= note?.id ?? crypto.randomUUID();
-    data.set("id", requestId.current);
-    data.set("revision", String(revision));
-    const result = await saveNote(previous, data);
+    const result = await runAction(async () => {
+      requestId.current ??= note?.id ?? createRequestId();
+      data.set("id", requestId.current);
+      data.set("revision", String(revision));
+      return saveNote(previous, data);
+    }, UNCONFIRMED_SAVE);
     if (!result.error && result.id && result.revision) {
       setSaved({ title, body });
       setRevision(result.revision);

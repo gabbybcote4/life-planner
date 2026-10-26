@@ -10,12 +10,13 @@ const cards: Record<PlannerSection, string> = {
 };
 
 export function PlannerPage({ active, loading, children }: { active: PlannerSection; loading: string; children: ReactNode }) {
-  return <main className="planner-shell">
+  return <><a className="skip-link" href="#planner-main">Skip to main content</a>
+    <main id="planner-main" tabIndex={-1} className="planner-shell">
     <section className={`paper-card ${cards[active]}`} aria-label={`Your Life Planner ${active}`}>
       <PlannerNavigation active={active} />
       <Suspense fallback={<p role="status">{loading}</p>}>{children}</Suspense>
     </section>
-  </main>;
+  </main></>;
 }
 
 export function PlannerHeading({ eyebrow, title, description, email, className = "" }: {

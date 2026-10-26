@@ -59,6 +59,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - Report what changed, checks performed, any limits, and the branch/PR. Keep docs
   aligned with actual setup; do not describe planned capabilities as implemented.
 
+
 ### Task checks
 
 - Run `npm run test:tasks` for task input validation (Node.js 22.18+).
@@ -110,3 +111,11 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - Keep feature validation, owner filters, revision checks, and save/retry semantics
   in feature modules. Reuse presentation without merging unrelated data operations.
 - Run npm test, lint/build, and docs/MVP_REVIEW.md before confirming a refactor.
+
+### Client save reliability
+
+- Reuse runAction for client action failures; preserve framework redirects.
+- Keep drafts and stable create-request ids until confirmed success. Do not retry
+  writes automatically or report an unconfirmed response as saved.
+- Use createRequestId for new records, including local HTTP phone testing.
+- Run npm run test:client when changing action boundaries or request ids.

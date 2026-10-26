@@ -90,3 +90,17 @@ Supabase authentication or database privacy testing.
 
 Run lint, TypeScript/build, and the browser review in `docs/MVP_REVIEW.md` before
 committing a refactor. No schema/migration change is needed for this refactor.
+
+## Reliable client saves
+
+Wrap client-side server-action calls with runAction from
+src/lib/shared/client-actions.ts. Server try/catch cannot catch a request that
+never reaches the server. The wrapper returns honest failure feedback while
+preserving Next.js redirects/not-found control flow via unstable_rethrow.
+Keep drafts and request ids until confirmed success; do not automatically retry
+mutations. An unconfirmed save may have reached the database.
+
+Use createRequestId from src/lib/shared/request-id.ts for new records. It uses
+native randomUUID or secure random bytes when local HTTP lacks randomUUID;
+it never falls back to Math.random. Tests simulate both environments.
+PlannerPage supplies a keyboard-visible skip link to the main content.

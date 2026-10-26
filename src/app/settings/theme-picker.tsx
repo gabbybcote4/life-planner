@@ -1,5 +1,7 @@
 "use client";
 
+import { runAction, UNCONFIRMED_SAVE } from "@/lib/shared/client-actions";
+
 import { FormFeedback } from "@/components/ui/feedback";
 import { Button } from "@/components/ui/button";
 import type { CSSProperties } from "react";
@@ -11,7 +13,7 @@ export function ThemePicker({ savedTheme }: { savedTheme: Theme }) {
   const [choice, setChoice] = useState<Theme>(savedTheme);
   const [confirmed, setConfirmed] = useState<Theme>(savedTheme);
   const [state, action, pending] = useActionState<ThemeState, FormData>(async (previous, data) => {
-    const result = await saveTheme(previous, data);
+    const result = await runAction(() => saveTheme(previous, data), UNCONFIRMED_SAVE);
     if (!result.error) setConfirmed(choice);
     return result;
   }, {});
