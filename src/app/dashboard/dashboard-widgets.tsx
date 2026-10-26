@@ -1,5 +1,7 @@
 "use client";
 
+import { runAction, UNCONFIRMED_SAVE } from "@/lib/shared/client-actions";
+
 import { EmptyState } from "@/components/ui/empty-state";
 import { FormFeedback } from "@/components/ui/feedback";
 import { Button } from "@/components/ui/button";
@@ -20,7 +22,7 @@ export function DashboardWidgets({ savedLayout, savedRevision, canCustomize, slo
   const [state, action, pending] = useActionState<LayoutState, FormData>(async (previous, data) => {
     data.set("layout", JSON.stringify(draft));
     data.set("revision", String(revision));
-    const result = await saveDashboardLayout(previous, data);
+    const result = await runAction(() => saveDashboardLayout(previous, data), UNCONFIRMED_SAVE);
     if (!result.error && result.revision) {
       setSaved(draft);
       setRevision(result.revision);

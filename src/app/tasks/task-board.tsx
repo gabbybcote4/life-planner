@@ -1,5 +1,9 @@
 "use client";
 
+import { createRequestId } from "@/lib/shared/request-id";
+
+import { runAction, UNCONFIRMED_SAVE } from "@/lib/shared/client-actions";
+
 import { EmptyState } from "@/components/ui/empty-state";
 import { FormFeedback } from "@/components/ui/feedback";
 import { TextInput } from "@/components/ui/fields";
@@ -26,9 +30,11 @@ export function AddTaskForm() {
   const [title, setTitle] = useState("");
   const requestId = useRef<string | null>(null);
   const [state, action, pending] = useActionState<TaskActionState, FormData>(async (previous, data) => {
-    requestId.current ??= crypto.randomUUID();
-    data.set("id", requestId.current);
-    const result = await addTask(previous, data);
+    const result = await runAction(async () => {
+      requestId.current ??= createRequestId();
+      data.set("id", requestId.current);
+      return addTask(previous, data);
+    }, UNCONFIRMED_SAVE);
     if (!result.error) {
       setTitle("");
       requestId.current = null;
@@ -51,7 +57,7 @@ export function AddTaskForm() {
 function TaskRow({ task }: { task: Task }) {
   const [editing, setEditing] = useState(false);
   const [editMessage, setEditMessage] = useState("");
-  const [state, action, pending] = useActionState<TaskActionState, FormData>(setTaskCompleted, {});
+  const [state, action, pending] = useActionState<TaskActionState, FormData>((previous, data) => runAction(() => setTaskCompleted(previous, data), { error: "We could not confirm this change. Check your connection and try again." }), {});
 
   return <li className={`task-row${task.completed ? " is-complete" : ""}`}>
     <div className="task-main">
@@ -82,7 +88,7 @@ function EditTaskForm({ task, onCancel, onSaved }: {
   const inputId = useId();
   const [title, setTitle] = useState(task.title);
   const [state, action, pending] = useActionState<TaskActionState, FormData>(async (previous, data) => {
-    const result = await renameTask(previous, data);
+    const result = await runAction(() => renameTask(previous, data), UNCONFIRMED_SAVE);
     if (!result.error) onSaved();
     return result;
   }, {});

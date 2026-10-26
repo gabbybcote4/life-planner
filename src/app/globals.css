@@ -287,3 +287,6 @@ h2 { font-family: Georgia, "Times New Roman", serif; font-size: 1.7rem; line-hei
 .ui-button:disabled { cursor: not-allowed; }
 .ui-button[aria-busy="true"] { cursor: wait; }
 
+/* Keyboard shortcut past the repeated planner navigation. */
+.skip-link { position: fixed; top: 1rem; left: 1rem; z-index: 1000; padding: 0.75rem 1rem; background: var(--surface); color: var(--foreground); border: 2px solid var(--focus); border-radius: 6px; transform: translateY(-200%); }
+.skip-link:focus { transform: translateY(0); }

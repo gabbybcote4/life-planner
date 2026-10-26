@@ -1,5 +1,7 @@
 "use client";
 
+import { runAction } from "@/lib/shared/client-actions";
+
 import { FormFeedback } from "@/components/ui/feedback";
 import { TextInput } from "@/components/ui/fields";
 import { Button } from "@/components/ui/button";
@@ -14,7 +16,7 @@ export function AuthForm() {
 }
 
 function EmailForm({ mode, onModeChange }: { mode: Mode; onModeChange: (mode: Mode) => void }) {
-  const [state, action, pending] = useActionState<AuthState, FormData>(authenticate, {});
+  const [state, action, pending] = useActionState<AuthState, FormData>((previous, data) => runAction(() => authenticate(previous, data), { error: "We could not reach sign-in. Check your connection and try again." }), {});
   return <form action={action} className="auth-form">
     <div className="auth-switch" aria-label="Account options">
       <Button type="button" disabled={pending} aria-pressed={mode === "signin"} onClick={() => onModeChange("signin")}>Sign in</Button>

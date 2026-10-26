@@ -35,3 +35,24 @@ this refactor does not change schema, grants, or policies.
 These boxes are a checklist, not a claim that every browser check has run.
 Automated context tests cover the helper's handling of mocked verified results;
 they do not prove real account isolation or network-failure behavior by themselves.
+
+## Save reliability audit
+
+Automated: all 33 tests passed, including rejected requests, preparation failures,
+framework control flow, and secure UUID generation. TypeScript passed. These
+simulations do not establish browser offline behavior or physical phone support.
+
+Focused manual checks for this increment:
+
+- [ ] In a note, enter a disposable draft; set browser Network to Offline and save.
+  Confirm an error appears, the draft stays, and no Saved confirmation appears.
+  Restore Online and retry; reload to confirm one saved note.
+- [ ] Repeat a failed task add and calendar add; restore the connection and retry.
+  Confirm the entered values remain and no duplicate records are created.
+- [ ] With keyboard only, use the first Tab to reveal Skip to main content, activate
+  it, then navigate the forms and dashboard controls with visible focus.
+- [ ] On a phone/narrow viewport, check calendar, notes, forms, navigation, and
+  widgets. If testing over local HTTP, create a task/note/event successfully.
+- [ ] Repeat sign-in/out and verify two real accounts remain separate.
+
+This increment changes no database schema or permission policies.

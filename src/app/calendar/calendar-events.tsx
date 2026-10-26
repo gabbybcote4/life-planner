@@ -1,5 +1,9 @@
 "use client";
 
+import { createRequestId } from "@/lib/shared/request-id";
+
+import { runAction, UNCONFIRMED_SAVE } from "@/lib/shared/client-actions";
+
 import { FormFeedback } from "@/components/ui/feedback";
 import { TextInput } from "@/components/ui/fields";
 import { Button } from "@/components/ui/button";
@@ -52,9 +56,11 @@ function EventForm({ event, selectedDate, onSaved, onCancel }: {
   const [date, setDate] = useState(event?.event_date ?? selectedDate);
   const requestId = useRef<string | null>(null);
   const [state, action, pending] = useActionState<CalendarActionState, FormData>(async (previous, data) => {
-    requestId.current ??= event?.id ?? crypto.randomUUID();
-    data.set("id", requestId.current);
-    const result = await saveCalendarEvent(previous, data);
+    const result = await runAction(async () => {
+      requestId.current ??= event?.id ?? createRequestId();
+      data.set("id", requestId.current);
+      return saveCalendarEvent(previous, data);
+    }, UNCONFIRMED_SAVE);
     if (!result.error) {
       if (!event) { setTitle(""); requestId.current = null; }
       onSaved(result);
