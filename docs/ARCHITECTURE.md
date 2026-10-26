@@ -104,3 +104,15 @@ Use createRequestId from src/lib/shared/request-id.ts for new records. It uses
 native randomUUID or secure random bytes when local HTTP lacks randomUUID;
 it never falls back to Math.random. Tests simulate both environments.
 PlannerPage supplies a keyboard-visible skip link to the main content.
+
+## Spaces and text pages
+
+`src/app/components/plain-text-editor.tsx` supplies the shared controlled text
+editor for Notes and Spaces. It accepts a server save action, a navigation
+prefix, and an optional space identifier. Feature actions retain authorization,
+parent verification, owner filters, validation, retry confirmation, and revisions.
+Notes keeps a thin wrapper with its own action and destination.
+
+`src/app/spaces/space-form.tsx` handles create/rename drafts. The spaces page loads
+only the selected owner's space and selected page, with separate paginated lists.
+Do not replace the database's composite owner/parent foreign key with UI filtering.

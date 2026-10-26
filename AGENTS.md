@@ -119,3 +119,12 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
   writes automatically or report an unconfirmed response as saved.
 - Use createRequestId for new records, including local HTTP phone testing.
 - Run npm run test:client when changing action boundaries or request ids.
+
+### Spaces checks
+
+- Run npm run test:spaces plus existing Notes/shared regressions when changing the
+  shared PlainTextEditor. Keep notes and space-page save actions separate.
+- Apply the spaces migration and run supabase/tests/spaces_rls.sql; do not claim
+  live privacy verification until its final PASS result is confirmed.
+- Preserve same-owner parent constraints, immutable ownership/parent fields,
+  revision checks, explicit saves, and stable IDs for create retries.

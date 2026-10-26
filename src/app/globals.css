@@ -290,3 +290,9 @@ h2 { font-family: Georgia, "Times New Roman", serif; font-size: 1.7rem; line-hei
 /* Keyboard shortcut past the repeated planner navigation. */
 .skip-link { position: fixed; top: 1rem; left: 1rem; z-index: 1000; padding: 0.75rem 1rem; background: var(--surface); color: var(--foreground); border: 2px solid var(--focus); border-radius: 6px; transform: translateY(-200%); }
 .skip-link:focus { transform: translateY(0); }
+.spaces-library { margin: 1.5rem 0; padding: 1rem; border: 1px solid var(--border); border-radius: 10px; min-width: 0; }
+.space-links { display: flex; flex-wrap: wrap; gap: .75rem; padding: 0; list-style: none; }
+.space-links a { display: block; padding: .5rem; overflow-wrap: anywhere; }
+.space-links a[aria-current="page"] { font-weight: 700; text-decoration-thickness: 3px; }
+.space-form { display: grid; gap: .65rem; max-width: 34rem; min-width: 0; }
+.space-form button { justify-self: start; }
