@@ -186,3 +186,30 @@ choices explicitly rather than implementing assumptions as product policy.
 - Offline actions, sync conflicts, and cache privacy.
 - Template import formats and distribution/sharing model.
 - Detailed visual system and supported themes.
+
+## Confirmed visual direction — 2026-10-27
+
+The owner selected the Playful Retro dashboard concept: a late-1990s/early-2000s
+computer-inspired workspace. Use a coherent desktop shell, icon sidebar,
+window-style widget panels, colored title bars, pastel accents, illustrated space
+shortcuts, readable outlines, and restrained pixel/stationery details. Preserve
+clear hierarchy and useful density rather than turning the app into a decorative
+poster. Existing data and working controls remain real and usable.
+
+The retro shell is the shared foundation, not a single fixed palette. The owner
+wants many light and dark themes over time. Initial Sage Desktop, Pastel Desktop,
+and Midnight Desktop palettes are starting points; they do not define the eventual
+catalog limit. Full customization remains product direction: user-controlled
+spaces/pages/dashboard arrangements, colors, backgrounds, covers, icons, and
+widget styling through separately scoped increments. Custom palette validation,
+image uploads/storage, per-widget styling persistence, and selection interfaces
+still require implementation; do not present these as already available.
+
+Start by updating shared presentation components and semantic theme tokens, then
+review live dashboard visuals before committing. Keep saved widget arrangements
+and account theme choices. The first retro pass adds fixed space/calendar/map
+previews alongside the existing customizable task widgets; integrating every
+preview into saved layout editing is follow-up scope. Do not substitute demo data
+for live tasks/events/links or render decorative window dots as fake controls.
+The connection map must derive edges from saved private links and disclose any
+preview bounds. A focus timer shown in a concept is not yet a shipped feature.

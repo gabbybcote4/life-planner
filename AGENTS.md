@@ -173,3 +173,15 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
   shared TASK_SELECT projection so assignments never appear falsely unassigned.
 - Never delete/copy a task when removing its space. New-task retry confirmation
   must match both saved title and requested space.
+
+### Desktop design checks
+
+- Preserve the confirmed retro desktop visual direction in PRODUCT_BLUEPRINT.md.
+  Reuse DesktopWindow, DeskIcon, SpaceArtwork, semantic palette/accent tokens, and
+  the existing shared form controls; do not create disconnected page-specific skins.
+- More light/dark themes and full customization remain planned. Do not hard-code
+  new theme IDs or imply custom colors/backgrounds/covers are already persisted.
+- Run npm run test:desktop, theme contrast checks, and existing regression suites.
+  Check sidebar/keyboard/focus, long content, narrow screens, and every palette.
+- Keep decorative window chrome non-interactive. Dashboard preview data must stay
+  account-scoped, real, bounded with clear labels, and separate from saved widgets.

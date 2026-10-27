@@ -21,7 +21,7 @@ test("theme values accept only the available names, never inherited object keys"
 for (const [name, theme] of Object.entries(THEMES)) {
   test(`${name}: readable main text, muted text, actions, errors, and focus controls`, () => {
     const c = theme.colors;
-    for (const bg of [c.surface, c.input, c.panel, c.tint, c.selected]) {
+    for (const bg of [c.surface, c.input, c.panel, c.tint, c.selected, c["accent-pink"], c["accent-mint"], c["accent-blue"], c["accent-yellow"], c["accent-lilac"]]) {
       assert.ok(contrast(c.foreground, bg) >= 4.5, `${name} foreground contrast`);
       assert.ok(contrast(c.muted, bg) >= 4.5, `${name} muted contrast: ${contrast(c.muted, bg)}`);
     }

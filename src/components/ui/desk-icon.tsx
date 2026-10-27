@@ -1,0 +1,4 @@
+export function DeskIcon({name}:{name:string}) {
+ const paths:Record<string,string>={dashboard:"M3 11 12 3l9 8M5 10v11h5v-7h4v7h5V10",tasks:"M5 3h14v18H5zM8 8l2 2 5-5M8 15h8",calendar:"M3 6h18v15H3zM7 3v6m10-6v6M3 11h18",notes:"M5 3h10l4 4v14H5zM14 3v6h5M8 13h8m-8 4h6",spaces:"m3 8 9-5 9 5-9 5-9-5Zm0 5 9 5 9-5M3 18l9 5 9-5",search:"M10 3a7 7 0 1 0 0 14 7 7 0 0 0 0-14m5 12 6 6",settings:"M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8M12 2v3m0 14v3M2 12h3m14 0h3M5 5l2 2m10 10 2 2M5 19l2-2M17 7l2-2",save:"M3 3h16l2 2v16H3zM7 3v6h10V3M7 21v-8h10v8"};
+ return <svg viewBox="0 0 24 26" width="22" height="24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={paths[name]??paths.spaces}/></svg>;
+}

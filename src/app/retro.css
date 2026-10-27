@@ -1,0 +1,116 @@
+/* Shared retro desktop skin. Palette and accent colors come from themeVariables. */
+/* Local system fonts: classic desktop UI, rounded 2000s headings, console labels. */
+.theme-root {
+ --font-desktop-ui: Tahoma, Verdana, Arial, sans-serif;
+ --font-desktop-display: "Trebuchet MS", Tahoma, Verdana, sans-serif;
+ --font-desktop-mono: "Lucida Console", "Courier New", monospace;
+ font-family: var(--font-desktop-ui);
+}
+.theme-root h1, .theme-root h2, .theme-root h3 { font-family:var(--font-desktop-display); font-weight:700; }
+.theme-root .empty-title, .theme-root .overview-number, .theme-root .progress-value { font-family:var(--font-desktop-display); }
+.theme-root .brand { font-family:var(--font-desktop-display); }
+
+.desktop-app { min-height:100svh; display:grid; grid-template-columns:220px minmax(0,1fr); background:var(--background); color:var(--foreground); }
+.desktop-sidebar { position:sticky; top:0; height:100svh; display:flex; flex-direction:column; padding:1.8rem 1rem; border-right:2px solid var(--foreground); background:linear-gradient(160deg,var(--surface),var(--accent-lilac)); overflow-y:auto; }
+.desktop-brand { display:flex; align-items:center; gap:.9rem; padding:.4rem .6rem 1.8rem; font-family:var(--font-desktop-display); font-size:1.65rem; font-weight:700; line-height:1.1; }
+.desktop-brand svg { width:44px; height:48px; color:var(--primary); filter:drop-shadow(3px 3px 0 var(--accent-pink)); }
+.desktop-sidebar-label { font: .68rem var(--font-desktop-mono); letter-spacing:.12em; color:var(--muted); padding:.75rem; }
+.desktop-sidebar nav { display:grid; gap:.35rem; }
+.desktop-sidebar nav a { display:flex; align-items:center; gap:.85rem; min-height:46px; padding:.7rem .8rem; border:1px solid transparent; border-radius:7px; font-size:.95rem; }
+.desktop-sidebar nav a:hover { background:var(--tint); }
+.desktop-sidebar nav a[aria-current="page"] { background:var(--accent-lilac); border-color:var(--input-border); box-shadow:2px 2px 0 var(--shadow); font-weight:700; }
+.desktop-sidebar-bottom { margin-top:auto; padding:2rem .75rem .5rem; border-top:1px solid var(--border); font:.75rem/1.8 var(--font-desktop-mono); color:var(--muted); }
+.desktop-sidebar-bottom > span { font-size:1.6rem; color:var(--primary); }
+.desktop-sidebar-bottom a { display:inline-block; margin-top:.7rem; text-decoration:underline; min-height:44px; }
+.desktop-main.planner-shell { display:block; min-width:0; padding:2rem clamp(1rem,2.5vw,3rem); background-image:radial-gradient(var(--pattern) 1.2px,transparent 1.2px); background-size:17px 17px; }
+.desktop-main > .paper-card { max-width:1550px; padding:0; margin:auto; border:0; box-shadow:none; border-radius:0; background:transparent; }
+.desktop-main .planner-intro { align-items:flex-start; gap:1.3rem; margin-bottom:1.4rem; }
+.desktop-main h1 { font-family:var(--font-desktop-display); font-weight:700; font-size:clamp(2rem,3.2vw,3.6rem); letter-spacing:-.035em; }
+.desktop-main .planner-intro .eyebrow { font-family:var(--font-desktop-mono); color:var(--primary); }
+.desktop-main .planner-intro .intro { margin:.75rem 0 1.25rem; font-size:.92rem; }
+.desktop-main .planner-account { font-size:.7rem; }
+.desktop-main .planner-account .secondary-button { padding:.5rem .8rem; min-height:38px; }
+.desktop-main .primary-button,.desktop-main .secondary-button { border:1.5px solid var(--foreground); border-radius:6px; box-shadow:2px 2px 0 var(--shadow); }
+.desktop-main .primary-button { background:var(--primary); color:var(--on-primary); }
+.desktop-main .secondary-button { background:var(--accent-lilac); margin-top:0; color:var(--foreground); }
+.desktop-main .form-control { border:1.5px solid var(--input-border); border-radius:6px; }
+.desktop-main .task-checkbox { width:34px; height:34px; border:1.5px solid var(--input-border); border-radius:5px; margin-top:.35rem; }
+.desktop-main .task-checkbox[aria-checked="true"] { background:var(--primary); color:var(--on-primary); }
+.desktop-main .task-main { gap:.6rem; }
+.desktop-main .task-title { font-size:.88rem; }
+.desktop-main .task-space-assignment { font-size:.8rem; padding:.4rem .6rem; margin:.25rem 0; }
+.desktop-main .task-space-assignment summary { min-height:30px; display:list-item; align-content:center; }
+.desktop-main .space-task-panel,.desktop-main .spaces-library,.desktop-main .notes-library,.desktop-main .note-editor,.desktop-main .calendar-agenda,.desktop-main .theme-option { border:1.5px solid var(--input-border); box-shadow:3px 3px 0 var(--shadow); background:var(--surface); border-radius:9px; }
+.desktop-dashboard-columns { display:grid; grid-template-columns:minmax(0,1fr) 285px; gap:1.2rem; align-items:start; }
+.desktop-dashboard-center,.desktop-dashboard-rail { min-width:0; display:grid; gap:1.2rem; }
+.desktop-window,.desktop-main .dashboard-widget { min-width:0; border:1.5px solid var(--foreground); border-radius:10px; overflow:hidden; background:var(--surface); box-shadow:3px 3px 0 var(--shadow); }
+.window-titlebar { display:flex; align-items:center; gap:.7rem; min-height:35px; padding:.45rem .8rem; border-bottom:1px solid var(--foreground); background:linear-gradient(90deg,var(--accent-lilac),var(--surface)); font:.76rem var(--font-desktop-mono); }
+.window-titlebar h2 { font:inherit; font-weight:700; margin:0; }
+.window-titlebar > a { margin-left:auto; font:.72rem var(--font-desktop-ui); text-decoration:underline; padding:.3rem 0; }
+.window-content { padding:1rem; }
+.window-dots { display:inline-flex; align-items:center; gap:5px; flex-shrink:0; }
+.window-dots i { width:9px; height:9px; border:1px solid var(--foreground); border-radius:50%; background:var(--accent-pink); }
+.window-dots i:nth-child(2) { background:var(--accent-yellow); }
+.window-dots i:nth-child(3) { background:var(--accent-mint); }
+.desktop-space-cards { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:.8rem; }
+.desktop-space-card { display:block; border:1px solid var(--input-border); border-radius:8px; overflow:hidden; background:var(--accent-pink); min-width:0; transition:transform .15s; }
+.desktop-space-card:nth-child(2) { background:var(--accent-blue); }
+.desktop-space-card:nth-child(3) { background:var(--accent-mint); }
+.desktop-space-card:hover { transform:translateY(-3px); }
+.space-artwork { width:100%; height:auto; border-bottom:1px solid var(--input-border); }
+.desktop-space-card > div { padding:.7rem; }
+.desktop-space-card h3 { font:bold 1.1rem var(--font-desktop-display); overflow-wrap:anywhere; }
+.desktop-space-card p { margin-top:.35rem; font-size:.72rem; }
+.desktop-main .dashboard-customize-heading { margin:0 0 .6rem; }
+.desktop-main .dashboard-customize-heading .secondary-button { font-size:.8rem; min-height:40px; padding:.5rem .8rem; }
+.desktop-main .layout-announcement:empty { display:none; }
+.desktop-main .custom-widget-grid { gap:1rem; }
+.desktop-main .dashboard-widget { padding:0; }
+.desktop-main .dashboard-widget > section { padding:1rem; }
+.desktop-main .dashboard-widget h2 { font-size:1.35rem; }
+.desktop-main .dashboard-widget .eyebrow { font-size:.65rem; }
+.desktop-main .widget-controls { padding:.6rem; background:var(--panel); }
+.widget-type-capture .widget-titlebar { background:linear-gradient(90deg,var(--accent-pink),var(--surface)); }
+.widget-type-progress .widget-titlebar { background:linear-gradient(90deg,var(--accent-mint),var(--surface)); }
+.widget-type-recent .widget-titlebar { background:linear-gradient(90deg,var(--accent-yellow),var(--surface)); }
+.desktop-main .overview-card { padding:.75rem; border:0; background:var(--accent-blue); }
+.desktop-main .overview-open { background:var(--accent-pink); }
+.desktop-main .overview-completed { background:var(--accent-mint); }
+.desktop-main .overview-number { font-size:2.3rem; }
+.desktop-main .overview-note { font-size:.72rem; }
+.desktop-main .dashboard-section-heading { flex-wrap:wrap; margin-bottom:.8rem; }
+.desktop-main .dashboard-section-heading .muted { font-size:.72rem; }
+.desktop-main .widget-half .overview-cards { grid-template-columns:1fr; }
+.desktop-main .widget-half .overview-card dd { display:flex; align-items:baseline; gap:.5rem; }
+.task-donut { --progress:0%; width:160px; aspect-ratio:1; margin:1.3rem auto; border-radius:50%; padding:15px; background:conic-gradient(var(--primary) var(--progress),var(--accent-mint) 0); }
+.task-donut > div { height:100%; border-radius:50%; background:var(--surface); display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; }
+.task-donut strong { font:bold 1.8rem var(--font-desktop-display); }
+.task-donut span { font-size:.72rem; margin-top:.3rem; }
+.desktop-main .dashboard-progress-widget progress { height:5px; }
+.desktop-mini-calendar { padding:.3rem 0 1rem; }
+.desktop-mini-calendar h3 { font:bold 1.3rem var(--font-desktop-display); margin:.3rem 0 1rem; }
+.mini-weekdays,.mini-month-days { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:2px; text-align:center; font-size:.73rem; }
+.mini-weekdays { color:var(--muted); margin-bottom:.6rem; }
+.mini-month-days a { display:grid; place-items:center; min-height:30px; border-radius:6px; }
+.mini-month-days a:hover { background:var(--accent-mint); }
+.mini-month-days a[aria-current="date"] { background:var(--accent-pink); outline:1px solid var(--input-border); font-weight:700; }
+.upcoming-event-list { list-style:none; padding:0; }
+.upcoming-event-list li { padding:1rem 0; border-bottom:1px solid var(--border); display:grid; gap:.35rem; overflow-wrap:anywhere; }
+.upcoming-event-list time { font:.7rem var(--font-desktop-mono); color:var(--muted); }
+.upcoming-event-list a { font-size:.88rem; text-decoration:underline; text-underline-offset:3px; }
+.desktop-shortcuts { padding:1rem; border:1.5px dashed var(--input-border); border-radius:9px; background:var(--accent-yellow); }
+.desktop-shortcuts a { display:block; min-height:42px; padding:.65rem 0; font-size:.85rem; }
+.desktop-graph { width:100%; height:auto; background-image:radial-gradient(var(--pattern) 1px,transparent 1px); background-size:16px 16px; }
+.desktop-graph a:hover circle { stroke:var(--foreground); stroke-width:3; }
+.graph-open-links { display:flex; flex-wrap:wrap; gap:.5rem; padding:0; list-style:none; margin:.6rem 0; }
+.graph-open-links a { display:block; padding:.4rem .65rem; border:1px solid var(--input-border); border-radius:6px; background:var(--accent-lilac); font-size:.75rem; overflow-wrap:anywhere; }
+@media(min-width:1700px) { .desktop-app { grid-template-columns:240px minmax(0,1fr); } }
+@media(max-width:1200px) { .desktop-app { grid-template-columns:185px minmax(0,1fr); } .desktop-dashboard-columns { grid-template-columns:minmax(0,1fr); } .desktop-dashboard-rail { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media(max-width:800px) { .desktop-app { display:block; } .desktop-sidebar { position:relative; height:auto; padding:.7rem; border-right:0; border-bottom:2px solid var(--foreground); } .desktop-brand { padding:.2rem .4rem .8rem; font-size:1.15rem; } .desktop-brand br { display:none; } .desktop-brand svg { width:28px; height:30px; } .desktop-sidebar-label,.desktop-sidebar-bottom { display:none; } .desktop-sidebar nav { display:flex; flex-wrap:wrap; gap:.2rem; } .desktop-sidebar nav a { padding:.45rem .6rem; font-size:.78rem; gap:.4rem; min-height:44px; } .desktop-sidebar nav svg { width:17px; height:19px; } .desktop-main.planner-shell { padding:1.3rem .8rem; } .desktop-main .planner-intro { display:block; } .desktop-main .planner-account { max-width:none; text-align:left; margin:.5rem 0 1rem; } .desktop-main .planner-account .muted { font-size:.7rem; } .desktop-space-cards { grid-template-columns:repeat(3,minmax(0,1fr)); gap:.5rem; } .desktop-space-card > div { padding:.55rem; } .desktop-space-card h3 { font-size:.9rem; } }
+@media(max-width:500px) { .desktop-space-cards,.desktop-dashboard-rail { grid-template-columns:1fr; } .space-artwork { max-height:150px; } .desktop-main h1 { font-size:2.2rem; } .desktop-main .overview-cards { grid-template-columns:1fr; } }
+@media(prefers-reduced-motion:reduce) { .desktop-space-card { transition:none; } }
+
+/* Keep title bars console-like while headings use the softer desktop display face. */
+.desktop-main .window-titlebar h2 { font:inherit; font-weight:700; }
+.desktop-main .overview-number { font-weight:700; font-variant-numeric:tabular-nums; }
+.desktop-main .desktop-graph text { font-family:var(--font-desktop-ui); }

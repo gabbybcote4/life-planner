@@ -1,3 +1,4 @@
+import type {CSSProperties} from "react";
 import Link from "next/link";
 import { EmptyState } from "@/components/ui/empty-state";
 import type { Task } from "@/lib/tasks/types";
@@ -32,7 +33,7 @@ export function TaskProgressWidget({ open, completed, headingId = "progress-head
   return <section className="dashboard-progress-widget" aria-labelledby={headingId}>
     <p className="eyebrow">Every step counts</p><h2 id={headingId}>Your progress</h2>
     {total === 0 ? <p className="muted panel-intro">Your first task is a place to start. Your progress will appear here.</p> : <>
-      <p className="progress-value">{percent}<span>% complete</span></p>
+      <div className="task-donut" style={{"--progress":percent+"%"} as CSSProperties} role="img" aria-label={`${percent}% of saved tasks completed`}><div><strong>{completed} / {total}</strong><span>tasks complete</span></div></div>
       <progress value={completed} max={total} aria-label={`${completed} of ${total} saved tasks completed`} />
       <p className="muted panel-intro">{open === 0 ? "All caught up. Take a moment to enjoy it." : `${completed} of ${total} tasks completed. Keep going at your own pace.`}</p>
     </>}

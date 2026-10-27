@@ -101,3 +101,15 @@ This increment changes no database schema or permission policies.
 - [ ] Lost-response retries do not duplicate tasks or confirm a different parent.
 - [ ] SQL owner constraints and task privacy regressions return PASS.
 - [ ] Two accounts, keyboard, phone layouts, themes, search, and page drafts work.
+
+## Retro desktop review
+
+- [ ] Pastel Desktop matches the approved window-card direction; Sage/Midnight work.
+- [ ] Sidebar navigation, skip link, focus, sign-in/out, and narrow screens work.
+- [ ] Saved widget order/width/remove/add/save/cancel behavior remains unchanged.
+- [ ] Space cover cards open actual owned spaces; preview limits are visible.
+- [ ] Calendar day/event links open actual date-only records; UTC context is clear.
+- [ ] Map lines match saved links; node links and the full-title list open the items.
+- [ ] Empty/failed spaces/events/links show honest states without demo data.
+- [ ] Tasks, Notes, Spaces, templates, assignments, search, and themes still work.
+- [ ] Two accounts keep data, preferences, and layout isolated.
