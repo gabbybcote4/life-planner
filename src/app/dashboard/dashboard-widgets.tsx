@@ -2,6 +2,7 @@
 
 import { runAction, UNCONFIRMED_SAVE } from "@/lib/shared/client-actions";
 
+import {WindowDots} from "@/components/ui/desktop-window";
 import { EmptyState } from "@/components/ui/empty-state";
 import { FormFeedback } from "@/components/ui/feedback";
 import { Button } from "@/components/ui/button";
@@ -63,7 +64,8 @@ export function DashboardWidgets({ savedLayout, savedRevision, canCustomize, slo
     <p className="layout-announcement" role="status" aria-live="polite">{pending ? "Saving your layout..." : announcement}</p>
     {draft.length === 0 && <EmptyState title="A little breathing room.">Use Customize dashboard to add widgets. Your saved tasks are still on the Tasks page.</EmptyState>}
     <div className="custom-widget-grid">{draft.map((widget, index) => <article key={widget.id}
-      className={`dashboard-widget widget-${widget.width}`} aria-label={WIDGETS[widget.id].label}>
+      className={`dashboard-widget widget-${widget.width} widget-type-${widget.id}`} aria-label={WIDGETS[widget.id].label}>
+      <div className="window-titlebar widget-titlebar"><WindowDots/><span>{WIDGETS[widget.id].label}</span></div>
       {editing && <div className="widget-controls">
         <span className="widget-control-title">{WIDGETS[widget.id].label}</span>
         <Button type="button" disabled={pending || !canCustomize || index === 0} aria-label={`Move ${WIDGETS[widget.id].label} up`}

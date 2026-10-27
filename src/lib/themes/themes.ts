@@ -1,4 +1,5 @@
 const sage = {
+  "accent-pink":"#f5dedc", "accent-mint":"#dcebdc", "accent-blue":"#dce7f4", "accent-yellow":"#f9edca", "accent-lilac":"#e7def1",
   background: "#f4efe5", foreground: "#343b35", surface: "#fffcf7", input: "#fffefa",
   panel: "#f5f2e8", tint: "#edf0e4", selected: "#dfe8d2", muted: "#596057",
   primary: "#42583e", "on-primary": "#fffdf7", "primary-hover": "#32442e",
@@ -7,14 +8,16 @@ const sage = {
   success: "#344d31", "success-surface": "#edf1e5", shadow: "#343b351f", pattern: "#64745b18",
 };
 const rose: typeof sage = {
-  background: "#f5eaec", foreground: "#48333b", surface: "#fff9f8", input: "#fffcfb",
+  "accent-pink":"#fbddec", "accent-mint":"#d9f1e6", "accent-blue":"#dce8ff", "accent-yellow":"#fff0ce", "accent-lilac":"#e6dcfc",
+  background: "#f2edff", foreground: "#48333b", surface: "#fff9f5", input: "#fffcfb",
   panel: "#f5ecee", tint: "#f2e4e8", selected: "#ead0da", muted: "#70535e",
   primary: "#7e4b60", "on-primary": "#fff9f8", "primary-hover": "#65394c",
-  focus: "#98637a", border: "#d5bec7", "input-border": "#a17c8b",
+  focus: "#98637a", border: "#756580", "input-border": "#a17c8b",
   error: "#8d302b", "error-surface": "#fce9e6", "error-border": "#c88c83",
   success: "#405638", "success-surface": "#eaf0e4", shadow: "#48333b1f", pattern: "#8b596d18",
 };
 const midnight: typeof sage = {
+  "accent-pink":"#44303d", "accent-mint":"#243e36", "accent-blue":"#29384d", "accent-yellow":"#413a27", "accent-lilac":"#383049",
   background: "#171e24", foreground: "#eeeae0", surface: "#222c33", input: "#1b252c",
   panel: "#29343b", tint: "#2d3c3c", selected: "#3c5044", muted: "#c2c7bd",
   primary: "#b4c6a0", "on-primary": "#182219", "primary-hover": "#ceddbc",
@@ -24,9 +27,9 @@ const midnight: typeof sage = {
 };
 
 export const THEMES = {
-  sage: { label: "Sage", description: "Warm paper, soft greens, and a little breathing room.", colors: sage },
-  rose: { label: "Rose", description: "Soft rose, warm ink, and a gentle touch of colour.", colors: rose },
-  midnight: { label: "Midnight", description: "Deep ink, muted greens, and a calmer evening glow.", colors: midnight },
+  sage: { label: "Sage Desktop", description: "A warm retro desktop with sage, peach, and paper tones.", colors: sage },
+  rose: { label: "Pastel Desktop", description: "Lavender, pink, and mint windows for your own little desktop.", colors: rose },
+  midnight: { label: "Midnight Desktop", description: "Dark window panels with muted violet, blue, and mint accents.", colors: midnight },
 };
 export type Theme = keyof typeof THEMES;
 export type ThemeState = { error?: string; message?: string };

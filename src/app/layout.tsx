@@ -3,6 +3,7 @@ import { Suspense, type CSSProperties } from "react";
 import { DEFAULT_THEME, themeVariables } from "@/lib/themes/themes";
 import { ThemeRoot } from "./components/theme-root";
 import "./globals.css";
+import "./retro.css";
 
 export const metadata: Metadata = {
   title: "Life Planner",

@@ -207,3 +207,32 @@ Space pages compose AddTaskForm(spaceId) and TaskList with owner/space-filtered,
 paginated reads. Existing add/edit/complete actions stay shared. Add-task retries
 compare the saved parent as well as the title. No client-only ownership assumption
 or independent copy of a task is introduced.
+
+## Retro desktop foundation
+
+The owner-selected late-90s/early-2000s visual direction is recorded in the product
+blueprint. src/app/retro.css skins the shared desktop shell and existing controls;
+window title bars use DesktopWindow/WindowDots, navigation uses DeskIcon, and
+SpaceArtwork supplies original code-native decorative covers. Semantic accent
+colors live beside existing palette tokens. Preserve saved theme keys: rose now
+labels Pastel Desktop, sage Sage Desktop, midnight Midnight Desktop. No database
+preference migration or automatic change to a user's chosen theme is introduced.
+
+Existing widget IDs/layout persistence stay unchanged. The space shortcuts,
+upcoming calendar rail, and connection-map preview are fixed shared panels in this
+first pass; making them individually add/remove/reorder/resize is follow-up work.
+Workspace data loaders read the verified account's spaces/events or the existing
+owner-scoped document RPC, without a shared cache. Preview bounds: first 3 spaces,
+next 5 all-day events, first 12 documents sorted by title/kind/id. The graph draws
+only saved links between displayed documents, provides a full-title accessible
+list, and never invents placeholder nodes/edges. Calendar context is explicitly UTC
+and its live clock is read only after connection().
+
+No timer, habit tracker, external music/weather, new theme IDs, uploaded covers,
+or per-widget custom color persistence is introduced in this foundation. Add future
+palettes through tokens and extend contrast checks across every accent surface.
+
+Typography uses local font-role tokens: Tahoma/Verdana for classic desktop UI,
+Trebuchet MS for softer 2000s headings, and Lucida Console/Courier New for title
+bars and small console labels. These apply across palettes without external font
+requests. Adjust roles in retro.css rather than changing each component's fonts.
