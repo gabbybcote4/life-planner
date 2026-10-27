@@ -293,3 +293,9 @@ new columns instead of resetting them. Failed/stale responses retain choices.
 DB column checks enforce built-ins even for direct requests; arbitrary image URLs
 or style payloads are not accepted. Creating a space uses database defaults; users
 personalize it afterwards. Template receipts remain independent of editable style.
+
+## Desktop backgrounds
+
+The shared themes/background module defines solid/dots/grid and subtle/medium/strong presets. ThemeRoot reads the owner�s saved preference and supplies validated data attributes; retro.css applies a shared texture to the desktop and isolated Settings preview. Content panels retain opaque theme surfaces. BackgroundPicker owns its draft, cancel/default preview, confirmed baseline, and save feedback. Theme changes never write background fields.
+
+The separate background action authenticates every call, updates only two preset columns with owner/background_revision predicates, and handles first-row creation without an owner-changing upsert. Migration 015 preserves existing rows with dots/medium defaults and uses a background-only revision trigger. A nondefault initial insert starts at revision 2 to protect concurrent first saves. RLS stays unchanged; direct clients cannot write revisions. No external assets, browser persistence, custom CSS, or uploaded wallpaper are introduced.

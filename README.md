@@ -610,3 +610,7 @@ return the original destination without resetting later appearance choices.
 Run npm test, lint, TypeScript, and build. Check preview/save/reload/sign-in,
 metadata in navigation/dashboard/header, all twelve palettes, keyboard, narrow
 screens, no-cover/default choices, failed saves, stale tabs, and two accounts.
+
+### Desktop background setup
+
+Apply supabase/migrations/20261027001500_desktop_background.sql, then run supabase/tests/desktop_background_rls.sql and the existing planner_preferences_rls.sql assertions. Settings offers solid/dots/grid with three intensity presets, isolated preview, cancel/default preview, and explicit account-scoped save. Existing desktops retain dots/medium; theme saves preserve the background. Run npm run test:background for validation, mutation, conflict, and database-preset parity checks.

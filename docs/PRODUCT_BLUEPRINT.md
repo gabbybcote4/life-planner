@@ -245,3 +245,9 @@ explicit settings save. Shared appearances distinguish the space list, dashboard
 cards, and selected header. This implements a first space-personalization layer;
 custom uploaded covers/backgrounds and user-defined artwork/colors remain future
 scope. Defaults preserve old spaces; no source tasks/pages are copied or removed.
+
+### Desktop texture increment
+
+- Solid, dotted, and grid desktop backgrounds use the current palette. Pattern intensity has subtle, medium, and strong presets.
+- Settings previews are draft-only with explicit save/cancel/default preview. Saved backgrounds follow the account; stale tabs cannot overwrite a newer background.
+- This extends preset customization; uploaded wallpapers, arbitrary colors, and broader layout styling remain future work.
