@@ -2,7 +2,7 @@
 import {runAction,UNCONFIRMED_SAVE} from "@/lib/shared/client-actions";
 import {FormFeedback} from "@/components/ui/feedback";
 import {Button} from "@/components/ui/button";
-import {WindowDots} from "@/components/ui/desktop-window";
+import {WindowTitleBar} from "@/components/ui/desktop-window";
 import type {CSSProperties} from "react";
 import {useActionState,useState} from "react";
 import {saveTheme} from "./actions";
@@ -12,7 +12,7 @@ export function ThemePicker({savedTheme}:{savedTheme:Theme}) {
  const [state,action,pending]=useActionState<ThemeState,FormData>(async(previous,data)=>{const result=await runAction(()=>saveTheme(previous,data),UNCONFIRMED_SAVE);if(!result.error)setConfirmed(choice);return result;},{});
  return <form action={action} className="theme-form" aria-busy={pending}>
  <section className="theme-live-preview" aria-label={"Preview of "+THEMES[choice].label} style={themeVariables(choice) as CSSProperties}>
- <div className="window-titlebar"><WindowDots/><strong>{THEMES[choice].label}</strong><span>{THEMES[choice].mode} palette</span></div>
+ <WindowTitleBar><strong>{THEMES[choice].label}</strong><span>{THEMES[choice].mode} palette</span></WindowTitleBar>
  <div className="theme-preview-desktop" aria-hidden="true"><div className="theme-preview-navigation">▧ My desktop<br/>✓ Tasks<br/>▤ Notes</div><div className="theme-preview-widgets"><div>✦ A little room for your day.<div className="theme-preview-line"/></div><div>✓ Small steps count.<div className="theme-preview-line"/></div><div>✧ Ideas connect.<div className="theme-preview-line"/></div></div></div>
  <p className="muted" aria-live="polite">{choice===confirmed?"Your saved theme.":"Preview only — Save theme to apply across your planner."}</p>
  </section>

@@ -1,0 +1,10 @@
+{
+  "files.exclude": {
+    "**/node_modules": true,
+    "**/.next": true,
+    "**/coverage": true,
+    "**/out": true,
+    "**/*.tsbuildinfo": true,
+    "**/next-env.d.ts": true
+  }
+}

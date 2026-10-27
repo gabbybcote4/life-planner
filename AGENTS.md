@@ -230,3 +230,19 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - Reuse the background preset parser/attributes for the saved root and isolated preview.
 - Keep backgrounds account-scoped with explicit saves, retained drafts, and revision guards; never store arbitrary CSS or external URLs.
 - Run background/theme regressions and desktop_background_rls.sql after migration 015. Theme saves must preserve the background and its revision.
+
+### Keep the project understandable
+
+- Keep README.md concise and current; put owner editing/recovery notes in docs/OWNER_GUIDE.md and implementation boundaries in docs/ARCHITECTURE.md.
+- Reuse WindowTitleBar, DesktopWindow, and fields.Select for standard chrome/controls. Keep specialized native widget-toolbar selects compact.
+- Prefer extending an existing relevant module over adding single-use pass-through wrappers. Extract shared behavior only when callers actually share the contract.
+- Remove unused imports/assets only after checking code references and framework file conventions. Preserve database migration history, privacy assertions, lockfile, and generated Next.js instructions.
+- Explorer exclusions are presentation only. Never hide source, tests, migrations, environment examples, or configuration to disguise unnecessary files.
+
+### Responsive navigation checks
+
+- Keep all routes in PLANNER_ROUTES; phone shortcuts must not orphan secondary sections.
+- Reuse MobileSection for temporary phone panels; keep children mounted and drafts intact. Desktop content must remain visible and saved widget metadata unchanged.
+- Keep position enums in JS/SQL aligned, explicit preview/save and owner/revision guards. Palette/background writes must preserve navigation.
+- Check 320/390/768/1280 CSS pixels, keyboard/More dismissal, 44px touch controls, and bottom safe area. Reset temporary browser viewport overrides.
+- Run test:navigation, full regressions, and navigation_position_rls.sql after migration 016. Do not claim live SQL or physical-device verification from mocks/emulation.

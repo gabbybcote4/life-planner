@@ -1,3 +1,5 @@
+// Widget labels/default arrangement live here. Saved ids are a database contract:
+// adding/removing ids or widths also requires a new SQL migration and privacy tests.
 export const WIDGETS = {
   spaces: {label:"Your spaces",description:"Illustrated shortcuts to your first three saved spaces."},
   calendar: {label:"Calendar & upcoming",description:"A compact month and your next five all-day events (UTC)."},

@@ -1,3 +1,5 @@
+// EDIT HERE for palette colours and labels. Keep saved theme keys unchanged.
+// Each colour role is shared across pages; run npm run test:themes after edits.
 const sage = {
   "accent-pink":"#f5dedc", "accent-mint":"#dcebdc", "accent-blue":"#dce7f4", "accent-yellow":"#f9edca", "accent-lilac":"#e7def1",
   background: "#f4efe5", foreground: "#343b35", surface: "#fffcf7", input: "#fffefa",

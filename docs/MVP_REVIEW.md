@@ -1,14 +1,14 @@
 # MVP review checklist
 
 Use the prepared review copy before committing. Save test drafts before changing
-pages. Existing database privacy assertions were verified in earlier increments;
-this refactor does not change schema, grants, or policies.
+pages. This is a checklist, not a record that checks have run. Verify applicable
+database assertions whenever schema or permissions change.
 
 ## Automated checks
 
 - [ ] `npm test`: all feature and shared-component tests pass.
 - [ ] `npm run lint` and TypeScript/build complete successfully.
-- [ ] Diff contains no environment values or migration edits.
+- [ ] Diff contains no environment values; any migration is limited to the agreed increment.
 
 ## Browser regression checks
 
@@ -38,9 +38,9 @@ they do not prove real account isolation or network-failure behavior by themselv
 
 ## Save reliability audit
 
-Automated: all 33 tests passed, including rejected requests, preparation failures,
-framework control flow, and secure UUID generation. TypeScript passed. These
-simulations do not establish browser offline behavior or physical phone support.
+Reliability tests cover rejected requests, preparation failures, framework control
+flow, and secure UUID generation. These simulations do not establish browser offline
+behavior or physical phone support. Run the current suite for up-to-date results.
 
 Focused manual checks for this increment:
 
@@ -162,3 +162,20 @@ This increment changes no database schema or permission policies.
 - Refresh and visit Tasks/Spaces; verify the saved background follows the account. Change palette and check light/dark backgrounds, focus, and readable panels.
 - Save in one tab, then attempt a different background from a stale tab: keep its draft and show conflict. Reload to reconcile.
 - Check a new account with no preferences, two-account isolation, offline errors, keyboard controls, and a narrow viewport.
+
+## Structure and reuse audit review
+
+- Confirm the app looks the same: title bars/dots in widgets and theme previews, and dropdowns in Spaces/Search/Background settings.
+- Create/edit/save a note and follow its links after removing the pass-through editor wrapper.
+- Check keyboard labels/focus, narrow layouts, a light palette and a dark palette.
+- Review Explorer: generated folders are hidden, while source/tests/SQL/config remain visible. See OWNER_GUIDE.md to reveal them.
+- No SQL migration or live permission change is part of this cleanup.
+
+## Mobile and navigation review
+
+- Apply migration 016; run existing preference tests and navigation_position_rls.sql. Confirm both final PASS results.
+- Check every screen at 320, 390, 768, and 1280 CSS pixels, including long titles.
+- Save each navigation position, reload, navigate, and sign out/in. Check a second account, stale tabs, and failed saves. Preserve palette/background.
+- At phone widths check More route/active indicators, Escape/Close/outside dismissal, hidden-menu keyboard behavior, and 44px primary touch targets.
+- Open/close dashboard and library/settings panels. Drafts survive; editing layout reveals content; desktop widths reveal everything. Saved widget order/size/accent do not change.
+- Check bottom dock never covers the final control, including iPhone safe area, physical phone keyboard, rotation, and zoom. Browser emulation is only part of verification.
