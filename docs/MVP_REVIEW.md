@@ -78,3 +78,15 @@ This increment changes no database schema or permission policies.
 - [ ] Terms are not added to the URL; account switches clear search state.
 - [ ] Signed-out/foreign access is denied, including copied task-detail URLs.
 - [ ] Keyboard controls, narrow layouts, and all themes remain usable.
+
+## Space starter review
+
+- [ ] Preview Personal, Work, and Study; each creates the displayed three pages.
+- [ ] Customize a name, create/reload, edit/rename pages, search, and insert links.
+- [ ] Existing space rename and blank-space creation still work.
+- [ ] Create a second space from the same form; it uses a fresh request identity.
+- [ ] An ambiguous failure preserves inputs; same-request retry does not duplicate
+  or overwrite pages. Different retry inputs are rejected clearly.
+- [ ] Atomic rollback and receipt/owner protections pass the database assertions.
+- [ ] Other accounts cannot see created spaces/pages/receipts or replay the request.
+- [ ] Template radios/previews work by keyboard, on phones, and in every theme.

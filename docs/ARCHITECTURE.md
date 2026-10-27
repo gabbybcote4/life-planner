@@ -167,3 +167,23 @@ or changing search semantics. Result metadata excludes full body content.
 loadSelectedTask performs an exact id plus owner query for task result links,
 independent of the normal task-list limit. It reuses TaskList and task actions,
 including existing save-error handling, rather than introducing a second editor.
+
+## Space starters
+
+SpaceForm composes native radio choices, complete page previews, shared controls,
+and the existing rename action. New spaces call createSpaceFromTemplate;
+the server validates the key/title/request ID, verifies account context, and calls
+one transactional RPC. It passes no owner or caller-provided page content.
+
+planner_space_templates is the single source of preview and copied text. The
+security-invoker create function inserts an owned space, all catalog pages, and an
+immutable receipt in one transaction. Retry confirmation uses original metadata
+so current user edits are not compared with (or replaced by) starter text.
+Receipts are scoped by RLS and composite owner/parent foreign keys. They are retry
+metadata, not authorization to bypass ownership. Direct authenticated receipt
+writes can describe only owned resources; changing/deleting receipts is denied.
+
+After confirmed success the client clears its creation ID/name for another explicit
+creation. Errors retain input and the same ID. A conflicting changed retry is
+rejected rather than silently creating another space. Catalog load errors leave
+existing spaces available; new-space creation requires the starter setup.
