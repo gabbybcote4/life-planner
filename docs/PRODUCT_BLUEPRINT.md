@@ -222,3 +222,11 @@ layouts remain unchanged until the owner explicitly adds widgets and saves.
 This completes the first retro pass's fixed-panel follow-up; custom colors,
 backgrounds, uploaded covers, free sizing, and more light/dark palettes remain
 future customization increments.
+
+### Palette library follow-up — 2026-10-27
+
+The initial retro library now includes twelve preset themes: six light and six
+dark. Users can preview a preset before explicitly saving it. This is a foundation
+for the broader theme library and full customization, not a cap on available
+palettes or implementation of user-defined colors/backgrounds/covers. Existing
+palette IDs and saved choices remain valid.

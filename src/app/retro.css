@@ -123,3 +123,20 @@
 .widget-half .desktop-space-cards { grid-template-columns:1fr; }
 .widget-half .space-artwork { max-height:150px; }
 .widget-full .desktop-mini-calendar { max-width:430px; margin:auto; }
+.theme-library-group { margin:1.4rem 0 2rem; }
+.theme-library-group > .muted { margin:.5rem 0 1rem; }
+.theme-library-group .theme-options { grid-template-columns:repeat(3,minmax(0,1fr)); }
+.theme-live-preview { margin-bottom:1.8rem; border:1.5px solid var(--foreground); border-radius:9px; background:var(--surface); color:var(--foreground); overflow:hidden; box-shadow:3px 3px 0 var(--shadow); }
+.theme-live-preview > .muted { padding:.8rem 1rem; }
+.theme-live-preview .window-titlebar > span:last-child { margin-left:auto; font-size:.7rem; }
+.theme-preview-desktop { display:grid; grid-template-columns:130px minmax(0,1fr); min-height:175px; padding:1rem; gap:1rem; background:var(--background); }
+.theme-preview-navigation { padding:1rem; background:var(--accent-lilac); border:1px solid var(--input-border); border-radius:6px; font-size:.8rem; line-height:2.3; }
+.theme-preview-widgets { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:.7rem; align-items:center; font-size:.85rem; }
+.theme-preview-widgets > div { padding:1rem; border:1px solid var(--input-border); border-radius:7px; background:var(--accent-pink); }
+.theme-preview-widgets > div:nth-child(2) { background:var(--accent-mint); }
+.theme-preview-widgets > div:nth-child(3) { background:var(--accent-blue); }
+.theme-preview-line { height:5px; border-radius:2px; background:var(--primary); margin-top:1rem; opacity:.6; width:70%; }
+.theme-accent-dots { display:flex; gap:5px; justify-content:center; padding:.5rem; }
+.theme-accent-dots i { width:15px; height:15px; border-radius:50%; border:1px solid var(--input-border); }
+@media(max-width:950px) { .theme-library-group .theme-options { grid-template-columns:repeat(2,minmax(0,1fr)); } .theme-preview-widgets { grid-template-columns:1fr; } }
+@media(max-width:500px) { .theme-library-group .theme-options { grid-template-columns:1fr; } .theme-preview-desktop { grid-template-columns:1fr; } .theme-preview-navigation { display:none; } }
