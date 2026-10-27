@@ -318,3 +318,16 @@ h2 { font-family: Georgia, "Times New Roman", serif; font-size: 1.7rem; line-hei
 .search-results { list-style: none; padding: 0; }
 .search-results li { padding: .75rem 0; border-top: 1px solid var(--border); overflow-wrap: anywhere; }
 .search-results .text-link { font-size: 1rem; }
+.space-create-form { max-width: 100%; }
+.space-create-form > .form-control { max-width: 34rem; }
+.template-choices { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: .75rem; min-width: 0; }
+.template-choices legend { padding: .5rem 0; font-weight: 600; }
+.template-choice { display: grid; gap: .5rem; padding: 1rem; border: 1px solid var(--border); border-radius: 9px; background: var(--panel); cursor: pointer; overflow-wrap: anywhere; }
+.template-choice:has(input:checked) { border: 2px solid var(--focus); background: var(--selected); }
+.template-choice input { accent-color: var(--primary); width: 1.1rem; height: 1.1rem; }
+.template-choice input:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+.template-preview { padding: 1rem; border: 1px solid var(--border); border-radius: 9px; background: var(--panel); }
+.template-preview summary { cursor: pointer; font-weight: 600; }
+.template-preview section { padding: 1rem 0; border-bottom: 1px solid var(--border); }
+.template-page-text { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.7; }
+@media(max-width:600px) { .template-choices { grid-template-columns:minmax(0,1fr); } }

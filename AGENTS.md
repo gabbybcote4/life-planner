@@ -149,3 +149,15 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
   execution grants, literal matching, bounded pagination, and failure states.
 - Do not store search terms/results across accounts or add them to URLs/history.
 - Keep exact task-result reads owner-filtered and independent of list truncation.
+
+### Template checks
+
+- Run npm run test:templates and Spaces/Notes regressions. Apply the starter
+  migration and run supabase/tests/space_templates_rls.sql before claiming live
+  atomicity, retry safety, or isolation.
+- Keep starter content in the database catalog, with preview/copy from the same
+  source. Page content must obey existing title/body limits and remain plain text.
+- Keep creation transactional and security-invoker; preserve RLS/owner-parent
+  constraints. Never accept caller ownership or arbitrary template page payloads.
+- Retain request IDs on unconfirmed results and clear them only after confirmation.
+  Retried creation must never overwrite later user edits or rename the space.

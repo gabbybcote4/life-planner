@@ -4,6 +4,7 @@ import { requireAccount } from "@/lib/auth/account";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { isRecordId } from "@/lib/shared/validation";
 import { parseNotesPage, type Note } from "@/lib/notes/types";
+import { type SpaceTemplate } from "@/lib/templates/types";
 import { type Space } from "@/lib/spaces/types";
 import { PlannerPage, PlannerHeading, SetupNotice, LoadError } from "@/app/components/planner-page";
 import { TextDocumentEditor } from "@/app/components/text-document-editor";
@@ -14,6 +15,9 @@ const SIZE=20;
 async function SpacesContent({searchParams}:{searchParams:Search}) {
  if(!isSupabaseConfigured()) return <SetupNotice/>;
  const {supabase,userId,email}=await requireAccount();
+ let templates:SpaceTemplate[]=[];let templatesError:string|undefined;
+ try {const catalog=await supabase.rpc("planner_space_templates");if(catalog.error)throw new Error("catalog");templates=catalog.data??[];}
+ catch {templatesError="Starters could not be loaded. Apply the template setup if needed, then reopen Spaces. Existing spaces remain available.";}
  const params=await searchParams, spacesPage=parseNotesPage(params.spacesPage), pagesPage=parseNotesPage(params.pagesPage);
  const list=await supabase.from("spaces").select("id,title,revision",{count:"exact"}).eq("user_id",userId).order("created_at").order("id").range((spacesPage-1)*SIZE,spacesPage*SIZE-1);
  const requested=params.space ?? list.data?.[0]?.id;
@@ -39,7 +43,7 @@ async function SpacesContent({searchParams}:{searchParams:Search}) {
  <ul className="space-links">{list.data?.map(item=><li key={item.id}><Link href={'/spaces?space='+item.id+'&spacesPage='+spacesPage} aria-current={space?.id===item.id?'page':undefined}>{item.title}</Link></li>)}</ul>
  {!list.data?.length && <p className="muted">Create your first space below.</p>}
  <nav className="notes-pagination" aria-label="Space list pages">{spacesPage>1&&<Link href={'/spaces?spacesPage='+(spacesPage-1)}>Previous spaces</Link>}{(list.count??0)>spacesPage*SIZE&&spacesPage<9999&&<Link href={'/spaces?spacesPage='+(spacesPage+1)}>Next spaces</Link>}</nav>
- <SpaceForm key={userId}/></section>
+ <SpaceForm key={userId} templates={templates} templatesError={templatesError}/></section>
  {unavailable ? <LoadError title="This space is unavailable." description="Choose a space from your list." action="/spaces"/> : space ? <>
  <section className="spaces-library"><SpaceForm key={userId+space.id} space={space}/></section>
  {pages?.error ? <LoadError title="Pages could not be loaded." description="Try again; saved pages have not changed." action={base}/> : <div className="notes-layout">

@@ -432,3 +432,42 @@ categories, body-only matches, dates, same-title records, pagination, no matches
 failed requests, signed-out access, two accounts, keyboard, phone, and all themes.
 Search terms and results remain in component memory only; leaving/reloading may
 require searching again.
+
+## Space starters
+
+Spaces offers Blank, Personal, Work, and Study. Choose a starter, preview all its
+page text, name the space, and confirm creation. Each named starter creates three
+ordinary private pages that can be renamed, edited, searched, and linked normally.
+Blank uses the same confirmed creation path and creates no starter pages.
+
+Apply `supabase/migrations/20261027000900_space_templates.sql` once after Spaces,
+then run `supabase/tests/space_templates_rls.sql` and verify the final PASS row.
+It adds the database-backed static catalog, a protected creation-receipt table,
+a parent/owner uniqueness constraint, and an authenticated security-invoker create
+function. Existing table grants and ownership policies are preserved.
+
+The preview and copied text both come from planner_space_templates, avoiding a
+second catalog in app code. Template space/pages/receipt are created in one
+transaction. A repeated request ID plus the same original title/template returns
+the created destination without re-copying pages or overwriting edits. Changed
+retry inputs or a preexisting unrelated space are rejected. Keep the original
+name/starter after an unconfirmed response and check your spaces before making a
+new request. There is no automatic retry. After confirmed creation the form clears
+its request ID and name so a later creation starts a separate space.
+
+Creation receipts retain the original name, starter key, and first page identity
+for retry confirmation, not a snapshot of editable page text. Receipt reads/inserts
+are owner-protected; updates/deletes are not granted. Composite foreign keys keep
+the referenced space/page in the same account and parent. These receipts do not
+establish a general content history or recovery feature.
+
+Run npm run test:templates plus regressions, lint, TypeScript, and build. The SQL
+assertions test real atomic rollback with a temporary failure trigger, idempotent
+retries after edits/rename, ownership, and anonymous denial; all fixtures roll
+back. Unit tests validate the actual catalog content and mocked action boundaries,
+not live database atomicity. Check template previews, creation, reload, edits,
+blank spaces, repeat creation, narrow layouts, keyboard, themes, and two accounts.
+
+This increment does not add importing/sharing, user-authored templates, copying
+existing personal data, tasks/events from templates, or applying a template over
+an existing space.
