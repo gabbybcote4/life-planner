@@ -3,7 +3,7 @@ import {getAccountContext} from "@/lib/auth/account";
 import {SpaceCards,ConnectionMap,UpcomingEvents,type GraphDocument} from "./workspace-previews";
 export async function DashboardSpaces(){
  const account=await getAccountContext();if(!account)return null;
- const {data,error}=await account.supabase.from("spaces").select("id,title").eq("user_id",account.userId).order("created_at").order("id").limit(4);
+ const {data,error}=await account.supabase.from("spaces").select("id,title,icon,cover,accent").eq("user_id",account.userId).order("created_at").order("id").limit(4);
  return <SpaceCards embedded spaces={(data??[]).slice(0,3)} more={(data?.length??0)>3} error={Boolean(error)}/>;
 }
 export async function DashboardConnections(){

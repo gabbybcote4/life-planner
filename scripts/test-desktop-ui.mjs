@@ -6,12 +6,14 @@ import ts from 'typescript';
 import React from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
 import * as links from '../src/lib/knowledge/links.ts';
+import * as appearance from '../src/lib/spaces/appearance.ts';
 import * as dates from '../src/lib/calendar/dates.ts';
 const require=createRequire(import.meta.url);
 function load(path,deps={}){const code=ts.transpileModule(fs.readFileSync(new URL(path,import.meta.url),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX,esModuleInterop:true}}).outputText;const loaded={exports:{}};new Function('require','exports',code)(name=>name in deps?deps[name]:require(name),loaded.exports);return loaded.exports;}
 const windows=load('../src/components/ui/desktop-window.tsx');
 const art=load('../src/components/ui/space-artwork.tsx');
-const previews=load('../src/app/dashboard/workspace-previews.tsx',{'@/components/ui/desktop-window':windows,'@/components/ui/space-artwork':art,'@/lib/knowledge/links':links,'@/lib/calendar/dates':dates});
+const visual=load('../src/components/ui/space-visual.tsx',{'./space-artwork':art,'@/lib/spaces/appearance':appearance});
+const previews=load('../src/app/dashboard/workspace-previews.tsx',{'@/components/ui/desktop-window':windows,'@/components/ui/space-visual':visual,'@/lib/knowledge/links':links,'@/lib/calendar/dates':dates});
 const render=(component,props)=>renderToStaticMarkup(React.createElement(component,props));
 const id='ae66172a-f871-43b3-a610-a838d8b7c001',other='ae66172a-f871-43b3-a610-a838d8b7c002';
 test('window chrome is decorative and titles are accessible escaped text',()=>{const html=render(windows.DesktopWindow,{title:'<script>Title</script>',children:'Content'});assert.match(html,/aria-label="&lt;script&gt;/);assert.doesNotMatch(html,/<script>/);assert.equal((html.match(/<i/g)||[]).length,3);});

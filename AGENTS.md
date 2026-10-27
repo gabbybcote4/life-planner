@@ -214,3 +214,13 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - Run layout/contrast regressions and the widget accent SQL privacy/revision tests.
 - Apply accent roles through shared theme tokens and validated data attributes;
   keep preview-only changes separate from confirmed saves.
+
+### Space appearance checks
+
+- Keep icon/cover/accent allowlists aligned in shared types and database checks.
+- Reuse SpaceVisual/SpaceMark for preview/cards/header/navigation; never interpolate
+  arbitrary URLs, SVG markup, or CSS. Automatic cover must be stable for identity.
+- Save metadata with the space's existing owner/revision guard and retain failed
+  drafts. Older name-only submissions must not clear appearance columns.
+- Run space-appearance, Spaces, desktop, and theme regressions plus live SQL privacy
+  tests, including preservation of appearance across template creation retries.

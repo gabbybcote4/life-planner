@@ -581,3 +581,32 @@ Run npm test, lint, TypeScript, and build. Review save/reload/sign-in, Cancel,
 resizing/reordering without losing color, reset semantics, conflict handling,
 all twelve themes, keyboard, phone layouts, and account isolation. Removing a
 widget removes only its layout entry, never underlying planner data.
+
+## Space personalization
+
+Open a saved space and expand Personalize this space to choose an icon, cover,
+and theme-relative accent. A local preview uses the same SpaceVisual component as
+the dashboard card and selected space header. Save space settings writes the name
+and appearance together with the existing revision check. Choices also appear in
+the space navigation list. New spaces can be personalized after creation.
+
+Icons: Folder, Home, Work, Book, Star, Leaf. Covers: Automatic, Cozy corner,
+Computer desk, Study shelf, or No cover. Accents: Theme default plus the same five
+palette roles used by widgets. Automatic covers are deterministic for a space ID,
+so they stay consistent between views and reloads. All artwork is built-in SVG;
+there are no uploads, external image URLs, custom SVG, hex colors, or custom CSS.
+
+Apply `supabase/migrations/20261027001400_space_appearance.sql` once, then run
+spaces_rls.sql and space_appearance_rls.sql. Defaults keep old spaces valid; only
+three checked metadata columns and their update grants are added. Ownership/RLS,
+revision trigger, template creation, and parent constraints remain intact.
+
+Original rename submissions without appearance fields continue to update only the
+name. Partial/unknown appearance values are rejected by the action, and direct
+requests are constrained by the database. A stale save retains the form choices
+and reports a conflict rather than overwriting newer settings. Template retries
+return the original destination without resetting later appearance choices.
+
+Run npm test, lint, TypeScript, and build. Check preview/save/reload/sign-in,
+metadata in navigation/dashboard/header, all twelve palettes, keyboard, narrow
+screens, no-cover/default choices, failed saves, stale tabs, and two accounts.

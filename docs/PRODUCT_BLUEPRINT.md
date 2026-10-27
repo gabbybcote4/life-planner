@@ -237,3 +237,11 @@ Each widget can now save a theme-relative title-bar accent from five shared role
 with Theme default and reset controls. This is a first per-widget styling step;
 it does not implement arbitrary custom colors, uploaded covers/backgrounds, or
 complete visual customization. Older layouts remain valid and unchanged.
+
+### Space appearance follow-up — 2026-10-27
+
+Spaces now support built-in icon/illustration/accent choices with a preview and
+explicit settings save. Shared appearances distinguish the space list, dashboard
+cards, and selected header. This implements a first space-personalization layer;
+custom uploaded covers/backgrounds and user-defined artwork/colors remain future
+scope. Defaults preserve old spaces; no source tasks/pages are copied or removed.
