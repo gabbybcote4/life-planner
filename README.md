@@ -80,6 +80,7 @@ edit applied migrations, or drop tables to get past setup errors.
 | 017 focus_timer_widget | Optional timer placement | focus_timer_widget_rls.sql |
 | 018 task_planning | Task dates/priorities | task_planning_rls.sql |
 | 019 dashboard_guidance | Owned guidance + widget | dashboard_guidance_rls.sql |
+| 020 inbox_capture | Atomic quick capture + review queue | inbox_capture_rls.sql |
 
 Review SQL before running it; use a disposable/test database where possible.
 Assertions create fictional users/records and roll back changes. Confirm every
@@ -153,3 +154,10 @@ Run npm run test:guidance and the SQL privacy/ranking checks. No AI service is u
 
 Guidance is visual-first: Next up, keyword badges, counts and short event rows.
 Why this? and How suggestions work reveal the detailed reasoning on demand.
+
+## Inbox and quick capture
+
+After migration 020, use + Capture for a task or note, optionally in a space.
+Inbox links to the saved source; Reviewed clears only its queue entry. Unsaved drafts
+survive closing the dialog/routes within this tab, but refresh/sign-out clears them.
+Run npm run test:inbox and the Inbox SQL privacy assertions. See OWNER_GUIDE for editing notes.

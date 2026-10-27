@@ -216,3 +216,11 @@ This increment changes no database schema or permission policies.
 - Open task, focus, Show another, refresh, and Unplanned/Calendar links still work.
 - Check keyboard disclosure behavior, readable badge contrast, long titles, empty/error states, and 320/390/1280px layouts.
 - No database migration or permission/ranking change is included.
+
+## Inbox capture review
+
+- Apply migration 020; run inbox_capture_rls.sql and confirm PASS separately from automated app tests.
+- Capture a task, a standalone note and a note in a space. Open each saved source and verify it survives refresh.
+- Close/reopen an unsaved draft, switch routes and confirm it remains; discard explicitly. Refresh clears unsaved drafts.
+- Edit a saved source, then mark its receipt Reviewed. Source edits/completion remain intact; restore via Reviewed tab.
+- Check keyboard open/close/focus, failed-save feedback, long text, phone widths and both theme modes. Confirm account changes cannot expose the previous draft or queue.

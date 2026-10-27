@@ -275,3 +275,10 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - Prefer clear action cards, short lists and keywords over explanatory paragraphs.
 - Keep one dominant next action; use labeled badges/date chips and existing palette/icon roles. Do not rely on colour alone.
 - Put detailed rationale behind optional disclosures, while preserving visible task/date/priority information, accessible names, and visible error/save feedback.
+
+### Inbox and capture checks
+
+- Reuse QuickCaptureProvider and SpacePicker; keep drafts inside the keyed account provider. Refresh/sign-out clears unsaved text; never persist drafts across accounts.
+- Quick capture creates a real task/note/space page and immutable original receipt atomically. Reviewed changes only queue status; preserve source data and revision guards.
+- Keep stable request IDs until confirmed success. Matching retries must not overwrite later edits or review status. Never accept caller-supplied ownership.
+- Run test:inbox, full regressions and inbox_capture_rls.sql after migration 020. Confirm live SQL and browser checks separately; voice/AI/tags remain future work.

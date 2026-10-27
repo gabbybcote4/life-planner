@@ -1,3 +1,4 @@
+import {QuickCaptureProvider} from "@/app/inbox/quick-capture";
 import { FocusTimerProvider } from "@/app/dashboard/focus-timer";
 import {DEFAULT_NAV_POSITION,parseNavPosition} from "@/lib/navigation";
 import {DEFAULT_BACKGROUND,parseBackground,backgroundAttributes} from "@/lib/themes/background";
@@ -24,5 +25,5 @@ export async function ThemeRoot({ children }: { children: ReactNode }) {
       // Keep the planner usable; Settings reports preference-service errors.
     }
   }
-  return <div className="theme-root" {...backgroundAttributes(background)} data-theme={theme} data-nav-position={navigation} style={themeVariables(theme) as CSSProperties}><FocusTimerProvider key={timerOwner ?? "signed-out"}>{children}</FocusTimerProvider></div>;
+  return <div className="theme-root" {...backgroundAttributes(background)} data-theme={theme} data-nav-position={navigation} style={themeVariables(theme) as CSSProperties}><FocusTimerProvider key={timerOwner ?? "signed-out"}><QuickCaptureProvider>{children}</QuickCaptureProvider></FocusTimerProvider></div>;
 }
