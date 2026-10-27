@@ -235,3 +235,12 @@ three recent previews plus existing task controls under Manage these tasks.
 The desktop grid retains saved half/full widths and source content; no masonry
 order changes or shrinking of phone touch targets. Month previews remain explicitly
 UTC; guidance dates use the local day, both labeled.
+
+## Visual-first guidance presentation
+
+taskCue and shortGuidanceDate in lib/dashboard/guidance.ts supply short labels from
+the same explicit evidence as taskReason. GuidanceContent renders a single next-up
+card, labeled metric tiles, date/space chips and a compact event list. Detailed
+reasons/ranking remain in native disclosures. The RPC, owner boundaries, ranking,
+refresh, timer behavior and saved layout contract are unchanged. Date formatting
+uses explicit date arguments and UTC; no live clock reads enter rendering.

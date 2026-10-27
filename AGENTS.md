@@ -269,3 +269,9 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - Keep rule explanations aligned with SQL ordering, all-day calendar labels, and a user choice of another task. Never overwrite an active timer.
 - Guidance is an optional ninth widget; explicit promotion/save preserves metadata and seven-widget defaults. Compact styling must keep readable fonts, real actions and phone touch targets.
 - Run test:guidance plus regressions and dashboard_guidance_rls.sql after migration 019; confirm live privacy/ranking/older-record tests before claiming verification.
+
+### Visual-first UI preference
+
+- Prefer clear action cards, short lists and keywords over explanatory paragraphs.
+- Keep one dominant next action; use labeled badges/date chips and existing palette/icon roles. Do not rely on colour alone.
+- Put detailed rationale behind optional disclosures, while preserving visible task/date/priority information, accessible names, and visible error/save feedback.

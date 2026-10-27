@@ -42,9 +42,13 @@ test("read failures return no false zero counts or stale guidance",async()=>{
  for(const value of [{error:{code:"network"}},{data:{}},{data:null}]){const h=harness(value);const result=await h.loadGuidance({data,date:today},form());assert.ok(result.error);assert.equal(result.data,undefined);}
 });
 test("rendered suggestion escapes saved content, explains source, and links exact tasks",()=>{
- const ui=compile("../src/app/dashboard/guidance-widget.tsx",{"next/link":({children,...props})=>React.createElement("a",props,children),"@/components/ui/button":compile("../src/components/ui/button.tsx"),"@/components/ui/feedback":compile("../src/components/ui/feedback.tsx"),"@/lib/calendar/dates":dates,"@/lib/shared/client-actions":{},"@/lib/dashboard/guidance":guidance,"./focus-timer":{StartGuidedFocus:()=>React.createElement("button",null,"Start focus")},"./guidance-actions":{}});
+ const ui=compile("../src/app/dashboard/guidance-widget.tsx",{"@/components/ui/desk-icon":compile("../src/components/ui/desk-icon.tsx"),"next/link":({children,...props})=>React.createElement("a",props,children),"@/components/ui/button":compile("../src/components/ui/button.tsx"),"@/components/ui/feedback":compile("../src/components/ui/feedback.tsx"),"@/lib/calendar/dates":dates,"@/lib/shared/client-actions":{},"@/lib/dashboard/guidance":guidance,"./focus-timer":{StartGuidedFocus:()=>React.createElement("button",null,"Start focus")},"./guidance-actions":{}});
  const html=renderToStaticMarkup(React.createElement(ui.GuidanceContent,{data:{...data,tasks:[{...task,title:"<script>literal</script>"}]},date:today,selected:0,onChoose(){}}));
  assert.match(html,/&lt;script&gt;/);assert.doesNotMatch(html,/<script>/);assert.match(html,new RegExp("tasks\\?task="+id));assert.match(html,/not an urgent deadline/);assert.match(html,/all 1 open tasks/);
+ const mixed=renderToStaticMarkup(React.createElement(ui.GuidanceContent,{data:{...data,tasks:[{...task,due_date:today,priority:"high"}]},date:today,selected:0,onChoose(){}}));
+ assert.match(mixed,/data-cue="today">Today/);assert.match(mixed,/guidance-priority-tag">High priority/);
+ assert.match(mixed,/<details class="guidance-why"><summary>Why this\?/);
+ assert.match(mixed,/<details class="guidance-logic"><summary>How suggestions work/);
 });
 test("widget registration expands safely without changing saved defaults",()=>{
  assert.ok(WIDGETS.guidance);assert.equal(DEFAULT_LAYOUT.length,7);assert.ok(!DEFAULT_LAYOUT.some(w=>w.id==="guidance"));
@@ -59,4 +63,13 @@ test("explicit guidance promotion preserves order/width/accent and never mutates
  const saved=[{id:"recent",width:"half",accent:"pink"},{id:"guidance",width:"half",accent:"mint"},{id:"timer",width:"full"}],before=JSON.stringify(saved);
  assert.deepEqual(withGuidanceFirst(saved),[saved[1],saved[0],saved[2]]);assert.equal(JSON.stringify(saved),before);
  assert.deepEqual(withGuidanceFirst([]),[{id:"guidance",width:"full"}]);
+});
+
+test("visual cue labels match their detailed evidence without inventing urgency",()=>{
+ for(const [fields,label] of [[{due_date:"2026-10-26"},"Overdue"],[{due_date:today},"Today"],[{priority:"high"},"High priority"],[{due_date:"2026-11-02"},"Upcoming"],[{},"Unplanned"]]){
+  assert.equal(guidance.taskCue({...task,...fields},today).label,label);
+ }
+ assert.equal(guidance.shortGuidanceDate(today,today),"Today");
+ assert.equal(guidance.shortGuidanceDate("2026-10-28",today),"Tomorrow");
+ assert.equal(guidance.shortGuidanceDate("2028-02-29",today),"Feb 29, 2028");
 });
