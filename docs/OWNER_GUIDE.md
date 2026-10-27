@@ -312,3 +312,15 @@ Edit short status/date labels in lib/dashboard/guidance.ts (taskCue/
 shortGuidanceDate), the card/list in app/dashboard/guidance-widget.tsx, and visual
 styles in responsive.css's Visual-first guidance section. Keep due dates and action
 buttons visible. Keep errors explicit even when shortening other copy.
+
+## Inbox and quick capture
+
+Use + Capture in the account controls. Choose Task or Note, enter text and optionally pick a space. A task is immediately available in Tasks; a note goes to Notes, or becomes a page in the chosen space. Opening Capture from a selected space supplies that space for an empty draft.
+
+Close/reopen keeps an unsaved draft within this tab. Refresh, sign-out or account change clears it. Discard draft clears it explicitly. Wait for Captured before treating an item as saved; after an uncertain save, retry the unchanged draft or check Inbox first.
+
+Inbox keeps the original capture. Open its source to edit, plan, move or complete it. Reviewed only clears the queue; Reviewed tab > Return to Inbox restores it. Later source edits do not rewrite the original snapshot. Deleting a source removes its Inbox receipt too.
+
+To change capture fields/labels, edit src/app/inbox/quick-capture.tsx. Inbox cards are in capture-card.tsx; shared space choices are in src/app/components/space-picker.tsx. Validation belongs in src/lib/inbox/types.ts and actions in app/inbox/actions.ts. Styles are in responsive.css's Inbox section. Run npm run test:inbox after changes. Database changes require a new migration; never rewrite applied migration 020.
+
+Apply migration 020 after earlier migrations, then run supabase/tests/inbox_capture_rls.sql. Check its PASS result. Voice capture, AI organization and tags remain planned features.

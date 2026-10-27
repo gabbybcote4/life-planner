@@ -43,7 +43,7 @@ async function SpacesContent({searchParams}:{searchParams:Search}) {
  const tasks=space?await supabase.from("tasks").select(TASK_SELECT,{count:"exact"}).eq("user_id",userId).eq("space_id",space.id).order("created_at",{ascending:false}).order("id").range((tasksPage-1)*20,tasksPage*20-1):null;
  const base=space ? '/spaces?space='+space.id+'&spacesPage='+spacesPage : '/spaces';
  return <>
- <PlannerHeading eyebrow="Room for your life" title="Spaces of your own." description="Gather simple text pages by life area, project, or whatever makes sense to you." email={email}/>
+ <PlannerHeading eyebrow="Room for your life" captureSpace={space&&!unavailable?{id:space.id,title:space.title}:undefined} title="Spaces of your own." description="Gather simple text pages by life area, project, or whatever makes sense to you." email={email}/>
  <p className="muted">Private to your account. Save drafts before changing spaces or pages.</p>
  {list.error ? <LoadError title="Your spaces could not be loaded." description="Apply the spaces setup if this is your first visit, then try again." action="/spaces"/> : <>
  <MobileSection className="spaces-library" title="Browse & create spaces"><h2 id="spaces-heading">Your spaces</h2>

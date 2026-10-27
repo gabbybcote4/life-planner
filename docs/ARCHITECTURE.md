@@ -244,3 +244,11 @@ card, labeled metric tiles, date/space chips and a compact event list. Detailed
 reasons/ranking remain in native disclosures. The RPC, owner boundaries, ranking,
 refresh, timer behavior and saved layout contract are unchanged. Date formatting
 uses explicit date arguments and UTC; no live clock reads enter rendering.
+
+## Inbox and shared quick capture
+
+`app/inbox/quick-capture.tsx` supplies the global native dialog through the account-keyed ThemeRoot. PlannerHeading launches it; Spaces passes the selected space. `components/space-picker.tsx` is shared with task assignment. Drafts live only in this tab's memory.
+
+`lib/inbox/types.ts` validates input and resolves source links. `app/inbox/actions.ts` authenticates each capture/review; migration 020 implements one security-invoker transaction for the source and original Inbox snapshot. A note in a space becomes a space page. Queue review updates only reviewed with owner/id/revision guards. Sources keep their existing editors and permissions. Receipt retries compare the original payload and leave later edits intact.
+
+`app/inbox/page.tsx` paginates owned queue/reviewed snapshots; capture-card.tsx links to existing source controls. Keep original text escaped. Deleting a source cascades its receipt; reviewing never deletes the source. This increment adds no voice, AI or tag service.

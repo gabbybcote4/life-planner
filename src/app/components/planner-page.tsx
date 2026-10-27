@@ -1,3 +1,5 @@
+import {QuickCaptureButton} from "@/app/inbox/quick-capture";
+import type {SpaceChoice} from "@/lib/inbox/types";
 import { FocusTimerStatus } from "@/app/dashboard/focus-timer";
 import type { ReactNode } from "react";
 import { Suspense } from "react";
@@ -7,7 +9,7 @@ import { PlannerNavigation } from "./planner-navigation";
 import { SignOutButton } from "../sign-out-button";
 
 const cards: Record<PlannerSection, string> = {
-  dashboard: "dashboard-card", tasks: "planner-card", calendar: "calendar-card", notes: "notes-card", settings: "settings-card", spaces: "notes-card", search: "notes-card",
+  inbox: "notes-card", dashboard: "dashboard-card", tasks: "planner-card", calendar: "calendar-card", notes: "notes-card", settings: "settings-card", spaces: "notes-card", search: "notes-card",
 };
 
 export function PlannerPage({ active, loading, children }: { active: PlannerSection; loading: string; children: ReactNode }) {
@@ -22,12 +24,12 @@ export function PlannerPage({ active, loading, children }: { active: PlannerSect
   </main></div></>;
 }
 
-export function PlannerHeading({ eyebrow, title, description, email, className = "" }: {
-  eyebrow: string; title: string; description: string; email: string; className?: string;
+export function PlannerHeading({ eyebrow, title, description, email, captureSpace, className = "" }: {
+  eyebrow: string; title: string; description: string; email: string; captureSpace?: SpaceChoice; className?: string;
 }) {
   return <div className={`planner-intro ${className}`.trim()}>
     <div><p className="eyebrow">{eyebrow}</p><h1>{title}</h1><p className="intro">{description}</p></div>
-    <div className="planner-account"><p className="muted">{email}</p><SignOutButton /><FocusTimerStatus /></div>
+    <div className="planner-account"><p className="muted">{email}</p><QuickCaptureButton space={captureSpace}/><SignOutButton /><FocusTimerStatus /></div>
   </div>;
 }
 

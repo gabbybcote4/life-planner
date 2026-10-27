@@ -337,3 +337,59 @@ action. The first increment adds planning inputs only; the guidance widget follo
   conflict feedback must remain clear, visible and honest.
 - Apply this preference to future Inbox, widgets and optional life modules, not
   just this one guidance card. Do not hide essential deadlines behind explanations.
+
+### Voice-first brain dumps and assisted organization (future direction)
+
+Owner intent: make capture easy and inviting enough to use spontaneously. Within
+a space such as Work, the user should be able to speak freely about an idea or
+project without structuring it, adding tags, or deciding on tasks while talking.
+Speech-to-text is an optional capture method alongside typing, not a separate
+complicated workflow. This is roadmap direction, not an implemented feature.
+
+Target flow:
+1. Open a space (or the future global Inbox) and tap a clearly labeled microphone.
+2. Record a freeform brain dump with visible recording state and simple stop/cancel.
+3. Review/edit the transcript and explicitly save the capture into that space.
+4. Optionally ask the planner to organize it: suggest a project outline, notes,
+   tasks, and tags as short visual cards/checklists grounded in the transcript.
+5. Accept, edit, or reject suggestions individually or in a reviewable batch.
+   Keep the original capture accessible so organization does not replace the idea.
+
+Confirmed experience priorities:
+- Capture first; organization later. Inherit the current space, with an easy way
+  to change it, rather than forcing users through folders/tags before recording.
+- Keep the interface visual and calm: Record / Stop / Review / Organize, concise
+  status cues, and one obvious next action. A typing fallback remains available.
+- AI and tags should reduce effort, not create more forms or require a taxonomy.
+  Suggested tags are editable/optional, and proposed tasks remain suggestions.
+- Recording is user-initiated, clearly indicated, and stoppable. Avoid hidden or
+  always-listening behavior.
+
+Working design guardrails, to refine before implementation:
+- Save the original transcript independently of accepted organizational changes.
+  Preview proposed tasks/dates/tags before applying them; do not invent commitments
+  or silently schedule work from uncertain speech. Ask briefly when necessary.
+- Keep captures and derived records private to the verified account, with existing
+  ownership protections. Any AI/transcription data transfer must be explicit.
+- Handle permission denial, interrupted capture, failed transcription and failed
+  saves honestly; make retry/edit/cancel understandable and protect draft work.
+- Decide whether audio is kept, where it is processed, retention/deletion, and
+  history separately. Do not promise permanent recordings or offline dictation.
+
+Open implementation decisions:
+- On-device versus hosted transcription/AI, supported devices/browsers/languages,
+  recording limits, long-input handling, accuracy review, accessibility and costs.
+- Tag model, project representation, source links, duplicate detection, batch
+  acceptance/undo, and how accepted suggestions feed dashboard guidance.
+
+Incremental order: build the reusable Inbox/space capture foundation, add reviewed
+speech-to-text capture, then add opt-in AI/tag organization. Exact rollout may be
+adjusted after a scoped design and device/privacy evaluation. No microphone access,
+AI service, transcription integration or tagging system is added by this note.
+
+
+## Inbox and quick-capture foundation — October 27, 2026
+
+Confirmed next increment: Inbox and quick capture before speech-to-text. Global capture offers Task/Note and optional space context. It saves an actual task, note or space page immediately and preserves the original capture in a private review queue. Reviewed removes queue clutter without completing/deleting the source; reviewed entries can return to the queue. Existing source editors handle planning and completion.
+
+Reuse the account-scoped capture dialog and shared space picker. Keep unsaved drafts in tab memory, explicit saves, stable retry identities, atomic persistence, per-user RLS and revision-protected review. Preserve compact keyword/action layouts and existing retro theme tokens. Speech, AI, tagging and automatic interpretation are not part of this increment. Database and owner browser verification remain required before release.

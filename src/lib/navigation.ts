@@ -2,6 +2,7 @@
 // active pages and the protected-route list in src/proxy.ts.
 export const PLANNER_ROUTES = [
   { id: "dashboard", label: "Dashboard", href: "/" },
+  { id: "inbox", label: "Inbox", href: "/inbox" },
   { id: "tasks", label: "Tasks", href: "/tasks" },
   { id: "calendar", label: "Calendar", href: "/calendar" },
   { id: "notes", label: "Notes", href: "/notes" },
