@@ -181,3 +181,39 @@
 .background-options { display:flex; gap:1.2rem; flex-wrap:wrap; margin:1rem 0; }
 .background-options label { display:flex; align-items:center; gap:.5rem; }
 .background-form select { max-width:300px; display:block; margin:.5rem 0 1rem; }
+
+/* Focus timer: shared palette roles; session state is in the account-scoped provider. */
+.widget-type-timer .widget-titlebar { background:linear-gradient(90deg,var(--accent-mint),var(--surface)); }
+.focus-timer { text-align:center; }
+.focus-timer h2 { margin-bottom:1rem; }
+.focus-timer-modes { display:flex; justify-content:center; flex-wrap:wrap; gap:.5rem; }
+.focus-timer-modes .secondary-button { margin:0; min-height:44px; padding:.55rem .7rem; font-size:.85rem; }
+.focus-timer-modes [aria-pressed="true"] { outline:2px solid var(--focus); outline-offset:2px; background:var(--accent-mint); }
+.focus-timer-dial { --timer-progress:0%; width:min(100%,230px); aspect-ratio:1; margin:1.5rem auto; padding:10px; border-radius:50%; background:conic-gradient(var(--primary) var(--timer-progress),var(--accent-mint) 0); }
+.focus-timer-dial > div { height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.6rem; border-radius:50%; background:var(--surface); color:var(--foreground); }
+.focus-timer-dial output { font:clamp(2.5rem,6vw,3.5rem) var(--font-desktop-mono); font-variant-numeric:tabular-nums; letter-spacing:-.06em; }
+.focus-timer-controls { display:flex; justify-content:center; flex-wrap:wrap; gap:.75rem; margin:.75rem 0; }
+.focus-timer-controls :is(.primary-button,.secondary-button,.task-edit-button) { margin:0; min-height:44px; }
+.focus-timer-duration { text-align:left; max-width:30rem; margin:1rem auto; }
+.focus-timer-duration summary { min-height:44px; align-content:center; color:var(--primary); cursor:pointer; }
+.focus-duration-fields { display:flex; gap:.5rem; margin:.6rem 0; flex-wrap:wrap; }
+.focus-duration-fields .form-control { flex:1; min-width:5rem; }
+.focus-duration-fields .secondary-button { margin:0; }
+.focus-timer-note { margin-top:1rem; }
+.focus-timer-status { text-align:left; margin-top:.7rem; font-size:.85rem; border:1px solid var(--input-border); border-radius:6px; background:var(--surface); }
+.focus-timer-status summary { min-height:44px; padding:.6rem; cursor:pointer; color:var(--primary); font-variant-numeric:tabular-nums; }
+.focus-timer-status > div { padding:.5rem; }
+.focus-timer-status .focus-timer-controls .primary-button { font-size:.8rem; padding:.5rem; }
+
+/* Shared optional task planning controls; date/priority never block quick capture. */
+.task-planning { margin:.5rem 0; padding:.5rem .65rem; border:1px solid var(--border); border-radius:7px; background:var(--surface); }
+.task-planning summary { min-height:44px; align-content:center; cursor:pointer; color:var(--primary); font-size:.85rem; overflow-wrap:anywhere; }
+.task-plan-badges { display:inline-flex; flex-wrap:wrap; align-items:center; gap:.5rem; max-width:100%; }
+.task-priority { border:1px solid var(--input-border); border-radius:5px; padding:.25rem .5rem; color:var(--foreground); background:var(--accent-blue); }
+.task-priority[data-priority="high"] { background:var(--accent-pink); }
+.task-priority[data-priority="low"] { background:var(--accent-mint); }
+.task-planning fieldset { border:0; padding:0; margin:.7rem 0; display:grid; gap:.65rem; min-width:0; }
+.task-planning .form-control { max-width:28rem; }
+.task-plan-controls { display:flex; gap:.6rem; flex-wrap:wrap; align-items:center; }
+.task-plan-controls .primary-button { margin-top:0; }
+.task-plan-controls .task-edit-button { min-height:44px; }

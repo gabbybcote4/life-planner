@@ -239,3 +239,65 @@ Edit responsive.css for phone spacing/placement; keep the 44px touch targets and
 bottom safe-area padding. Change route text in navigation.ts; do not remove ids or
 saved position keys without coordinating the database. Test a real phone as well
 as desktop resizing, especially its on-screen keyboard and bottom navigation.
+
+## Focus timer
+
+Use Customize dashboard > Add Focus timer > Save layout, after migration 017.
+Start/Pause/Resume/Reset control the selected session. Focus starts at 25 minutes,
+short break at 5, long break at 15. Session length accepts whole minutes 1-180;
+changing mode/length resets it and requires pausing first. Completion waits for you.
+
+The timer stays active while you browse within the same tab. Its small status
+control beside account controls lets you pause/resume/reset away from Dashboard,
+even if the widget is removed. Refreshing/closing the tab resets it; another tab
+or device has its own session. No focus history, sounds, or notifications are saved.
+
+Change defaults in src/lib/timer/timer.ts. Change widget/provider controls in
+src/app/dashboard/focus-timer.tsx and appearance in retro.css's Focus timer section.
+Keep clock reads in effects/events and the provider keyed by account. Use test:timer
+after changing rules. Adding timer placement requires the existing layout SQL setup.
+
+## Task dates and priorities
+
+You can still dump a task in using just its title. Open Add a date or priority under
+a saved task to plan it later. Choose an optional date and No priority/Low/Medium/High,
+then Save task plan. Cancel restores the confirmed draft. Clear date & priority is
+a draft change until saved. This is shared across Tasks, Dashboard, and Spaces.
+
+A stale plan asks you to reload rather than overwriting newer choices. Copy any
+draft you need first. Renaming, completing, or assigning the task does not clear
+its date/priority. A due date is date-only; it does not create an event or reminder.
+
+Edit labels in TASK_PRIORITIES in src/lib/tasks/types.ts; keep saved keys unchanged.
+Shared date validation is in lib/calendar/dates.ts; planning controls/action are
+in src/app/tasks/task-planning.tsx and planning-actions.ts. Add a new migration for
+schema choices. Run test:task-planning. Existing tasks start with no date/priority.
+
+The blueprint also records future optional meals/calorie tracking and workouts,
+and capture-first guidance. Those modules and the Your next step widget are not
+implemented by this planning-input increment.
+
+## Guidance and less dashboard scrolling
+
+After migration 019, click Add Your next step at the top, then Save layout. If it
+already exists lower down, Move Your next step to the top does the same as a draft.
+Cancel restores your layout. Width and accent still use the normal widget controls.
+
+Guidance explains overdue/today/priority/date-based suggestions and shows three task
+alternatives from all open tasks. Show another changes only the displayed option.
+Open task lets you edit/complete it. Start focus uses the timer, without completing
+the task or replacing an existing active/paused session. Missing dates/priorities
+are organizing cues, not invented urgency. Refresh guidance rechecks saved plans;
+source edits and local-day changes also refresh it.
+
+Calendar commitments are all-day, not timed appointments. Sparse data may produce
+an oldest-capture suggestion or no open task; read the reason. This is rule-based,
+not automatic understanding of every note or an external AI integration.
+
+Desktop widgets now use compact space shortcuts, smaller graphics and fewer repeated
+headings. Month view, map links and Manage these tasks open the existing full
+content. Recent tasks/events show up to three; open the full pages for everything.
+
+Edit rule explanations/types in lib/dashboard/guidance.ts, UI in
+app/dashboard/guidance-widget.tsx, and compact styling in app/responsive.css.
+Ranking changes require a new SQL migration and matching explanation/tests.

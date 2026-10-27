@@ -162,3 +162,76 @@ Run test:navigation, the full suite, and navigation_position_rls.sql. Browser re
 must include 320/390/768/1280px widths, every position, menus, drafts, touch targets,
 bottom safe area, keyboard focus, and phone orientation. Desktop emulation does not
 replace a physical iPhone/Android keyboard/safe-area check.
+
+## Optional focus timer
+
+src/lib/timer/timer.ts is the pure clock-free state machine: deadlines, exact paused
+remaining milliseconds, explicit reset/mode/duration actions, and display formatting.
+src/app/dashboard/focus-timer.tsx supplies the shared provider, widget, controls,
+and small cross-page status disclosure. Existing Button/fields/feedback and palette
+roles keep it consistent. ThemeRoot keys the provider by verified owner; sign-out
+or account changes remount it. No timer state goes to browser storage or the DB.
+
+Events start/pause with Date.now; effects tick and catch visibility/pageshow changes.
+Rendering never reads the live clock. Delayed ticks derive time from endsAt. The
+provider survives internal navigation; full refresh/tab close resets it. Sessions
+are independent per tab/device. Completion announces once and does not autoplay.
+There is no sound, OS notification, task logging, or saved focus history.
+
+Widget placement uses the existing explicit layout save with the optional timer ID.
+Migration 017 expands only the validator to eight possible IDs, preserving the
+seven-widget default and all existing rows. Runtime countdown fields are rejected
+in layout JSON. Removing the widget leaves a running session controllable from
+the page-heading status disclosure; Reset ends it. No automatic database writes.
+
+## Optional task planning inputs
+
+TaskPlanning in src/app/tasks/task-planning.tsx is composed by TaskRow, so Tasks,
+dashboard lists, space lists, and exact selected search results share one control.
+TASK_SELECT includes due_date/priority/planning_revision everywhere relevant.
+Quick capture stays title-only; creation/retry/rename/completion/assignment actions
+do not write planning metadata. Existing records remain unplanned by default.
+
+planning-actions.ts validates the shared date-only parser, priority allowlist, task
+ID and revision, authenticates fresh context, then updates only date/priority with
+owner/id/planning_revision predicates. Empty date clears it; priority none clears
+priority. Missing/invalid fields cannot silently clear a plan. Confirmed saves
+refresh relevant routes, advance the local baseline, and show current badges.
+Errors/stale results retain drafts; cancellation restores the confirmed choices.
+
+Migration 018 adds nullable date (1900-2100), four checked priorities and a protected
+planning revision. Its trigger increments only when planning fields change.
+Unrelated title/completion/space changes leave it alone. Existing RLS/parent keys,
+title/completion behavior, and narrow insert grants remain unchanged. No data rows
+are rewritten or calendar events created. This is input groundwork, not automatic
+ranking or a guidance widget. Unit mocks and SQL assertions have separate scopes.
+
+## Explainable guidance and compact dashboard
+
+planner_dashboard_guidance(p_today date) in migration 019 is read-only, stable,
+security-invoker, owner-filtered, and authenticated-only. It scans all owned open
+tasks for exact counts, ranks three alternatives, joins only owned space context,
+and returns three owned upcoming events plus today's event count. No recent-task
+limit feeds the rankings. It accepts a date, never a caller owner. No notes are
+sent to an AI service and no records are inferred or written by guidance.
+
+DashboardGuidance reads latest owned task/event timestamps, using new per-owner
+updated-at indexes, and passes a refreshKey to GuidanceWidget. The client requests
+data after hydration using localToday(), refreshes when source versions or the
+local day change, and supports explicit refresh. Guidance errors replace suggestions
+instead of inventing zeros. Calendar mutations now refresh Dashboard as well.
+Reason text and SQL ordering must remain aligned. Choosing another task is UI state;
+the focus action reuses the existing provider and does not replace a paused/running
+session. React escapes all saved labels; exact task links use the existing reader.
+
+withGuidanceFirst promotes/adds only in a draft and preserves existing metadata.
+Migration 019 adds the optional ninth identity to the validator without rewriting
+defaults/rows. Source counts cover all relevant tasks even beyond the Tasks list's
+200-row preview; SQL fixtures test that boundary and account isolation.
+
+Compact presentation lives in responsive.css and existing widget modules: small
+space shortcuts, horizontal counts, smaller dials, folded calendar/link detail,
+three recent previews plus existing task controls under Manage these tasks.
+The desktop grid retains saved half/full widths and source content; no masonry
+order changes or shrinking of phone touch targets. Month previews remain explicitly
+UTC; guidance dates use the local day, both labeled.

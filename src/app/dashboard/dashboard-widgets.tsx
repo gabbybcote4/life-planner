@@ -9,14 +9,14 @@ import { Button } from "@/components/ui/button";
 import type { ReactNode } from "react";
 import { useActionState, useState } from "react";
 import { saveDashboardLayout } from "./actions";
-import { WIDGET_ACCENTS, setWidgetAccent,clearWidgetAccents,DEFAULT_LAYOUT, addWorkspaceWidgets, WIDGETS, moveWidget, type Widget, type WidgetId, type LayoutState } from "@/lib/dashboard/layout";
+import { withGuidanceFirst, WIDGET_ACCENTS, setWidgetAccent,clearWidgetAccents,DEFAULT_LAYOUT, addWorkspaceWidgets, WIDGETS, moveWidget, type Widget, type WidgetId, type LayoutState } from "@/lib/dashboard/layout";
 
 export function DashboardWidgets({ savedLayout, savedRevision, canCustomize, slots }: {
   savedLayout: Widget[]; savedRevision: number; canCustomize: boolean; slots: Record<WidgetId, ReactNode>;
 }) {
   const [editing, setEditing] = useState(false);
   // Phone-only disclosures are temporary UI state, not saved layout changes.
-  const [mobileOpen,setMobileOpen] = useState<WidgetId[]>(() => Array.from(new Set<WidgetId>([...(savedLayout[0] ? [savedLayout[0].id] : []),"capture","recent"])));
+  const [mobileOpen,setMobileOpen] = useState<WidgetId[]>(() => Array.from(new Set<WidgetId>([...(savedLayout[0] ? [savedLayout[0].id] : []),"guidance","capture","recent"])));
   const [draft, setDraft] = useState<Widget[]>(savedLayout);
   const [saved, setSaved] = useState<Widget[]>(savedLayout);
   const [revision, setRevision] = useState(savedRevision);
@@ -42,6 +42,7 @@ export function DashboardWidgets({ savedLayout, savedRevision, canCustomize, slo
       <p className="muted">{editing && dirty ? "Unsaved layout changes" : "Your dashboard, arranged your way"}</p>
       {!editing && <Button variant="secondary" type="button" disabled={!canCustomize}
         onClick={() => { setEditing(true); setAnnouncement(""); }}>Customize dashboard</Button>}
+    {!editing && draft[0]?.id!=="guidance" && <Button className="add-guidance-shortcut" variant="secondary" disabled={!canCustomize} onClick={()=>{setDraft(withGuidanceFirst(draft));setEditing(true);setMobileOpen(current=>Array.from(new Set<WidgetId>([...current,"guidance"])));setAnnouncement("Your next step is at the top of your draft. Save layout to keep it.");}}>{missing.includes("guidance")?"Add Your next step at the top":"Move Your next step to the top"}</Button>}
     </div>
     {editing && <section className="widget-library" aria-labelledby="widget-library-heading">
       <h2 id="widget-library-heading">Arrange your dashboard</h2>

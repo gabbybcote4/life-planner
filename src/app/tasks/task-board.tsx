@@ -1,4 +1,5 @@
 "use client";
+import {TaskPlanning} from "./task-planning";
 
 import { createRequestId } from "@/lib/shared/request-id";
 
@@ -82,6 +83,7 @@ function TaskRow({ task }: { task: Task }) {
       </>}
     </div>
     {task.space_id && task.space && <p className="muted">Space: <Link className="text-link" href={"/spaces?space="+task.space_id}>{task.space.title}</Link></p>}
+    <TaskPlanning task={task} disabled={pending||editing}/>
     <TaskSpaceAssignment task={task} disabled={pending||editing}/>
     {!editing && <FormFeedback {...(editMessage ? { message: editMessage } : state)} pending={pending} className="task-feedback" />}
   </li>;

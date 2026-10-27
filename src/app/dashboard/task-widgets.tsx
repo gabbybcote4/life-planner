@@ -1,3 +1,4 @@
+import { FocusTimerWidget } from "./focus-timer";
 import type {ReactNode,CSSProperties} from "react";
 import Link from "next/link";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -44,14 +45,15 @@ export function RecentTasksWidget({ tasks, headingId = "recent-heading" }: { tas
   return <section className="dashboard-recent-widget" aria-labelledby={headingId}>
     <div className="dashboard-section-heading"><div><p className="eyebrow">Pick up where you left off</p><h2 id={headingId}>Recently added</h2></div>
       <Link className="text-link" href="/tasks">View all tasks <span aria-hidden="true">→</span></Link></div>
-    {tasks.length === 0 ? <EmptyState title="Your list starts here.">Add a task from Quick add or the Tasks page.</EmptyState> : <TaskList tasks={tasks} />}
+    {tasks.length === 0 ? <EmptyState title="Your list starts here.">Add a task from Quick add or the Tasks page.</EmptyState> : <><ul className="compact-recent-tasks">{tasks.map(task=><li key={task.id}><Link href={"/tasks?task="+task.id} className={task.completed?"is-done":""}><span aria-hidden="true">{task.completed?"✓":"○"}</span>{task.title}</Link></li>)}</ul><details className="compact-task-editor"><summary>Manage these tasks</summary><TaskList tasks={tasks}/></details></>}
   </section>;
 }
 
 export function TaskWidgets({ open, completed, tasks, layout, revision, canCustomize,workspaceSlots }: {
-  open: number; completed: number; tasks: Task[]; layout: Widget[]; revision: number; canCustomize: boolean; workspaceSlots:Pick<Record<WidgetId,ReactNode>,"spaces"|"calendar"|"connections">;
+  open: number; completed: number; tasks: Task[]; layout: Widget[]; revision: number; canCustomize: boolean; workspaceSlots:Pick<Record<WidgetId,ReactNode>,"spaces"|"calendar"|"connections"|"guidance">;
 }) {
   return <DashboardWidgets savedLayout={layout} savedRevision={revision} canCustomize={canCustomize} slots={{...workspaceSlots,
+    timer: <FocusTimerWidget />,
     overview: <TaskOverviewWidget open={open} completed={completed} />,
     capture: <QuickAddWidget />,
     progress: <TaskProgressWidget open={open} completed={completed} />,

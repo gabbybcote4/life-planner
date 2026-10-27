@@ -1,13 +1,15 @@
 // Widget labels/default arrangement live here. Saved ids are a database contract:
 // adding/removing ids or widths also requires a new SQL migration and privacy tests.
 export const WIDGETS = {
+  guidance: {label:"Your next step",description:"Explained task suggestions and upcoming commitments from your saved plans."},
+  timer: { label: "Focus timer", description: "A focus or break countdown that stays active in this tab." },
   spaces: {label:"Your spaces",description:"Illustrated shortcuts to your first three saved spaces."},
-  calendar: {label:"Calendar & upcoming",description:"A compact month and your next five all-day events (UTC)."},
+  calendar: {label:"Calendar & upcoming",description:"A compact month and your next three all-day events (UTC)."},
   connections: {label:"Connection map",description:"A preview of saved links between your first twelve notes and pages."},
   overview: { label: "Task overview", description: "Your open, completed, and total task counts." },
   capture: { label: "Quick add", description: "Capture a new task from your dashboard." },
   progress: { label: "Task progress", description: "See progress across your saved tasks." },
-  recent: { label: "Recent tasks", description: "View and edit your five most recently added tasks." },
+  recent: { label: "Recent tasks", description: "View and edit your three most recently added tasks." },
 };
 export type WidgetId = keyof typeof WIDGETS;
 export const WIDGET_ACCENTS = {pink:"Pink",mint:"Mint",blue:"Blue",yellow:"Butter",lilac:"Lilac"};
@@ -60,3 +62,9 @@ export function setWidgetAccent(layout:Widget[],id:WidgetId,accent:unknown):Widg
  return layout.map(widget=>{const next={...widget};if(next.id===id){if(accent==="auto")delete next.accent;else next.accent=accent;}return next;});
 }
 export function clearWidgetAccents(layout:Widget[]):Widget[] {return layout.map(widget=>{const next={...widget};delete next.accent;return next;});}
+
+// Explicit draft helper: promote guidance without changing other saved metadata.
+export function withGuidanceFirst(layout:Widget[]):Widget[]{
+ const existing=layout.find(widget=>widget.id==="guidance");
+ return [existing?{...existing}:{id:"guidance",width:"full"},...layout.filter(widget=>widget.id!=="guidance").map(widget=>({...widget}))];
+}

@@ -179,3 +179,32 @@ This increment changes no database schema or permission policies.
 - At phone widths check More route/active indicators, Escape/Close/outside dismissal, hidden-menu keyboard behavior, and 44px primary touch targets.
 - Open/close dashboard and library/settings panels. Drafts survive; editing layout reveals content; desktop widths reveal everything. Saved widget order/size/accent do not change.
 - Check bottom dock never covers the final control, including iPhone safe area, physical phone keyboard, rotation, and zoom. Browser emulation is only part of verification.
+
+## Focus timer review
+
+- Apply migration 017 and run existing layout privacy assertions plus focus_timer_widget_rls.sql; confirm both PASS results.
+- Add Focus timer explicitly, save, reload. Move/resize/accent/remove it; existing widgets and source data stay unchanged.
+- Start/pause/resume/reset, switch modes while paused, and set 1/25/180 minutes. Reject zero, decimals and >180. Running sessions disable mode/length changes.
+- Start a one-minute test, switch pages/tabs and return. Time catches up; paused time does not count. Completion stops at zero without auto-start or repeated announcement.
+- Cross-page status controls still work if the widget is hidden/removed. Reset ends the session. Refresh resets; sign-out/account changes clear it.
+- Check keyboard, touch controls, narrow 320/390px screens, light/dark palettes, screen-reader completion, and long labels. No physical-device or live SQL claim from unit tests.
+
+## Task planning input review
+
+- Apply migration 018 and run existing task privacy tests plus task_planning_rls.sql; confirm both PASS results.
+- Add a title-only task; it needs no date/priority. Add/edit/clear planning from Tasks, a dashboard task list, and its Space; save/reload to confirm shared results.
+- Verify title edit, completion, and assignment preserve the plan. Planning changes preserve title/completion/assignment.
+- Open two tabs on the same task. Save a plan in one; a stale save in the other retains its draft and reports conflict. Cancel restores its confirmed choices.
+- Check valid leap day, empty date, date boundaries, all priorities, failed saves, another account, and signed-out direct writes.
+- Check date labels across time zones, mobile input/select widths, keyboard, dark/light palettes, and 44px summary/buttons. No calendar event/reminder is created.
+- This increment adds metadata inputs only; guidance/ranking and wellbeing modules remain future work.
+
+## Guidance and compact dashboard review
+
+- Apply migration 019; run guidance privacy assertions and existing dashboard layout tests. Confirm both PASS results, including the older-than-200-captures fixture.
+- Add/promote Your next step explicitly, save/reload, and check width/accent/cancel/removal without changing other metadata.
+- Create owned overdue/today/high-priority/unplanned tasks. Verify explanations, completed exclusion, Show another, exact task links, and all-day commitments.
+- Edit/complete a task elsewhere and return; guidance refreshes. Check local midnight/day changes and explicit refresh; failed reads must not resemble zero tasks.
+- Start focus without changing the task. Existing running/paused timers are never replaced.
+- Check a second account, sparse/no data, malformed date rejection, keyboard, light/dark, 320/390px phones and 1280px desktop.
+- Compare desktop scrolling: compact space cards/counts/dials and three-row previews. Open month/map/task details and confirm real controls are retained.
