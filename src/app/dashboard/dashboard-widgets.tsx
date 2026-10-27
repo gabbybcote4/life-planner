@@ -2,7 +2,7 @@
 
 import { runAction, UNCONFIRMED_SAVE } from "@/lib/shared/client-actions";
 
-import {WindowDots} from "@/components/ui/desktop-window";
+import {WindowTitleBar} from "@/components/ui/desktop-window";
 import { EmptyState } from "@/components/ui/empty-state";
 import { FormFeedback } from "@/components/ui/feedback";
 import { Button } from "@/components/ui/button";
@@ -15,6 +15,8 @@ export function DashboardWidgets({ savedLayout, savedRevision, canCustomize, slo
   savedLayout: Widget[]; savedRevision: number; canCustomize: boolean; slots: Record<WidgetId, ReactNode>;
 }) {
   const [editing, setEditing] = useState(false);
+  // Phone-only disclosures are temporary UI state, not saved layout changes.
+  const [mobileOpen,setMobileOpen] = useState<WidgetId[]>(() => Array.from(new Set<WidgetId>([...(savedLayout[0] ? [savedLayout[0].id] : []),"capture","recent"])));
   const [draft, setDraft] = useState<Widget[]>(savedLayout);
   const [saved, setSaved] = useState<Widget[]>(savedLayout);
   const [revision, setRevision] = useState(savedRevision);
@@ -67,7 +69,7 @@ export function DashboardWidgets({ savedLayout, savedRevision, canCustomize, slo
     {draft.length === 0 && <EmptyState title="A little breathing room.">Use Customize dashboard to add widgets. Your saved tasks are still on the Tasks page.</EmptyState>}
     <div className="custom-widget-grid">{draft.map((widget, index) => <article key={widget.id}
       data-accent={widget.accent} className={`dashboard-widget widget-${widget.width} widget-type-${widget.id}`} aria-label={WIDGETS[widget.id].label}>
-      <div className="window-titlebar widget-titlebar"><WindowDots/><span>{WIDGETS[widget.id].label}</span></div>
+      <WindowTitleBar className="widget-titlebar"><span>{WIDGETS[widget.id].label}</span><Button className="mobile-widget-toggle" aria-label={(editing || mobileOpen.includes(widget.id)?"Close ":"Open ")+WIDGETS[widget.id].label} aria-expanded={editing || mobileOpen.includes(widget.id)} aria-controls={"widget-body-"+widget.id} disabled={editing} onClick={()=>setMobileOpen(current=>current.includes(widget.id)?current.filter(id=>id!==widget.id):[...current,widget.id])}>{editing || mobileOpen.includes(widget.id)?"Close":"Open"}</Button></WindowTitleBar>
       {editing && <div className="widget-controls">
         <span className="widget-control-title">{WIDGETS[widget.id].label}</span>
         <Button type="button" disabled={pending || !canCustomize || index === 0} aria-label={`Move ${WIDGETS[widget.id].label} up`}
@@ -89,7 +91,7 @@ export function DashboardWidgets({ savedLayout, savedRevision, canCustomize, slo
         <Button type="button" disabled={pending || !canCustomize} aria-label={`Remove ${WIDGETS[widget.id].label} widget`}
           onClick={() => change(draft.filter((item) => item.id !== widget.id), `${WIDGETS[widget.id].label} removed from the dashboard.`)}>Remove</Button>
       </div>}
-      {slots[widget.id]}
+      <div className="widget-body" id={"widget-body-"+widget.id} data-mobile-collapsed={!editing && !mobileOpen.includes(widget.id)}>{slots[widget.id]}</div>
     </article>)}</div>
   </div>;
 }

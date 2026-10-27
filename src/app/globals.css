@@ -111,12 +111,6 @@ h2 { font-family: Georgia, "Times New Roman", serif; font-size: 1.7rem; line-hei
 }
 /* Dashboard overview */
 .dashboard-card { max-width: 70rem; }
-.planner-navigation { display: flex; align-items: center; justify-content: space-between; gap: 1.25rem; padding-bottom: 1.5rem; margin-bottom: 2rem; border-bottom: 1px solid var(--border); }
-.planner-navigation .brand { margin: 0; text-decoration: none; }
-.planner-navigation nav { display: flex; align-items: center; gap: 0.4rem; }
-.planner-navigation nav a { display: inline-flex; align-items: center; min-height: 44px; padding: 0.65rem 1rem; border-radius: 7px; font-size: 0.9rem; font-weight: 600; color: var(--primary); }
-.planner-navigation nav a[aria-current="page"] { background: var(--selected); color: var(--foreground); }
-.planner-navigation nav a:hover { background: var(--tint); }
 .dashboard-intro { padding-bottom: 0.75rem; }
 .dashboard-intro h1 { max-width: 37rem; }
 .dashboard-intro .intro { max-width: 35rem; }
@@ -144,9 +138,6 @@ h2 { font-family: Georgia, "Times New Roman", serif; font-size: 1.7rem; line-hei
   .overview-note { font-size: 0.75rem; }
 }
 @media (max-width: 460px) {
-  .planner-navigation { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
-  .planner-navigation nav { width: 100%; }
-  .planner-navigation nav a { flex: 1; justify-content: center; }
   .overview-cards { grid-template-columns: minmax(0, 1fr); }
   .overview-card dd { display: flex; align-items: center; gap: 1rem; }
   .overview-number { font-size: 2.4rem; }
@@ -192,7 +183,6 @@ h2 { font-family: Georgia, "Times New Roman", serif; font-size: 1.7rem; line-hei
   .calendar-card { padding: 1.25rem; }
   .calendar-day { min-height: 64px; padding: 0.35rem; }
   .calendar-agenda { padding: 1.25rem; }
-  .planner-navigation nav a { padding-left: 0.65rem; padding-right: 0.65rem; font-size: 0.85rem; }
 }
 /* Plain-text notes */
 .notes-card { max-width: 75rem; }
@@ -214,7 +204,6 @@ h2 { font-family: Georgia, "Times New Roman", serif; font-size: 1.7rem; line-hei
 .note-form textarea { line-height: 1.85; min-height: 22rem; resize: vertical; }
 .note-form .primary-button { justify-self: start; }
 .note-save-hint { font-size: 0.8rem; }
-.planner-navigation nav { flex-wrap: wrap; }
 @media (max-width: 760px) {
   .notes-layout { grid-template-columns: minmax(0, 1fr); }
   .notes-library { padding: 1rem; }
@@ -246,8 +235,6 @@ h2 { font-family: Georgia, "Times New Roman", serif; font-size: 1.7rem; line-hei
 @media (max-width: 760px) {
   .theme-options { grid-template-columns: minmax(0, 1fr); }
   .settings-card { padding: 1.25rem; }
-  .planner-navigation { flex-wrap: wrap; }
-  .planner-navigation nav { width: 100%; }
 }
 /* Saved dashboard widget arrangements */
 .dashboard-customize-heading { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.25rem; }

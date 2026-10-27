@@ -2,7 +2,7 @@
 import Link from "next/link";
 import {useActionState,useId,useState} from "react";
 import {Button} from "@/components/ui/button";
-import {TextInput} from "@/components/ui/fields";
+import {TextInput,Select} from "@/components/ui/fields";
 import {FormFeedback} from "@/components/ui/feedback";
 import {runAction} from "@/lib/shared/client-actions";
 import {EMPTY_SEARCH,SEARCH_KINDS,SEARCH_LABELS,SEARCH_PAGE_SIZE,searchHref,type SearchState,type SearchKind} from "@/lib/search/types";
@@ -15,7 +15,7 @@ export function SearchForm() {
  <label htmlFor={field+"-query"}>What are you looking for?</label>
  <TextInput id={field+"-query"} name="query" type="search" value={query} onChange={e=>setQuery(e.target.value)} maxLength={200} readOnly={pending} placeholder="Search your saved titles and text..." autoComplete="off"/>
  <label htmlFor={field+"-kind"}>Look in</label>
- <select id={field+"-kind"} className="form-control" name="kind" value={kind} onChange={e=>setKind(e.target.value as SearchKind)} disabled={pending}>{SEARCH_KINDS.map(value=><option key={value} value={value}>{SEARCH_LABELS[value]}</option>)}</select>
+ <Select id={field+"-kind"} name="kind" value={kind} onChange={e=>setKind(e.target.value as SearchKind)} disabled={pending}>{SEARCH_KINDS.map(value=><option key={value} value={value}>{SEARCH_LABELS[value]}</option>)}</Select>
  <Button type="submit" name="offset" value="0" variant="primary" pending={pending} pendingLabel="Searching...">Search</Button>
  <FormFeedback pending={pending} pendingLabel="Searching your planner..." error={state.error}/>
  {!state.searched&&!state.error&&!pending&&<p className="muted">Enter a word or phrase to search your saved planner. Nothing here is shared with other accounts.</p>}

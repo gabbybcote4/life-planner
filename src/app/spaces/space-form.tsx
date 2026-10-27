@@ -2,7 +2,7 @@
 import {useActionState,useId,useRef,useState} from "react";
 import {useRouter} from "next/navigation";
 import {Button} from "@/components/ui/button";
-import {TextInput} from "@/components/ui/fields";
+import {TextInput,Select} from "@/components/ui/fields";
 import {FormFeedback} from "@/components/ui/feedback";
 import {runAction,UNCONFIRMED_SAVE} from "@/lib/shared/client-actions";
 import {createRequestId} from "@/lib/shared/request-id";
@@ -44,7 +44,7 @@ export function SpaceForm({space,templates=[],templatesError}:{space?:Space;temp
  {!space&&selected&&<details className="template-preview"><summary>Preview {selected.title} starter pages</summary>{selected.pages.map(page=><section key={page.title}><h3>{page.title}</h3><p className="template-page-text">{page.body}</p></section>)}<p className="muted">These become your own editable pages. No tasks, events, or account settings will be changed.</p></details>}
  {space&&<details className="space-personalization"><summary>Personalize this space</summary>
  <div className="space-appearance-preview"><SpaceVisual space={{id:space.id,title:title||"Your space",...appearance}} description="Preview only — save space settings to keep it."/></div>
- {([{name:"icon",label:"Icon",options:SPACE_ICONS},{name:"cover",label:"Cover illustration",options:SPACE_COVERS},{name:"accent",label:"Accent",options:SPACE_ACCENTS}] as const).map(control=><label key={control.name} className="space-style-control">{control.label}<select className="form-control" name={control.name} value={appearance[control.name]} disabled={pending} onChange={event=>{const next={...appearance,[control.name]:event.target.value};const parsed=parseSpaceAppearance(next.icon,next.cover,next.accent);if(parsed)setAppearance(parsed);}}>{Object.entries(control.options).map(([value,label])=><option key={value} value={value}>{label}</option>)}</select></label>)}
+ {([{name:"icon",label:"Icon",options:SPACE_ICONS},{name:"cover",label:"Cover illustration",options:SPACE_COVERS},{name:"accent",label:"Accent",options:SPACE_ACCENTS}] as const).map(control=><label key={control.name} className="space-style-control">{control.label}<Select name={control.name} value={appearance[control.name]} disabled={pending} onChange={event=>{const next={...appearance,[control.name]:event.target.value};const parsed=parseSpaceAppearance(next.icon,next.cover,next.accent);if(parsed)setAppearance(parsed);}}>{Object.entries(control.options).map(([value,label])=><option key={value} value={value}>{label}</option>)}</Select></label>)}
  </details>}
  <label htmlFor={field}>{space?"Space name":"New space name"}</label>
  <TextInput id={field} name="title" value={title} onChange={e=>setTitle(e.target.value)} required maxLength={200} readOnly={pending} placeholder="Home, work, or something yours..."/>

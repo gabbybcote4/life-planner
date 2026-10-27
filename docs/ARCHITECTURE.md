@@ -1,301 +1,164 @@
 # Reusable planner architecture
 
-The planner uses a small shared UI layer with feature-specific content and save
-logic. Reuse the existing components before adding another version of a control.
+See [OWNER_GUIDE.md](OWNER_GUIDE.md) for editing recipes and audit findings,
+[README.md](../README.md) for setup/migrations, and [MVP_REVIEW.md](MVP_REVIEW.md)
+for testing. This describes the current structure, not old implementation stages.
 
-## Where to change things
+## Three layers
+
+A page reads authorized data and composes a screen. A feature component owns its
+draft, feedback, and explicit save. Shared UI supplies a consistent appearance.
+Validation and rules live in src/lib. Each feature action keeps its authorization,
+owner filters, constraints, retries, and revisions. Share presentation without
+merging unrelated database operations.
+
+## Reuse map
 
 | Concern | Source |
 | --- | --- |
-| Navigation labels and destinations | `src/lib/navigation.ts` |
-| Planner page frame and loading boundary | `src/app/components/planner-page.tsx` → `PlannerPage` |
-| Account heading and sign-out placement | Same file → `PlannerHeading` |
-| Standard retry/error and setup states | Same file → `LoadError`, `SetupNotice` |
-| Buttons, variants, and pending labels | `src/components/ui/button.tsx` |
-| Text inputs and text areas | `src/components/ui/fields.tsx` |
-| Save, pending, and validation feedback | `src/components/ui/feedback.tsx` |
-| Shared panel empty states | `src/components/ui/empty-state.tsx` |
-| Colours for every theme, including fallback | `src/lib/themes/themes.ts` |
-| Shared control rules and feature layout styles | `src/app/globals.css` |
-| Verified current account | `src/lib/auth/account.ts` |
-| Common record-id validation | `src/lib/shared/validation.ts` |
+| Shell/loading/heading/account placement | src/app/components/planner-page.tsx: PlannerPage, PlannerHeading |
+| Sidebar labels/destinations | src/lib/navigation.ts and PlannerNavigation |
+| Setup/retry state | planner-page.tsx: SetupNotice, LoadError |
+| Buttons and pending labels | src/components/ui/button.tsx |
+| Inputs, text areas, standard dropdowns | src/components/ui/fields.tsx |
+| Save/error/pending messages | src/components/ui/feedback.tsx |
+| Empty panels | src/components/ui/empty-state.tsx |
+| Retro title bar/window | src/components/ui/desktop-window.tsx: WindowTitleBar, DesktopWindow |
+| Navigation icons | src/components/ui/desk-icon.tsx |
+| Space preview/card/header/icon | src/components/ui/space-visual.tsx: SpaceVisual, SpaceMark |
+| Original SVG covers | src/components/ui/space-artwork.tsx |
+| Palette values/labels | src/lib/themes/themes.ts |
+| Background preset parsing/attributes | src/lib/themes/background.ts |
+| Core layout/controls vs retro appearance | src/app/globals.css vs src/app/retro.css |
+| Navigation placement and phone rules | src/app/responsive.css |
+| Temporary phone section disclosure | src/components/ui/mobile-section.tsx |
 
-`PlannerPage` accepts an active navigation section, a loading message, and children.
-It owns the paper frame, navigation, and Suspense boundary, so new pages keep the
-same spacing and request-time rendering pattern. `PlannerHeading` accepts the
-page's title/copy and current account email; content still belongs to the feature.
+Button defaults to type=button; submit buttons explicitly use type=submit. Fields
+forward native labeling, validation, disabled/read-only state, and callbacks.
+Compact widget-toolbar selects and native radio/hidden fields remain specialized.
+WindowTitleBar owns dots/classes; callers supply headings/actions. Embedded windows
+avoid duplicate chrome inside a dashboard widget.
 
-## Reusable content
+## Feature composition
 
-- `src/app/dashboard/task-widgets.tsx` exports TaskOverviewWidget, QuickAddWidget,
-  TaskProgressWidget, and RecentTasksWidget. These take data as props; their
-  presentation is independent of the home-page query. Optional heading ids allow
-  multiple compositions without duplicated accessible labels.
-- `src/app/dashboard/dashboard-widgets.tsx` manages arrangement and saved layouts.
-  It receives rendered content slots, so it does not own task queries or mutation
-  logic. Removing a slot never deletes the feature's source records.
-- `src/app/tasks/task-board.tsx` exports TaskBoard, TaskList, and AddTaskForm.
-- `src/app/calendar/month-view.tsx` renders a month from its selected date/events.
-  CalendarEvents owns the interactive event forms; date helpers remain in lib.
-- `src/app/notes/note-editor.tsx` owns plain-text note editing and draft/revision
-  state. ThemePicker similarly owns theme selection, not session verification.
+- TaskBoard, TaskList, AddTaskForm serve Tasks, Dashboard, and Spaces.
+  TASK_SELECT includes assignments in each relevant projection.
+- TaskOverviewWidget, QuickAddWidget, TaskProgressWidget, RecentTasksWidget receive
+  data as props. DashboardWidgets arranges content slots, not queries/source data.
+- Workspace loaders read the verified owner's first three spaces, next five all-day
+  events, and first twelve documents sorted by title/kind/id. The graph draws only
+  saved links between displayed documents. It labels the bounds and UTC date context.
+- TextDocumentEditor composes PlainTextEditor and owned link resolution for Notes
+  and space pages. Notes now calls it directly; saveNote/saveSpacePage stay separate.
+- LinkPicker inserts into a draft; normal document save persists it. LinkedText
+  renders escaped text and resolved internal links. Connections shows current titles.
+- MonthView receives dates/events; CalendarEvents owns forms. Local Today is computed
+  after hydration. Date-only formatting uses UTC to preserve calendar dates.
+- SearchForm posts queries as action state, not URL/history/shared storage.
+  loadSelectedTask reads an exact owned result independently of list truncation.
 
-A page fetches authorized data and composes content; a widget displays provided
-data; an interactive feature component owns its form state. Keep those boundaries
-visible instead of introducing a generic component with many unrelated flags.
+Task/event/note/page titles allow 1-200 characters; document bodies up to 20,000.
+Dates are 1900-2100. Tasks shows the latest 200 with a limit notice; notes/pages
+paginate by 20. Calendar queries over 1,000 events report a limit error. Keep these
+explicit bounds and feature-specific validation rather than silently truncating data.
 
-## Forms and styling
+## Drafts, saves, and retries
 
-Use Button with `variant="primary"`, `"secondary"`, `"text"`, or `"plain"`.
-Buttons default to `type="button"`; form submission must explicitly use
-`type="submit"`. The pending prop disables the button, marks it busy, and supplies
-a pending label. Plain preserves specialized checkbox/calendar/widget styling.
+runAction catches transport failures while preserving Next redirects/not-found
+control flow. Keep drafts and stable create IDs until confirmation. Do not retry
+writes automatically or display Saved for an unconfirmed response. createRequestId
+uses secure UUID/random bytes, including local HTTP without randomUUID.
+No localStorage/persistent browser cache holds planner data. Save before navigation.
 
-Use TextInput/TextArea with normal HTML attributes and a matching label/id. The
-shared form-control class owns borders, colour, font, padding, and focus; feature
-styles should handle placement, sizes, and spacing. Keep hidden/radio fields
-native when they need their existing specialized semantics.
+Notes/pages/spaces/layout/backgrounds retain revision baselines and report stale
+saves without losing the draft. Task title/calendar/theme updates use the last
+successful write. Task-space moves guard the original assignment. Creation retries
+compare the original request without replacing later edits.
 
-Use FormFeedback for common pending/error/success output. It gives pending/error
-priority over stale success messages and uses live announcements. Domain notices
-with richer navigation can retain their own presentation when appropriate.
+The starter catalog and receipt live in SQL. Space+pages+receipt are transactional.
+Retrying does not recopy pages, rename a space, or reset its appearance. Receipts
+record original request metadata, not general document history.
 
-Theme colours come only from the palette module. The root layout supplies the
-Sage fallback with the same themeVariables helper used by the saved ThemeRoot,
-so changing a palette does not require maintaining a second CSS copy.
+## Appearance contracts
 
-## Authentication and data boundaries
+themeVariables is the single palette-to-CSS mapping. Layout supplies the same Sage
+fallback; ThemeRoot reads the verified account's preferences without shared caching.
+Explicit palette mode sets colorScheme. Previews do not change the saved root.
+Sign-in/out refreshes the layout to keep account settings separate.
 
-`requireAccount()` is for protected page reads and redirects signed-out visitors.
-`getAccountContext()` is for mutations/theme reads that need their own failure
-feedback. It creates a request-scoped Supabase client and calls getClaims; it never
-trusts getSession or caches identities across requests.
+retro.css owns local font roles (Tahoma/Verdana UI, Trebuchet headings, Lucida
+Console title bars), shell/window styling, and semantic accents. Space presets are
+validated; automatic covers stay stable by ID. Arbitrary URLs, SVG payloads, CSS,
+uploaded wallpaper, and hex strings are not persisted as preferences.
 
-Every mutation still invokes the helper inside that action. Keep owner filters,
-RLS, input validation, revision checks, duplicate-retry handling, and feature error
-messages close to the feature's data access. Shared page gating is not authorization.
-Sign-in/sign-out and the email callback intentionally use the raw auth client.
+Widget id/width/optional-accent validation matches SQL. Legacy layouts stay valid;
+adding widgets/restoring defaults stays draft-only until Save. Removing a widget
+does not delete its records. Existing rows are not automatically rewritten.
 
-Next.js requires static proxy matchers. Keep that literal list in src/proxy.ts;
-the navigation regression test verifies that all registered planner routes appear
-in it rather than replacing it with a dynamic configuration the compiler ignores.
+The shared background parser/attributes drive the saved desktop and isolated
+preview. Saves update background columns with owner/background_revision guards.
+A nondefault initial insert starts at revision 2 to protect concurrent first saves.
+Palette saves do not change backgrounds.
+
+## Account and database boundaries
+
+requireAccount protects page reads; getAccountContext checks verified claims inside
+each action. Page gating alone is not authorization. Supabase creation stays
+request-scoped behind connection() before cookie/auth access; removing that boundary
+previously caused Next prerender clock errors.
+
+proxy.ts refreshes cookies and marks responses private/no-store. Its matcher must
+stay a static literal; navigation tests check route coverage. Never cache identities
+or authenticated responses across accounts.
+
+Keep RLS, narrow grants, and composite same-owner parent foreign keys. Never trust
+caller ownership/timestamps/revisions. Search/link helpers are security-invoker,
+owner-filtered, and authenticated-only. Marker parsing matches JS/SQL: note/page,
+UUID, 1-200-character one-line label, deduplicated identities, 20,000-character body.
+Bodies stay plain text and never become unsanitized HTML.
+
+Add new migrations instead of editing applied history. Do not build a generic
+save-everything helper. Browser database access can be added if a real future feature
+needs it; the unused browser-client module was removed.
 
 ## Verification
 
-`npm test` runs the existing feature tests plus shared-component/auth-context
-regression checks. The latter compile actual TSX primitives with the installed
-TypeScript package and server-render them with React. Account tests mock the SDK
-result to check request isolation and failure handling; they do not replace live
-Supabase authentication or database privacy testing.
-
-Run lint, TypeScript/build, and the browser review in `docs/MVP_REVIEW.md` before
-committing a refactor. No schema/migration change is needed for this refactor.
-
-## Reliable client saves
-
-Wrap client-side server-action calls with runAction from
-src/lib/shared/client-actions.ts. Server try/catch cannot catch a request that
-never reaches the server. The wrapper returns honest failure feedback while
-preserving Next.js redirects/not-found control flow via unstable_rethrow.
-Keep drafts and request ids until confirmed success; do not automatically retry
-mutations. An unconfirmed save may have reached the database.
-
-Use createRequestId from src/lib/shared/request-id.ts for new records. It uses
-native randomUUID or secure random bytes when local HTTP lacks randomUUID;
-it never falls back to Math.random. Tests simulate both environments.
-PlannerPage supplies a keyboard-visible skip link to the main content.
-
-## Spaces and text pages
-
-`src/app/components/plain-text-editor.tsx` supplies the shared controlled text
-editor for Notes and Spaces. It accepts a server save action, a navigation
-prefix, and an optional space identifier. Feature actions retain authorization,
-parent verification, owner filters, validation, retry confirmation, and revisions.
-Notes keeps a thin wrapper with its own action and destination.
-
-`src/app/spaces/space-form.tsx` handles create/rename drafts. The spaces page loads
-only the selected owner's space and selected page, with separate paginated lists.
-Do not replace the database's composite owner/parent foreign key with UI filtering.
-
-## Knowledge links
-
-src/lib/knowledge/links.ts defines typed link targets, stable plain-text markers,
-selection insertion, and safe planner destinations. PlainTextEditor composes
-LinkPicker outside its save form to avoid nested forms. Insertion only changes
-the draft; established feature actions retain ownership/revision/save checks.
-
-KnowledgeConnections loads saved outgoing/backlink lists; ConnectionList supplies
-read-only refresh and pagination. Server actions always re-check account context
-and call authenticated SQL functions. Nothing is stored in browser persistence or
-shared caches. Notes/page saves revalidate both areas so connections can refresh.
-
-The database reads the current user's Notes and Spaces through security-invoker
-helpers. The marker parser deduplicates kind/UUID references and joins only owned
-targets. Backlinks are computed from saved bodies, avoiding dual-write/index drift.
-An unavailable target returns no metadata; an inaccessible source cannot enumerate
-links. Searches use literal substring matching and deterministic title/kind/id
-ordering. List queries return 21 rows for a 20-item page, not an unreported cap.
-
-The first implementation scans the owner's saved bodies for backlinks. For large
-libraries, profile before adding a transactionally maintained index; do not add a
-client-updated link table that can drift from saved text or bypass ownership.
+npm test renders actual components and mocks account/action responses. It checks
+contracts/failures, not live RLS/browser interaction. SQL tests are separate.
+This cleanup changes presentation reuse and organization, with no dependency,
+migration, data operation, permission change, or timer implementation. The following
+mobile/navigation increment is separate and adds migration 016.
 
 
-TextDocumentEditor resolves initial owned link targets for PlainTextEditor. Read
-mode renders body segments through LinkedText: literal text stays escaped, and
-only resolved account-owned targets become Next links. Unknown targets display
-an unavailable label. The shared marker parser handles reading and insertion.
-ResolveLinkPreview performs fresh account checks and owner-filtered target reads
-in batches of 50. It accepts no owner parameter and makes no writes. Preview
-failures never turn a confirmed save into a failed save or discard text.
+## Mobile navigation and responsive panels
 
-## Unified search
+PlannerNavigation is a client component using the same PLANNER_ROUTES for the
+full menu and MOBILE_PRIMARY_ROUTES shortcuts. The More disclosure is nonmodal:
+route clicks, its close control, Escape, and outside pointer clicks dismiss it.
+Escape/Close return focus to the toggle. Hidden menu items leave the accessibility
+tree through CSS display:none. The shared Button accepts its native ref.
 
-src/lib/search/types.ts owns validated search inputs, result types, category
-labels, and destination mapping. SearchForm uses shared inputs, buttons, feedback,
-and the planner frame; its explicit action runs a fresh account check each time.
-Search is posted as form state, without query terms in navigation URLs or shared
-caches. Prior results are labeled when the input/category changes, and pagination
-is disabled until the new search runs. Failures are separate from zero matches.
+ThemeRoot reads nav_position on the verified account; Settings loads nav_revision.
+NavigationPicker has isolated preview, cancel/default, explicit save and transport
+feedback. saveNavigation authenticates and filters by owner/revision; it never
+writes theme/background. Migration 016 restricts positions to four presets and
+protects revisions, including concurrent nondefault initial inserts (revision 2).
+Existing accounts remain left; no row/layout rewrite is performed.
 
-planner_search is a read-only, security-invoker SQL function. Each UNION branch
-filters auth.uid and keeps RLS active; page matches also join their owned parent.
-Literal substring matching does not interpolate SQL or expose a caller owner field.
-The first version scans owned text; profile larger libraries before adding indexes
-or changing search semantics. Result metadata excludes full body content.
+responsive.css loads after retro.css. Left/right are desktop sidebars, top is a
+sticky horizontal menu, bottom a fixed dock with reserved content/safe-area space.
+At 800px and below, Dashboard/Tasks/Calendar/More replace the full navigation.
+Left/right use a top bar and side-aligned More; top/bottom use their chosen edge.
+Do not keep persistent sidebars on narrow phones and squeeze the editor.
 
-loadSelectedTask performs an exact id plus owner query for task result links,
-independent of the normal task-list limit. It reuses TaskList and task actions,
-including existing save-error handling, rather than introducing a second editor.
+Dashboard widget phone toggles are local UI state only. The first saved widget and
+Quick add/Recently added start expanded; secondary panels collapse. Customization
+opens content while editing. Saved identities/order/width/accent remain untouched.
+MobileSection reuses the same phone disclosure pattern for libraries/settings,
+retaining mounted children so closing never discards form drafts. Desktop content
+stays visible regardless of phone disclosure state. No local storage is used.
 
-## Space starters
-
-SpaceForm composes native radio choices, complete page previews, shared controls,
-and the existing rename action. New spaces call createSpaceFromTemplate;
-the server validates the key/title/request ID, verifies account context, and calls
-one transactional RPC. It passes no owner or caller-provided page content.
-
-planner_space_templates is the single source of preview and copied text. The
-security-invoker create function inserts an owned space, all catalog pages, and an
-immutable receipt in one transaction. Retry confirmation uses original metadata
-so current user edits are not compared with (or replaced by) starter text.
-Receipts are scoped by RLS and composite owner/parent foreign keys. They are retry
-metadata, not authorization to bypass ownership. Direct authenticated receipt
-writes can describe only owned resources; changing/deleting receipts is denied.
-
-After confirmed success the client clears its creation ID/name for another explicit
-creation. Errors retain input and the same ID. A conflicting changed retry is
-rejected rather than silently creating another space. Catalog load errors leave
-existing spaces available; new-space creation requires the starter setup.
-
-## Task-space composition
-
-TASK_SELECT centralizes the task/space summary projection for task lists, selected
-tasks, dashboard widgets, and space views. The joined parent is protected by RLS
-and the composite owner foreign key; optional Task fields preserve presentation
-compatibility with existing test fixtures. TaskSpaceAssignment reuses unified
-search restricted to space results; it supports pagination and an explicit save.
-Its original assignment baseline is retained until a move confirms, avoiding
-silent overwrites from newer server props while a choice is in progress.
-
-assignTaskSpace verifies the current account and desired owned parent, then updates
-only space_id with task-id, owner, and previous-assignment predicates. Missing
-matches are checked for a matching saved destination to confirm a retry; otherwise
-a conflict is returned. Moving or unassigning never touches title/completion.
-
-Space pages compose AddTaskForm(spaceId) and TaskList with owner/space-filtered,
-paginated reads. Existing add/edit/complete actions stay shared. Add-task retries
-compare the saved parent as well as the title. No client-only ownership assumption
-or independent copy of a task is introduced.
-
-## Retro desktop foundation
-
-The owner-selected late-90s/early-2000s visual direction is recorded in the product
-blueprint. src/app/retro.css skins the shared desktop shell and existing controls;
-window title bars use DesktopWindow/WindowDots, navigation uses DeskIcon, and
-SpaceArtwork supplies original code-native decorative covers. Semantic accent
-colors live beside existing palette tokens. Preserve saved theme keys: rose now
-labels Pastel Desktop, sage Sage Desktop, midnight Midnight Desktop. No database
-preference migration or automatic change to a user's chosen theme is introduced.
-
-Existing widget IDs/layout persistence stay unchanged. The space shortcuts,
-upcoming calendar rail, and connection-map preview are fixed shared panels in this
-first pass; making them individually add/remove/reorder/resize is follow-up work.
-Workspace data loaders read the verified account's spaces/events or the existing
-owner-scoped document RPC, without a shared cache. Preview bounds: first 3 spaces,
-next 5 all-day events, first 12 documents sorted by title/kind/id. The graph draws
-only saved links between displayed documents, provides a full-title accessible
-list, and never invents placeholder nodes/edges. Calendar context is explicitly UTC
-and its live clock is read only after connection().
-
-No timer, habit tracker, external music/weather, new theme IDs, uploaded covers,
-or per-widget custom color persistence is introduced in this foundation. Add future
-palettes through tokens and extend contrast checks across every accent surface.
-
-Typography uses local font-role tokens: Tahoma/Verdana for classic desktop UI,
-Trebuchet MS for softer 2000s headings, and Lucida Console/Courier New for title
-bars and small console labels. These apply across palettes without external font
-requests. Adjust roles in retro.css rather than changing each component's fonts.
-
-## Unified workspace widgets
-
-All seven widget identities now live in the dashboard registry, with matching
-application/database validation. TaskWidgets composes task content and passed
-server-rendered workspace slots into DashboardWidgets. DesktopWindow embedded mode
-avoids nested window chrome. Fixed workspace placement/rail was removed; the saved
-layout alone determines which panels are shown and their order/width.
-
-LEGACY_LAYOUT documents the old four-widget arrangement. It remains valid unchanged.
-DEFAULT_LAYOUT is the seven-widget starting point, and addWorkspaceWidgets appends
-only missing workspace identities without changing existing order/size. Migration
-updates the SQL default/validator without rewriting rows or revisions. Tests check
-app/database parity and backward compatibility. Existing layout conflict/privacy
-boundaries and metadata-only persistence remain unchanged.
-
-## Expanded palette library
-
-Each registry entry contains explicit light/dark mode and a complete shared token
-set. themeVariables reads that metadata rather than inferring dark mode from one
-legacy name. Shared UI/artwork/graph/calendar styling continues to use semantic
-palette/accent tokens. The twelve-palette allowlist matches the database check;
-legacy IDs/defaults and saved selections are preserved.
-
-ThemePicker groups native radio choices by mode and renders an isolated preview
-using the chosen palette's variables. The root's saved theme is untouched until
-the existing server action confirms a save. Preview text is explicitly illustrative,
-not live task data. No search history/local preference cache or external assets
-are introduced.
-
-## Widget accent metadata
-
-Widget optionally stores one semantic accent enum alongside id/width. App and SQL
-validators accept the legacy two-field shape and only the five registered values;
-unknown keys, null accents, hex/CSS strings, and extra payload remain invalid.
-Automatic color is represented by omitting accent, not storing an auto string.
-
-setWidgetAccent/clearWidgetAccents return new arrays and preserve identities,
-positions, and widths. Existing movement/width operations retain optional metadata.
-Only the validated data-accent attribute selects a CSS token rule; no user string
-is interpolated into a style declaration. Palette changes resolve the same role
-through existing theme variables, preserving tested readable foreground colors.
-Draft save/cancel/revision behavior remains in the existing layout action/component.
-
-## Space appearance composition
-
-The appearance module owns the icon/cover/accent allowlists, defaults, strict parse,
-stable automatic-cover selection, and shared read projection. SpaceMark/SpaceVisual
-compose the existing SVG artwork with controlled theme roles. Space list, dashboard,
-selected header, and edit preview use the same saved metadata and presentation.
-
-SpaceForm owns name/appearance drafts together. The edit action updates only those
-columns using id, verified owner, and revision. Legacy name-only calls omit the
-new columns instead of resetting them. Failed/stale responses retain choices.
-DB column checks enforce built-ins even for direct requests; arbitrary image URLs
-or style payloads are not accepted. Creating a space uses database defaults; users
-personalize it afterwards. Template receipts remain independent of editable style.
-
-## Desktop backgrounds
-
-The shared themes/background module defines solid/dots/grid and subtle/medium/strong presets. ThemeRoot reads the owner�s saved preference and supplies validated data attributes; retro.css applies a shared texture to the desktop and isolated Settings preview. Content panels retain opaque theme surfaces. BackgroundPicker owns its draft, cancel/default preview, confirmed baseline, and save feedback. Theme changes never write background fields.
-
-The separate background action authenticates every call, updates only two preset columns with owner/background_revision predicates, and handles first-row creation without an owner-changing upsert. Migration 015 preserves existing rows with dots/medium defaults and uses a background-only revision trigger. A nondefault initial insert starts at revision 2 to protect concurrent first saves. RLS stays unchanged; direct clients cannot write revisions. No external assets, browser persistence, custom CSS, or uploaded wallpaper are introduced.
+Run test:navigation, the full suite, and navigation_position_rls.sql. Browser review
+must include 320/390/768/1280px widths, every position, menus, drafts, touch targets,
+bottom safe area, keyboard focus, and phone orientation. Desktop emulation does not
+replace a physical iPhone/Android keyboard/safe-area check.

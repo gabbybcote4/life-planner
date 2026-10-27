@@ -1,3 +1,5 @@
+/* EDITING MAP: font roles at the top; shell, windows/widgets, then personalization.
+   Palette colors belong in src/lib/themes/themes.ts, not in these rules. */
 /* Shared retro desktop skin. Palette and accent colors come from themeVariables. */
 /* Local system fonts: classic desktop UI, rounded 2000s headings, console labels. */
 .theme-root {
@@ -41,8 +43,6 @@
 .desktop-main .task-space-assignment { font-size:.8rem; padding:.4rem .6rem; margin:.25rem 0; }
 .desktop-main .task-space-assignment summary { min-height:30px; display:list-item; align-content:center; }
 .desktop-main .space-task-panel,.desktop-main .spaces-library,.desktop-main .notes-library,.desktop-main .note-editor,.desktop-main .calendar-agenda,.desktop-main .theme-option { border:1.5px solid var(--input-border); box-shadow:3px 3px 0 var(--shadow); background:var(--surface); border-radius:9px; }
-.desktop-dashboard-columns { display:grid; grid-template-columns:minmax(0,1fr) 285px; gap:1.2rem; align-items:start; }
-.desktop-dashboard-center,.desktop-dashboard-rail { min-width:0; display:grid; gap:1.2rem; }
 .desktop-window,.desktop-main .dashboard-widget { min-width:0; border:1.5px solid var(--foreground); border-radius:10px; overflow:hidden; background:var(--surface); box-shadow:3px 3px 0 var(--shadow); }
 .window-titlebar { display:flex; align-items:center; gap:.7rem; min-height:35px; padding:.45rem .8rem; border-bottom:1px solid var(--foreground); background:linear-gradient(90deg,var(--accent-lilac),var(--surface)); font:.76rem var(--font-desktop-mono); }
 .window-titlebar h2 { font:inherit; font-weight:700; margin:0; }
@@ -98,16 +98,14 @@
 .upcoming-event-list li { padding:1rem 0; border-bottom:1px solid var(--border); display:grid; gap:.35rem; overflow-wrap:anywhere; }
 .upcoming-event-list time { font:.7rem var(--font-desktop-mono); color:var(--muted); }
 .upcoming-event-list a { font-size:.88rem; text-decoration:underline; text-underline-offset:3px; }
-.desktop-shortcuts { padding:1rem; border:1.5px dashed var(--input-border); border-radius:9px; background:var(--accent-yellow); }
-.desktop-shortcuts a { display:block; min-height:42px; padding:.65rem 0; font-size:.85rem; }
 .desktop-graph { width:100%; height:auto; background-image:radial-gradient(var(--pattern) 1px,transparent 1px); background-size:16px 16px; }
 .desktop-graph a:hover circle { stroke:var(--foreground); stroke-width:3; }
 .graph-open-links { display:flex; flex-wrap:wrap; gap:.5rem; padding:0; list-style:none; margin:.6rem 0; }
 .graph-open-links a { display:block; padding:.4rem .65rem; border:1px solid var(--input-border); border-radius:6px; background:var(--accent-lilac); font-size:.75rem; overflow-wrap:anywhere; }
 @media(min-width:1700px) { .desktop-app { grid-template-columns:240px minmax(0,1fr); } }
-@media(max-width:1200px) { .desktop-app { grid-template-columns:185px minmax(0,1fr); } .desktop-dashboard-columns { grid-template-columns:minmax(0,1fr); } .desktop-dashboard-rail { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media(max-width:1200px) { .desktop-app { grid-template-columns:185px minmax(0,1fr); } }
 @media(max-width:800px) { .desktop-app { display:block; } .desktop-sidebar { position:relative; height:auto; padding:.7rem; border-right:0; border-bottom:2px solid var(--foreground); } .desktop-brand { padding:.2rem .4rem .8rem; font-size:1.15rem; } .desktop-brand br { display:none; } .desktop-brand svg { width:28px; height:30px; } .desktop-sidebar-label,.desktop-sidebar-bottom { display:none; } .desktop-sidebar nav { display:flex; flex-wrap:wrap; gap:.2rem; } .desktop-sidebar nav a { padding:.45rem .6rem; font-size:.78rem; gap:.4rem; min-height:44px; } .desktop-sidebar nav svg { width:17px; height:19px; } .desktop-main.planner-shell { padding:1.3rem .8rem; } .desktop-main .planner-intro { display:block; } .desktop-main .planner-account { max-width:none; text-align:left; margin:.5rem 0 1rem; } .desktop-main .planner-account .muted { font-size:.7rem; } .desktop-space-cards { grid-template-columns:repeat(3,minmax(0,1fr)); gap:.5rem; } .desktop-space-card > div { padding:.55rem; } .desktop-space-card h3 { font-size:.9rem; } }
-@media(max-width:500px) { .desktop-space-cards,.desktop-dashboard-rail { grid-template-columns:1fr; } .space-artwork { max-height:150px; } .desktop-main h1 { font-size:2.2rem; } .desktop-main .overview-cards { grid-template-columns:1fr; } }
+@media(max-width:500px) { .desktop-space-cards { grid-template-columns:1fr; } .space-artwork { max-height:150px; } .desktop-main h1 { font-size:2.2rem; } .desktop-main .overview-cards { grid-template-columns:1fr; } }
 @media(prefers-reduced-motion:reduce) { .desktop-space-card { transition:none; } }
 
 /* Keep title bars console-like while headings use the softer desktop display face. */

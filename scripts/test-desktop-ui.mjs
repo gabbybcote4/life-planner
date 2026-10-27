@@ -21,3 +21,15 @@ test('space cards link to actual IDs and disclose the preview limit',()=>{const 
 test('connection graph draws only saved edges between visible documents',()=>{const docs=[{id,kind:'note',title:'Source',space_id:null,space_title:null,body:'[[Target|note:'+other+']] [[Foreign|note:00000000-0000-0000-0000-000000000000]]'},{id:other,kind:'note',title:'Target',space_id:null,space_title:null,body:''}];const html=render(previews.ConnectionMap,{documents:docs,more:false,error:false});assert.equal((html.match(/<line /g)||[]).length,1);assert.doesNotMatch(html,/Foreign/);assert.match(html,new RegExp('/notes\\?note='+other));});
 test('empty and failed graphs do not invent connections',()=>{assert.match(render(previews.ConnectionMap,{documents:[],more:false,error:false}),/insert links/);assert.match(render(previews.ConnectionMap,{documents:[],more:false,error:true}),/role="alert"/);});
 test('mini calendar uses provided date and event links remain date-only',()=>{const html=render(previews.UpcomingEvents,{today:'2026-10-27',events:[{id,title:'Real event',event_date:'2026-10-31'}],more:false,error:false});assert.match(html,/October 2026/);assert.match(html,/calendar\?date=2026-10-31/);assert.match(html,/aria-current="date"/);assert.match(html,/UTC/);});
+
+test('shared title bar composes caller headings/actions and keeps chrome decorative',()=>{
+ const html=render(windows.WindowTitleBar,{className:'widget-titlebar',children:[
+ React.createElement('h2',{key:'title'},'<My window>'),
+ React.createElement('a',{key:'action',href:'/settings'},'Settings')]});
+ assert.match(html,/<header class="window-titlebar widget-titlebar">/);
+ assert.match(html,/<h2>&lt;My window&gt;<\/h2>/);
+ assert.match(html,/href="\/settings"/);
+ assert.match(html,/aria-hidden="true"/);
+ assert.equal((html.match(/<i\b/g)||[]).length,3);
+ assert.doesNotMatch(html,/<button/);
+});

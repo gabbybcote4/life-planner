@@ -1,6 +1,7 @@
 # Life Planner product blueprint
 
-Status: agreed product direction; implementation has not started.
+Status: agreed product direction with implemented increments recorded below.
+For the current feature summary and setup, see [README.md](../README.md).
 Consolidated: 2026-10-26.
 
 ## Source and scope
@@ -13,8 +14,8 @@ content references, not the six full rounds. The sections below group the suppli
 decisions by topic; they do not claim to reproduce the original round order.
 Unspecified details remain open rather than becoming requirements by assumption.
 
-This change documents the product and development conventions only. It does not
-authorize implementing the entire roadmap.
+The original blueprint documented decisions before implementation. Each later
+feature is scoped separately; this roadmap does not authorize implementing it all.
 
 ## 1. Audience and product foundation
 
@@ -251,3 +252,12 @@ scope. Defaults preserve old spaces; no source tasks/pages are copied or removed
 - Solid, dotted, and grid desktop backgrounds use the current palette. Pattern intensity has subtle, medium, and strong presets.
 - Settings previews are draft-only with explicit save/cancel/default preview. Saved backgrounds follow the account; stale tabs cannot overwrite a newer background.
 - This extends preset customization; uploaded wallpapers, arbitrary colors, and broader layout styling remain future work.
+
+### Mobile and navigation increment
+
+- Keep the retro desktop character while making phone screens quieter: compact
+  navigation, readable single-column content, generous touch controls, and temporary
+  expandable panels without rewriting the saved dashboard.
+- Save left/right/top/bottom navigation per account with isolated preview/cancel.
+  On phones, left/right adapt to a top bar with side-aligned More; top/bottom use
+  the chosen edge. All sections remain reachable.

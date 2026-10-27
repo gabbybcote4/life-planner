@@ -17,7 +17,7 @@ require.extensions[".tsx"] = (module, filename) => {
   module._compile(output, filename);
 };
 const { Button } = require("../src/components/ui/button.tsx");
-const { TextInput, TextArea } = require("../src/components/ui/fields.tsx");
+const { TextInput, TextArea, Select } = require("../src/components/ui/fields.tsx");
 const { FormFeedback } = require("../src/components/ui/feedback.tsx");
 const { EmptyState } = require("../src/components/ui/empty-state.tsx");
 const render = (component, props) => renderToStaticMarkup(React.createElement(component, props));
@@ -120,4 +120,17 @@ test("navigation is unique and each planner route has static proxy coverage", ()
   assert.equal(new Set(PLANNER_ROUTES.map((route) => route.href)).size, PLANNER_ROUTES.length);
   const proxy = fs.readFileSync(new URL("../src/proxy.ts", import.meta.url), "utf8");
   for (const route of PLANNER_ROUTES) assert.ok(proxy.includes(JSON.stringify(route.href)), `Missing proxy matcher: ${route.href}`);
+});
+
+test("shared dropdown preserves native selection, labels, disabled state, and escaped options", () => {
+  const html = render(Select, { id: "appearance", name: "appearance", value: "grid", disabled: true,
+    "aria-describedby": "hint", className: "custom-select", onChange() {},
+    children: [React.createElement("option", { key: "dots", value: "dots" }, "Dots"),
+      React.createElement("option", { key: "grid", value: "grid" }, "<Grid>")] });
+  assert.match(html, /class="form-control custom-select"/);
+  assert.match(html, /name="appearance"/);
+  assert.match(html, /aria-describedby="hint"/);
+  assert.match(html, /disabled=""/);
+  assert.match(html, /value="grid" selected=""/);
+  assert.match(html, /&lt;Grid&gt;/);
 });
