@@ -154,3 +154,11 @@ This increment changes no database schema or permission policies.
 - [ ] Older name-only updates and template retries preserve saved personalization.
 - [ ] Direct invalid values/foreign writes fail under SQL constraints and RLS.
 - [ ] Keyboard, phone layouts, all themes, templates, tasks, and pages still work.
+
+## Desktop backgrounds
+
+- Apply migration 015, run desktop_background_rls.sql and existing preference privacy tests, and confirm final PASS results.
+- In Settings, preview each pattern/intensity. Confirm the surrounding desktop changes only after Save; Cancel restores the saved preview, and Preview default requires saving.
+- Refresh and visit Tasks/Spaces; verify the saved background follows the account. Change palette and check light/dark backgrounds, focus, and readable panels.
+- Save in one tab, then attempt a different background from a stale tab: keep its draft and show conflict. Reload to reconcile.
+- Check a new account with no preferences, two-account isolation, offline errors, keyboard controls, and a narrow viewport.

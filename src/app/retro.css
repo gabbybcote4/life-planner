@@ -168,3 +168,18 @@
 .space-appearance-preview { overflow:hidden; border:1px solid var(--input-border); border-radius:8px; margin-bottom:1rem; }
 .space-style-control { display:grid; gap:.4rem; margin:.8rem 0; }
 .space-links .space-identity-link { display:flex; align-items:center; gap:.6rem; border-radius:6px; background:var(--space-card-color,var(--tint)); }
+
+
+/* Shared desktop texture: account root and isolated Settings preview. */
+.theme-root,.desktop-texture { --desktop-pattern:radial-gradient(var(--desktop-ink) 1.2px,transparent 1.2px); --desktop-ink:var(--pattern); --desktop-size:17px 17px; }
+[data-intensity="subtle"] { --desktop-ink:color-mix(in srgb,var(--pattern) 45%,transparent); }
+[data-intensity="strong"] { --desktop-ink:color-mix(in srgb,var(--foreground) 24%,var(--pattern)); }
+[data-background="solid"] { --desktop-pattern:none; }
+[data-background="grid"] { --desktop-pattern:linear-gradient(var(--desktop-ink) 1px,transparent 1px),linear-gradient(90deg,var(--desktop-ink) 1px,transparent 1px); --desktop-size:24px 24px; }
+.theme-root .desktop-main.planner-shell,.desktop-texture { background-image:var(--desktop-pattern); background-size:var(--desktop-size); }
+.background-form { margin-top:2.5rem; }
+.background-preview { padding:2rem; background-color:var(--background); border:1px solid var(--input-border); border-radius:9px; margin:1rem 0; }
+.background-preview-window { max-width:300px; padding:1rem; background:var(--surface); color:var(--foreground); border:1px solid var(--input-border); border-radius:8px; box-shadow:3px 3px 0 var(--shadow); }
+.background-options { display:flex; gap:1.2rem; flex-wrap:wrap; margin:1rem 0; }
+.background-options label { display:flex; align-items:center; gap:.5rem; }
+.background-form select { max-width:300px; display:block; margin:.5rem 0 1rem; }

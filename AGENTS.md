@@ -224,3 +224,9 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
   drafts. Older name-only submissions must not clear appearance columns.
 - Run space-appearance, Spaces, desktop, and theme regressions plus live SQL privacy
   tests, including preservation of appearance across template creation retries.
+
+### Desktop background checks
+
+- Reuse the background preset parser/attributes for the saved root and isolated preview.
+- Keep backgrounds account-scoped with explicit saves, retained drafts, and revision guards; never store arbitrary CSS or external URLs.
+- Run background/theme regressions and desktop_background_rls.sql after migration 015. Theme saves must preserve the background and its revision.
