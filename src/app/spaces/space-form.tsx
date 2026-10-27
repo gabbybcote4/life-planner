@@ -8,11 +8,14 @@ import {runAction,UNCONFIRMED_SAVE} from "@/lib/shared/client-actions";
 import {createRequestId} from "@/lib/shared/request-id";
 import {type Space} from "@/lib/spaces/types";
 import {type SpaceTemplate,type SpaceCreationState} from "@/lib/templates/types";
+import {SpaceVisual} from "@/components/ui/space-visual";
+import {SPACE_ICONS,SPACE_COVERS,SPACE_ACCENTS,spaceAppearance,parseSpaceAppearance} from "@/lib/spaces/appearance";
 import {saveSpace} from "./actions";
 import {createSpaceFromTemplate} from "./template-actions";
 export function SpaceForm({space,templates=[],templatesError}:{space?:Space;templates?:SpaceTemplate[];templatesError?:string}) {
  const field=useId(),router=useRouter();
  const [title,setTitle]=useState(space?.title??""),[revision,setRevision]=useState(space?.revision??1),[template,setTemplate]=useState("blank");
+ const [appearance,setAppearance]=useState(()=>spaceAppearance(space??{}));
  const requestId=useRef<string|null>(space?.id??null);
  const selected=templates.find(item=>item.key===template);
  const [state,action,pending]=useActionState<SpaceCreationState,FormData>(async(previous,data)=>{
@@ -39,9 +42,13 @@ export function SpaceForm({space,templates=[],templatesError}:{space?:Space;temp
  </fieldset>}
  {!space&&templatesError&&<FormFeedback error={templatesError}/>}
  {!space&&selected&&<details className="template-preview"><summary>Preview {selected.title} starter pages</summary>{selected.pages.map(page=><section key={page.title}><h3>{page.title}</h3><p className="template-page-text">{page.body}</p></section>)}<p className="muted">These become your own editable pages. No tasks, events, or account settings will be changed.</p></details>}
+ {space&&<details className="space-personalization"><summary>Personalize this space</summary>
+ <div className="space-appearance-preview"><SpaceVisual space={{id:space.id,title:title||"Your space",...appearance}} description="Preview only — save space settings to keep it."/></div>
+ {([{name:"icon",label:"Icon",options:SPACE_ICONS},{name:"cover",label:"Cover illustration",options:SPACE_COVERS},{name:"accent",label:"Accent",options:SPACE_ACCENTS}] as const).map(control=><label key={control.name} className="space-style-control">{control.label}<select className="form-control" name={control.name} value={appearance[control.name]} disabled={pending} onChange={event=>{const next={...appearance,[control.name]:event.target.value};const parsed=parseSpaceAppearance(next.icon,next.cover,next.accent);if(parsed)setAppearance(parsed);}}>{Object.entries(control.options).map(([value,label])=><option key={value} value={value}>{label}</option>)}</select></label>)}
+ </details>}
  <label htmlFor={field}>{space?"Space name":"New space name"}</label>
  <TextInput id={field} name="title" value={title} onChange={e=>setTitle(e.target.value)} required maxLength={200} readOnly={pending} placeholder="Home, work, or something yours..."/>
- <Button type="submit" variant="primary" disabled={pending||!title.trim()} pending={pending} pendingLabel={space?"Saving...":"Creating your space..."}>{space?"Rename space":selected?"Create from "+selected.title:"Create blank space"}</Button>
+ <Button type="submit" variant="primary" disabled={pending||!title.trim()} pending={pending} pendingLabel={space?"Saving...":"Creating your space..."}>{space?"Save space settings":selected?"Create from "+selected.title:"Create blank space"}</Button>
  <FormFeedback error={state.error} message={state.message}/>
  </form>;
 }

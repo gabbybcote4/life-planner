@@ -147,3 +147,24 @@
 .dashboard-widget[data-accent="yellow"] { --widget-accent:var(--accent-yellow); }
 .dashboard-widget[data-accent="lilac"] { --widget-accent:var(--accent-lilac); }
 .dashboard-widget[data-accent] > .widget-titlebar { background:linear-gradient(90deg,var(--widget-accent),var(--surface)); }
+.space-visual { --space-card-color:var(--accent-lilac); background:var(--space-card-color); color:var(--foreground); }
+.space-visual[data-cover="cozy"] { --space-card-color:var(--accent-pink); }
+.space-visual[data-cover="desk"] { --space-card-color:var(--accent-blue); }
+.space-visual[data-cover="study"] { --space-card-color:var(--accent-mint); }
+.space-visual[data-space-accent="pink"],.space-identity-link[data-space-accent="pink"] { --space-card-color:var(--accent-pink); }
+.space-visual[data-space-accent="mint"],.space-identity-link[data-space-accent="mint"] { --space-card-color:var(--accent-mint); }
+.space-visual[data-space-accent="blue"],.space-identity-link[data-space-accent="blue"] { --space-card-color:var(--accent-blue); }
+.space-visual[data-space-accent="yellow"],.space-identity-link[data-space-accent="yellow"] { --space-card-color:var(--accent-yellow); }
+.space-visual[data-space-accent="lilac"],.space-identity-link[data-space-accent="lilac"] { --space-card-color:var(--accent-lilac); }
+.desktop-space-card > .space-visual { padding:0; }
+.space-card-caption { padding:.8rem; }
+.space-card-caption h3 { display:flex; align-items:center; gap:.6rem; }
+.space-card-caption h3 span { overflow-wrap:anywhere; min-width:0; }
+.space-card-caption svg { flex-shrink:0; }
+.space-hero { max-width:52rem; margin-bottom:1.3rem; overflow:hidden; border:1px solid var(--input-border); border-radius:8px; }
+.space-hero .space-artwork { height:190px; }
+.space-personalization { max-width:36rem; margin:.8rem 0; }
+.space-personalization summary { min-height:44px; align-content:center; cursor:pointer; color:var(--primary); }
+.space-appearance-preview { overflow:hidden; border:1px solid var(--input-border); border-radius:8px; margin-bottom:1rem; }
+.space-style-control { display:grid; gap:.4rem; margin:.8rem 0; }
+.space-links .space-identity-link { display:flex; align-items:center; gap:.6rem; border-radius:6px; background:var(--space-card-color,var(--tint)); }

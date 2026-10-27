@@ -1,6 +1,6 @@
-export function SpaceArtwork({variant=0}:{variant?:number}) {
+export function SpaceArtwork({variant=0,followAccent=false}:{variant?:number;followAccent?:boolean}) {
  return <svg className="space-artwork" viewBox="0 0 320 150" aria-hidden="true" fill="none">
- <rect width="320" height="150" fill={variant%3===0?"var(--accent-pink)":variant%3===1?"var(--accent-blue)":"var(--accent-mint)"}/>
+ <rect width="320" height="150" fill={followAccent?"var(--space-card-color)":variant%3===0?"var(--accent-pink)":variant%3===1?"var(--accent-blue)":"var(--accent-mint)"}/>
  <g stroke="var(--foreground)" strokeWidth="1.6" strokeLinejoin="round">
  <rect x="146" y="15" width="145" height="92" rx="3" fill="var(--surface)"/><path d="M219 15v92M146 60h145"/>
  <path d="m147 92 30-23 23 15 38-39 52 47" fill="var(--accent-lilac)"/><circle cx="262" cy="38" r="12" fill="var(--accent-yellow)" stroke="none"/>

@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import ts from 'typescript';
 import {parseSpaceTitle} from '../src/lib/spaces/types.ts';
+import * as appearance from '../src/lib/spaces/appearance.ts';
 import * as notes from '../src/lib/notes/types.ts';
 import * as validation from '../src/lib/shared/validation.ts';
 const id='cf22172a-f871-43b3-a610-a838d8b7f001', parent='cf22172a-f871-43b3-a610-a838d8b7a001';
@@ -16,6 +17,7 @@ function harness(path,responses,account=true){
   if(name.endsWith('/auth/account'))return {getAccountContext:async()=>account?{supabase,userId:'owner-a'}:null};
   if(name.endsWith('/notes/types'))return notes;
   if(name.endsWith('/shared/validation'))return validation;
+  if(name.endsWith('/spaces/appearance'))return appearance;
   if(name.endsWith('/spaces/types'))return {parseSpaceTitle};
   throw Error(name);
  },loaded.exports);

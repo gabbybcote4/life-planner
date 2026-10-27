@@ -1,11 +1,12 @@
 import {monthCells,formatCalendarDate} from "@/lib/calendar/dates";
 import Link from "next/link";
 import {DesktopWindow} from "@/components/ui/desktop-window";
-import {SpaceArtwork} from "@/components/ui/space-artwork";
+import {SpaceVisual} from "@/components/ui/space-visual";
+import type {SpaceAppearance} from "@/lib/spaces/appearance";
 import {extractLinks,targetHref,type LinkTarget} from "@/lib/knowledge/links";
 export type GraphDocument=LinkTarget & {body:string};
-export function SpaceCards({spaces,more,error,embedded=false}:{embedded?:boolean;spaces:{id:string;title:string}[];more:boolean;error:boolean}) {
- return <DesktopWindow embedded={embedded} title="Your spaces" className="spaces-desktop-window" action={<Link href="/spaces">Open all →</Link>}>{error?<p role="alert">Spaces could not be loaded. <Link href="/spaces">Try Spaces</Link></p>:<><div className="desktop-space-cards">{spaces.map((space,index)=><Link key={space.id} className="desktop-space-card" href={"/spaces?space="+space.id}><SpaceArtwork variant={index}/><div><h3>{space.title}</h3><p className="muted">Open your pages & tasks <span aria-hidden="true">↗</span></p></div></Link>)}</div>{!spaces.length&&<p className="muted">Your own corners of life start here. <Link href="/spaces">Create a space →</Link></p>}{more&&<p className="muted">Showing your first three spaces. Open all to see the rest.</p>}</>}</DesktopWindow>;
+export function SpaceCards({spaces,more,error,embedded=false}:{embedded?:boolean;spaces:({id:string;title:string}&Partial<SpaceAppearance>)[];more:boolean;error:boolean}) {
+ return <DesktopWindow embedded={embedded} title="Your spaces" className="spaces-desktop-window" action={<Link href="/spaces">Open all →</Link>}>{error?<p role="alert">Spaces could not be loaded. <Link href="/spaces">Try Spaces</Link></p>:<><div className="desktop-space-cards">{spaces.map(space=><Link key={space.id} className="desktop-space-card" href={"/spaces?space="+space.id}><SpaceVisual space={space}/></Link>)}</div>{!spaces.length&&<p className="muted">Your own corners of life start here. <Link href="/spaces">Create a space →</Link></p>}{more&&<p className="muted">Showing your first three spaces. Open all to see the rest.</p>}</>}</DesktopWindow>;
 }
 export function ConnectionMap({documents,more,error,embedded=false}:{embedded?:boolean;documents:GraphDocument[];more:boolean;error:boolean}) {
  // The same saved-text parser drives inline links and this bounded preview.

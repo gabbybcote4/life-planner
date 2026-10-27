@@ -279,3 +279,17 @@ Only the validated data-accent attribute selects a CSS token rule; no user strin
 is interpolated into a style declaration. Palette changes resolve the same role
 through existing theme variables, preserving tested readable foreground colors.
 Draft save/cancel/revision behavior remains in the existing layout action/component.
+
+## Space appearance composition
+
+The appearance module owns the icon/cover/accent allowlists, defaults, strict parse,
+stable automatic-cover selection, and shared read projection. SpaceMark/SpaceVisual
+compose the existing SVG artwork with controlled theme roles. Space list, dashboard,
+selected header, and edit preview use the same saved metadata and presentation.
+
+SpaceForm owns name/appearance drafts together. The edit action updates only those
+columns using id, verified owner, and revision. Legacy name-only calls omit the
+new columns instead of resetting them. Failed/stale responses retain choices.
+DB column checks enforce built-ins even for direct requests; arbitrary image URLs
+or style payloads are not accepted. Creating a space uses database defaults; users
+personalize it afterwards. Template receipts remain independent of editable style.

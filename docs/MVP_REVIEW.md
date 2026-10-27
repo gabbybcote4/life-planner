@@ -144,3 +144,13 @@ This increment changes no database schema or permission policies.
 - [ ] Reorder/resize/add-workspace operations retain existing accents.
 - [ ] Invalid values and stale writes fail; account layouts stay isolated.
 - [ ] Keyboard, phone layouts, twelve themes, and source-data preservation work.
+
+## Space appearance review
+
+- [ ] Built-in icon/cover/accent previews match dashboard/header/navigation output.
+- [ ] Save/reload/sign-in persists choices; theme changes adapt accent shades.
+- [ ] Automatic covers stay consistent; No cover hides artwork without losing data.
+- [ ] Name and appearance save together; stale tabs show conflict and retain choices.
+- [ ] Older name-only updates and template retries preserve saved personalization.
+- [ ] Direct invalid values/foreign writes fail under SQL constraints and RLS.
+- [ ] Keyboard, phone layouts, all themes, templates, tasks, and pages still work.

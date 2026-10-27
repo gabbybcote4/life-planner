@@ -1,6 +1,8 @@
 import { KnowledgeConnections } from "@/app/knowledge/connections";
 import {AddTaskForm,TaskList} from "@/app/tasks/task-board";
 import {TASK_SELECT,type Task} from "@/lib/tasks/types";
+import {SPACE_SELECT} from "@/lib/spaces/appearance";
+import {SpaceMark,SpaceVisual} from "@/components/ui/space-visual";
 import Link from "next/link";
 import { requireAccount } from "@/lib/auth/account";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
@@ -21,13 +23,13 @@ async function SpacesContent({searchParams}:{searchParams:Search}) {
  try {const catalog=await supabase.rpc("planner_space_templates");if(catalog.error)throw new Error("catalog");templates=catalog.data??[];}
  catch {templatesError="Starters could not be loaded. Apply the template setup if needed, then reopen Spaces. Existing spaces remain available.";}
  const params=await searchParams, spacesPage=parseNotesPage(params.spacesPage), pagesPage=parseNotesPage(params.pagesPage);
- const list=await supabase.from("spaces").select("id,title,revision",{count:"exact"}).eq("user_id",userId).order("created_at").order("id").range((spacesPage-1)*SIZE,spacesPage*SIZE-1);
+ const list=await supabase.from("spaces").select(SPACE_SELECT,{count:"exact"}).eq("user_id",userId).order("created_at").order("id").range((spacesPage-1)*SIZE,spacesPage*SIZE-1);
  const requested=params.space ?? list.data?.[0]?.id;
  let space:Space|null=null;
  let unavailable=false;
  if(requested){
   if(!isRecordId(requested)) unavailable=true;
-  else {const result=await supabase.from("spaces").select("id,title,revision").eq("id",requested).eq("user_id",userId).maybeSingle();space=result.data;unavailable=Boolean(result.error||!space);}
+  else {const result=await supabase.from("spaces").select(SPACE_SELECT).eq("id",requested).eq("user_id",userId).maybeSingle();space=result.data;unavailable=Boolean(result.error||!space);}
  }
  const pages=space ? await supabase.from("space_pages").select("id,title",{count:"exact"}).eq("user_id",userId).eq("space_id",space.id).order("updated_at",{ascending:false}).order("id").range((pagesPage-1)*SIZE,pagesPage*SIZE-1) : null;
  const entry=params.entry === "new" ? null : params.entry ?? pages?.data?.[0]?.id ?? null;
@@ -44,12 +46,12 @@ async function SpacesContent({searchParams}:{searchParams:Search}) {
  <p className="muted">Private to your account. Save drafts before changing spaces or pages.</p>
  {list.error ? <LoadError title="Your spaces could not be loaded." description="Apply the spaces setup if this is your first visit, then try again." action="/spaces"/> : <>
  <section className="spaces-library" aria-labelledby="spaces-heading"><h2 id="spaces-heading">Your spaces</h2>
- <ul className="space-links">{list.data?.map(item=><li key={item.id}><Link href={'/spaces?space='+item.id+'&spacesPage='+spacesPage} aria-current={space?.id===item.id?'page':undefined}>{item.title}</Link></li>)}</ul>
+ <ul className="space-links">{list.data?.map(item=><li key={item.id}><Link href={'/spaces?space='+item.id+'&spacesPage='+spacesPage} data-space-accent={item.accent} className="space-identity-link" aria-current={space?.id===item.id?'page':undefined}><SpaceMark icon={item.icon}/>{item.title}</Link></li>)}</ul>
  {!list.data?.length && <p className="muted">Create your first space below.</p>}
  <nav className="notes-pagination" aria-label="Space list pages">{spacesPage>1&&<Link href={'/spaces?spacesPage='+(spacesPage-1)}>Previous spaces</Link>}{(list.count??0)>spacesPage*SIZE&&spacesPage<9999&&<Link href={'/spaces?spacesPage='+(spacesPage+1)}>Next spaces</Link>}</nav>
  <SpaceForm key={userId} templates={templates} templatesError={templatesError}/></section>
  {unavailable ? <LoadError title="This space is unavailable." description="Choose a space from your list." action="/spaces"/> : space ? <>
- <section className="spaces-library"><SpaceForm key={userId+space.id} space={space}/></section>
+ <section className="spaces-library"><div className="space-hero"><SpaceVisual space={space} description="Your pages, tasks, and ideas — together."/></div><SpaceForm key={userId+space.id} space={space}/></section>
  <section className="space-task-panel" aria-label="Tasks in this space"><h2>Tasks in {space.title}</h2>
  <AddTaskForm key={userId+space.id} spaceId={space.id}/>
  {tasks?.error?<LoadError title="Space tasks could not be loaded." description="Check the task-space setup and try again. Saved tasks have not changed." action={base}/>:<><p className="muted">{tasks?.count??0} saved tasks · newest first</p><TaskList tasks={(tasks?.data??[]) as unknown as Task[]}/>{!tasks?.data?.length&&<p className="muted">No tasks here yet. Add one above or assign an existing task from Tasks.</p>}
