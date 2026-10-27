@@ -1,3 +1,4 @@
+import {TASK_SELECT,type Task} from "@/lib/tasks/types";
 import Link from "next/link";
 import { requireAccount } from "@/lib/auth/account";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
@@ -19,14 +20,14 @@ async function Planner({searchParams}:{searchParams:TaskSearch}) {
     </>;
   }
   const { data: tasks, error: tasksError } = await supabase.from("tasks")
-    .select("id,title,completed,created_at")
+    .select(TASK_SELECT)
     .eq("user_id", userId)
     .order("created_at", { ascending: false })
     .order("id", { ascending: false })
     .limit(201);
   return <>
     <PlannerHeading eyebrow="Your own little corner" title="One thing at a time." description="Your saved tasks, ready whenever you are." email={email} />
-    {tasksError ? <LoadError title="Your tasks could not be loaded." description="Refresh to try again. Your saved tasks have not been changed." action="/tasks" /> : <TaskBoard key={userId} tasks={(tasks ?? []).slice(0, 200)} hasMore={(tasks?.length ?? 0) > 200} />}
+    {tasksError ? <LoadError title="Your tasks could not be loaded." description="Refresh to try again. Your saved tasks have not been changed." action="/tasks" /> : <TaskBoard key={userId} tasks={((tasks ?? []) as unknown as Task[]).slice(0, 200)} hasMore={(tasks?.length ?? 0) > 200} />}
   </>;
 }
 export default function TasksPage({searchParams}:{searchParams:TaskSearch}) {

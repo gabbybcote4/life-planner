@@ -331,3 +331,7 @@ h2 { font-family: Georgia, "Times New Roman", serif; font-size: 1.7rem; line-hei
 .template-preview section { padding: 1rem 0; border-bottom: 1px solid var(--border); }
 .template-page-text { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.7; }
 @media(max-width:600px) { .template-choices { grid-template-columns:minmax(0,1fr); } }
+.task-space-assignment { margin: .75rem 0; padding: .75rem; border: 1px solid var(--border); border-radius: 8px; background: var(--panel); }
+.task-space-assignment summary { color: var(--primary); cursor: pointer; }
+.task-space-assignment form { margin-top: 1rem; }
+.space-task-panel { margin: 1.5rem 0; padding: 1rem; border: 1px solid var(--border); border-radius: 9px; }

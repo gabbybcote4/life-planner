@@ -1,4 +1,6 @@
 import { KnowledgeConnections } from "@/app/knowledge/connections";
+import {AddTaskForm,TaskList} from "@/app/tasks/task-board";
+import {TASK_SELECT,type Task} from "@/lib/tasks/types";
 import Link from "next/link";
 import { requireAccount } from "@/lib/auth/account";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
@@ -10,7 +12,7 @@ import { PlannerPage, PlannerHeading, SetupNotice, LoadError } from "@/app/compo
 import { TextDocumentEditor } from "@/app/components/text-document-editor";
 import { SpaceForm } from "./space-form";
 import { saveSpacePage } from "./page-actions";
-type Search = Promise<{space?:string; entry?:string; spacesPage?:string; pagesPage?:string}>;
+type Search = Promise<{space?:string; entry?:string; spacesPage?:string; pagesPage?:string;tasksPage?:string}>;
 const SIZE=20;
 async function SpacesContent({searchParams}:{searchParams:Search}) {
  if(!isSupabaseConfigured()) return <SetupNotice/>;
@@ -34,6 +36,8 @@ async function SpacesContent({searchParams}:{searchParams:Search}) {
   if(!isRecordId(entry)) entryError=true;
   else {const result=await supabase.from("space_pages").select("id,title,body,revision").eq("id",entry).eq("space_id",space.id).eq("user_id",userId).maybeSingle();selected=result.data;entryError=Boolean(result.error||!selected);}
  }
+ const tasksPage=parseNotesPage(params.tasksPage);
+ const tasks=space?await supabase.from("tasks").select(TASK_SELECT,{count:"exact"}).eq("user_id",userId).eq("space_id",space.id).order("created_at",{ascending:false}).order("id").range((tasksPage-1)*20,tasksPage*20-1):null;
  const base=space ? '/spaces?space='+space.id+'&spacesPage='+spacesPage : '/spaces';
  return <>
  <PlannerHeading eyebrow="Room for your life" title="Spaces of your own." description="Gather simple text pages by life area, project, or whatever makes sense to you." email={email}/>
@@ -46,6 +50,11 @@ async function SpacesContent({searchParams}:{searchParams:Search}) {
  <SpaceForm key={userId} templates={templates} templatesError={templatesError}/></section>
  {unavailable ? <LoadError title="This space is unavailable." description="Choose a space from your list." action="/spaces"/> : space ? <>
  <section className="spaces-library"><SpaceForm key={userId+space.id} space={space}/></section>
+ <section className="space-task-panel" aria-label="Tasks in this space"><h2>Tasks in {space.title}</h2>
+ <AddTaskForm key={userId+space.id} spaceId={space.id}/>
+ {tasks?.error?<LoadError title="Space tasks could not be loaded." description="Check the task-space setup and try again. Saved tasks have not changed." action={base}/>:<><p className="muted">{tasks?.count??0} saved tasks · newest first</p><TaskList tasks={(tasks?.data??[]) as unknown as Task[]}/>{!tasks?.data?.length&&<p className="muted">No tasks here yet. Add one above or assign an existing task from Tasks.</p>}
+ <nav className="notes-pagination" aria-label="Tasks in this space">{tasksPage>1&&<Link href={base+'&tasksPage='+(tasksPage-1)+'&pagesPage='+pagesPage+(selected?'&entry='+selected.id:params.entry==='new'?'&entry=new':'')}>Previous tasks</Link>}{(tasks?.count??0)>tasksPage*20&&tasksPage<9999&&<Link href={base+'&tasksPage='+(tasksPage+1)+'&pagesPage='+pagesPage+(selected?'&entry='+selected.id:params.entry==='new'?'&entry=new':'')}>Next tasks</Link>}</nav></>}
+ </section>
  {pages?.error ? <LoadError title="Pages could not be loaded." description="Try again; saved pages have not changed." action={base}/> : <div className="notes-layout">
  <aside className="notes-library"><div className="notes-library-heading"><h2>{space.title}</h2><Link className="text-link" href={base+'&entry=new'}>New page</Link></div>
  <p className="muted">{pages?.count??0} saved pages</p>

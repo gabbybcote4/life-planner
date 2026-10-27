@@ -471,3 +471,38 @@ blank spaces, repeat creation, narrow layouts, keyboard, themes, and two account
 This increment does not add importing/sharing, user-authored templates, copying
 existing personal data, tasks/events from templates, or applying a template over
 an existing space.
+
+## Tasks in spaces
+
+Tasks can optionally belong to one space. All existing tasks remain unassigned
+when the migration is applied, and the main task list/dashboard continue to show
+assigned and unassigned tasks. Each task's Assign a space / Change task space
+control searches owned spaces with pagination, keeps a draft selection, and saves
+only on confirmation. No space clears the assignment without deleting the task.
+Space pages show their own tasks in pages of 20, with quick add automatically
+assigning the current space. Task title/edit/complete controls remain shared.
+
+Apply `supabase/migrations/20261027001000_task_spaces.sql` once after Spaces and
+Search. Run `supabase/tests/tasks_rls.sql` and `supabase/tests/task_spaces_rls.sql`.
+Verify the final PASS results. The migration adds nullable tasks.space_id, a
+composite (space_id,user_id) foreign key, a scoped index, column grants, and task
+space context in the existing search function. No ownership grants or row policies
+are broadened. A task cannot reference another account's space even through a
+direct request. Space deletion is not introduced; the foreign key prevents deleting
+an assigned parent without explicit future handling.
+
+Moves use a conditional update against the previously observed assignment. If it
+changed elsewhere, the app reports a conflict rather than overwriting the move.
+A lost response can be confirmed when the saved assignment already matches the
+requested destination. This guard concerns space assignment, not a general task
+revision/history feature. Existing title/completion updates do not write space_id.
+
+New task retries compare both title and space, so changing the requested space
+after an ambiguous response cannot silently confirm a different task placement.
+Task mutations refresh the dashboard, task list, and space views. Unified search
+also matches the assigned space name and shows it in task result context.
+
+Run npm run test:task-spaces plus all regressions, lint, TypeScript, and build.
+Manually verify assign/move/remove, quick add inside a space, reload/sign-in,
+more than 20 matching spaces/tasks, stale tabs, failed requests, keyboard, phone,
+themes, and two accounts. Save page drafts before changing task-list pages.

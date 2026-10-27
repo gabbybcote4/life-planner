@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "npm run test:tasks && npm run test:calendar && npm run test:notes && npm run test:themes && npm run test:dashboard && npm run test:components && npm run test:client && npm run test:spaces && npm run test:links && npm run test:search && npm run test:templates",
+    "test": "npm run test:tasks && npm run test:calendar && npm run test:notes && npm run test:themes && npm run test:dashboard && npm run test:components && npm run test:client && npm run test:spaces && npm run test:links && npm run test:search && npm run test:templates && npm run test:task-spaces",
     "test:tasks": "node --experimental-strip-types --test scripts/test-task-validation.mjs",
     "test:calendar": "node --experimental-strip-types --test scripts/test-calendar.mjs",
     "test:notes": "node --experimental-strip-types --test scripts/test-notes.mjs",
@@ -18,7 +18,8 @@
     "test:spaces": "node --experimental-strip-types --test scripts/test-spaces.mjs",
     "test:links": "node --experimental-strip-types --test scripts/test-knowledge-links.mjs",
     "test:search": "node --experimental-strip-types --test scripts/test-search.mjs",
-    "test:templates": "node --experimental-strip-types --test scripts/test-space-templates.mjs"
+    "test:templates": "node --experimental-strip-types --test scripts/test-space-templates.mjs",
+    "test:task-spaces": "node --experimental-strip-types --test scripts/test-task-spaces.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",

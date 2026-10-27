@@ -187,3 +187,23 @@ After confirmed success the client clears its creation ID/name for another expli
 creation. Errors retain input and the same ID. A conflicting changed retry is
 rejected rather than silently creating another space. Catalog load errors leave
 existing spaces available; new-space creation requires the starter setup.
+
+## Task-space composition
+
+TASK_SELECT centralizes the task/space summary projection for task lists, selected
+tasks, dashboard widgets, and space views. The joined parent is protected by RLS
+and the composite owner foreign key; optional Task fields preserve presentation
+compatibility with existing test fixtures. TaskSpaceAssignment reuses unified
+search restricted to space results; it supports pagination and an explicit save.
+Its original assignment baseline is retained until a move confirms, avoiding
+silent overwrites from newer server props while a choice is in progress.
+
+assignTaskSpace verifies the current account and desired owned parent, then updates
+only space_id with task-id, owner, and previous-assignment predicates. Missing
+matches are checked for a matching saved destination to confirm a retry; otherwise
+a conflict is returned. Moving or unassigning never touches title/completion.
+
+Space pages compose AddTaskForm(spaceId) and TaskList with owner/space-filtered,
+paginated reads. Existing add/edit/complete actions stay shared. Add-task retries
+compare the saved parent as well as the title. No client-only ownership assumption
+or independent copy of a task is introduced.
