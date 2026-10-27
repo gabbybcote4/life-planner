@@ -90,3 +90,14 @@ This increment changes no database schema or permission policies.
 - [ ] Atomic rollback and receipt/owner protections pass the database assertions.
 - [ ] Other accounts cannot see created spaces/pages/receipts or replay the request.
 - [ ] Template radios/previews work by keyboard, on phones, and in every theme.
+
+## Task-space review
+
+- [ ] Assign a main-list task, move it, remove its space, and reload; task survives.
+- [ ] Quick-add in a space saves there and remains visible on Tasks/dashboard.
+- [ ] Complete/reopen/rename in each view; other views stay consistent.
+- [ ] Paginate matching spaces and space tasks beyond 20 entries.
+- [ ] Two stale tabs cannot silently overwrite each other's assignments.
+- [ ] Lost-response retries do not duplicate tasks or confirm a different parent.
+- [ ] SQL owner constraints and task privacy regressions return PASS.
+- [ ] Two accounts, keyboard, phone layouts, themes, search, and page drafts work.

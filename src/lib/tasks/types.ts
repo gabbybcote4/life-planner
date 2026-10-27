@@ -3,6 +3,8 @@ export type Task = {
   title: string;
   completed: boolean;
   created_at: string;
+  space_id?: string | null;
+  space?: {title:string} | null;
 };
 
 export type TaskActionState = {
@@ -19,3 +21,5 @@ export function parseTaskTitle(value: FormDataEntryValue | null) {
   return title;
 }
 
+
+export const TASK_SELECT = "id,title,completed,created_at,space_id,space:spaces(title)";

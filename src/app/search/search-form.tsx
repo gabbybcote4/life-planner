@@ -26,7 +26,7 @@ export function SearchForm() {
  <p className="muted">Showing {state.offset+1}–{state.offset+state.items.length}{state.more?" · more results available":""}</p>
  <ul className="search-results">{state.items.map(item=><li key={item.kind+item.id}>
  <Link className="text-link" href={searchHref(item)}>{item.title}</Link>
- <p className="muted">{SEARCH_LABELS[item.kind]}{item.kind==="event"?" · "+item.event_date:""}{item.kind==="task"?" · "+(item.completed?"Completed":"To do"):""}{item.kind==="page"?" · "+item.space_title:""}</p>
+ <p className="muted">{SEARCH_LABELS[item.kind]}{item.kind==="event"?" · "+item.event_date:""}{item.kind==="task"?" · "+(item.completed?"Completed":"To do"):""}{(item.kind==="page"||item.kind==="task")&&item.space_title?" · "+item.space_title:""}</p>
  </li>)}</ul></>}
  <nav className="notes-pagination" aria-label="Search result pages">
  {state.offset>0&&<Button type="submit" name="offset" value={state.offset-SEARCH_PAGE_SIZE} variant="text" disabled={pending||changed}>Previous</Button>}

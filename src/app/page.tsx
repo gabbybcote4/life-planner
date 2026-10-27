@@ -1,3 +1,4 @@
+import {TASK_SELECT,type Task} from "@/lib/tasks/types";
 import { Button } from "@/components/ui/button";
 import { requireAccount } from "@/lib/auth/account";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
@@ -12,7 +13,7 @@ async function Dashboard() {
   const [open, completed, recent, savedLayout] = await Promise.all([
     supabase.from("tasks").select("id", { count: "exact", head: true }).eq("user_id", userId).eq("completed", false),
     supabase.from("tasks").select("id", { count: "exact", head: true }).eq("user_id", userId).eq("completed", true),
-    supabase.from("tasks").select("id,title,completed,created_at").eq("user_id", userId)
+    supabase.from("tasks").select(TASK_SELECT).eq("user_id", userId)
       .order("created_at", { ascending: false }).order("id", { ascending: false }).limit(5),
     supabase.from("dashboard_layouts").select("layout,revision").eq("user_id", userId).maybeSingle(),
   ]);
@@ -25,7 +26,7 @@ async function Dashboard() {
     {loadFailed ? <LoadError title="Your dashboard could not be loaded." description="Refresh to try again. Your saved tasks have not been changed." action="/" /> : <>
       {layoutFailed && <div className="form-error" role="alert">Your layout settings could not be loaded. You can still use the dashboard; reload before customizing.
         <form action="/" method="get"><Button variant="text" type="submit">Reload layout settings</Button></form></div>}
-      <TaskWidgets key={userId} open={open.count ?? 0} completed={completed.count ?? 0} tasks={recent.data ?? []}
+      <TaskWidgets key={userId} open={open.count ?? 0} completed={completed.count ?? 0} tasks={(recent.data ?? []) as unknown as Task[]}
         layout={parsedLayout ?? DEFAULT_LAYOUT} revision={savedLayout.data?.revision ?? 0} canCustomize={!layoutFailed} />
     </>}
   </>;

@@ -161,3 +161,15 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
   constraints. Never accept caller ownership or arbitrary template page payloads.
 - Retain request IDs on unconfirmed results and clear them only after confirmation.
   Retried creation must never overwrite later user edits or rename the space.
+
+### Task-space checks
+
+- Run npm run test:task-spaces, existing task tests, and full regressions. Apply the
+  task-space migration and run tasks_rls.sql plus task_spaces_rls.sql before
+  claiming live same-account assignment/privacy checks.
+- Preserve nullable assignment, composite parent ownership, narrow column grants,
+  explicit moves, original assignment baselines, and conditional-update conflicts.
+- Reuse TaskList/AddTaskForm across main, dashboard, and space views. Include the
+  shared TASK_SELECT projection so assignments never appear falsely unassigned.
+- Never delete/copy a task when removing its space. New-task retry confirmation
+  must match both saved title and requested space.

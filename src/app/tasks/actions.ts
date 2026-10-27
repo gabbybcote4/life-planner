@@ -12,6 +12,8 @@ const unavailableError = { error: "This task is no longer available. Refresh you
 export async function addTask(_previous: TaskActionState, formData: FormData): Promise<TaskActionState> {
   const title = parseTaskTitle(formData.get("title"));
   const id = formData.get("id");
+  const spaceId = formData.get("space_id");
+  if (spaceId !== null && spaceId !== "" && !isTaskId(spaceId)) return {error:"Open a valid space before adding a task."};
   if (!title) return { error: "Give your task a title between 1 and 200 characters." };
   if (!isTaskId(id)) return { error: "Please refresh your planner before adding this task." };
 
@@ -20,20 +22,21 @@ export async function addTask(_previous: TaskActionState, formData: FormData): P
     if (!context) return sessionError;
     const { supabase, userId } = context;
     const { data, error } = await supabase.from("tasks")
-      .insert({ id, user_id: userId, title }).select("id").single();
+      .insert({ id, user_id: userId, title, space_id:spaceId||null }).select("id").single();
     if (error) {
       // A retry after a lost response must not create a second task.
       if (error.code !== "23505") return saveError;
-      const existing = await supabase.from("tasks").select("id,title")
+      const existing = await supabase.from("tasks").select("id,title,space_id")
         .eq("id", id).eq("user_id", userId).maybeSingle();
       if (existing.error || !existing.data) return saveError;
-      if (existing.data.title !== title) return { error: "An earlier attempt saved this task. Refresh to see it before editing its title." };
+      if (existing.data.title !== title || existing.data.space_id !== (spaceId||null)) return { error: "An earlier attempt saved this task. Refresh to see it before editing its title." };
     } else if (!data) return saveError;
   } catch {
     return saveError;
   }
   revalidatePath("/");
   revalidatePath("/tasks");
+  revalidatePath("/spaces");
   return { message: "Task saved." };
 }
 
@@ -54,6 +57,7 @@ export async function renameTask(_previous: TaskActionState, formData: FormData)
   }
   revalidatePath("/");
   revalidatePath("/tasks");
+  revalidatePath("/spaces");
   return { message: "Changes saved." };
 }
 
@@ -76,6 +80,7 @@ export async function setTaskCompleted(_previous: TaskActionState, formData: For
   }
   revalidatePath("/");
   revalidatePath("/tasks");
+  revalidatePath("/spaces");
   return { message: completed === "true" ? "Task completed and saved." : "Task reopened and saved." };
 }
 

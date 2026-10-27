@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import ts from 'typescript';
 import * as search from '../src/lib/search/types.ts';
+import * as taskTypes from '../src/lib/tasks/types.ts';
 import * as validation from '../src/lib/shared/validation.ts';
 const id='ac44172a-f871-43b3-a610-a838d8b7c001';
 const item={kind:'task',id,title:'A task',space_id:null,space_title:null,event_date:null,completed:false};
@@ -62,7 +63,7 @@ test('database and network failures never report successful empty results',async
 function selectedHarness({result={data:{...item,created_at:'2026-01-01'},error:null},offline=false}={}) {
  const calls=[];
  const client={from(table){calls.push(['from',table]);return {select(columns){calls.push(['select',columns]);return this;},eq(k,v){calls.push(['eq',k,v]);return this;},async maybeSingle(){if(offline)throw Error('network');return result;}};}};
- const {loadSelectedTask}=load('../src/lib/tasks/selected-task.ts',{'@/lib/shared/validation':validation});
+ const {loadSelectedTask}=load('../src/lib/tasks/selected-task.ts',{'@/lib/shared/validation':validation,'./types':taskTypes});
  return {calls,read:value=>loadSelectedTask(client,'owner-a',value)};
 }
 test('selected task fetches by exact identity and owner, independent of list limits',async()=>{

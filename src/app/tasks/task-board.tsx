@@ -4,6 +4,8 @@ import { createRequestId } from "@/lib/shared/request-id";
 
 import { runAction, UNCONFIRMED_SAVE } from "@/lib/shared/client-actions";
 
+import Link from "next/link";
+import {TaskSpaceAssignment} from "./task-space-assignment";
 import { EmptyState } from "@/components/ui/empty-state";
 import { FormFeedback } from "@/components/ui/feedback";
 import { TextInput } from "@/components/ui/fields";
@@ -25,7 +27,7 @@ export function TaskBoard({ tasks, hasMore }: { tasks: Task[]; hasMore: boolean 
   </section>;
 }
 
-export function AddTaskForm() {
+export function AddTaskForm({spaceId}:{spaceId?:string} = {}) {
   const inputId = useId();
   const [title, setTitle] = useState("");
   const requestId = useRef<string | null>(null);
@@ -43,6 +45,7 @@ export function AddTaskForm() {
   }, {});
 
   return <form action={action} className="add-task-form" aria-busy={pending}>
+    {spaceId && <input type="hidden" name="space_id" value={spaceId}/>}
     <label htmlFor={inputId}>What would you like to get done?</label>
     <div className="add-task-controls">
       <TextInput id={inputId} name="title" value={title} onChange={(event) => setTitle(event.target.value)}
@@ -78,6 +81,8 @@ function TaskRow({ task }: { task: Task }) {
           onClick={() => { setEditMessage(""); setEditing(true); }}>Edit</Button>
       </>}
     </div>
+    {task.space_id && task.space && <p className="muted">Space: <Link className="text-link" href={"/spaces?space="+task.space_id}>{task.space.title}</Link></p>}
+    <TaskSpaceAssignment task={task} disabled={pending||editing}/>
     {!editing && <FormFeedback {...(editMessage ? { message: editMessage } : state)} pending={pending} className="task-feedback" />}
   </li>;
 }
