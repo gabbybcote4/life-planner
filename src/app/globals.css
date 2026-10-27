@@ -312,3 +312,9 @@ h2 { font-family: Georgia, "Times New Roman", serif; font-size: 1.7rem; line-hei
 .linked-text { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.8; }
 .linked-text a { color: var(--primary); text-decoration: underline; text-underline-offset: 3px; }
 .note-form[hidden] { display: none; }
+.planner-search { display: grid; gap: .75rem; min-width: 0; }
+.planner-search > .form-control { max-width: 42rem; }
+.planner-search > button { justify-self: start; }
+.search-results { list-style: none; padding: 0; }
+.search-results li { padding: .75rem 0; border-top: 1px solid var(--border); overflow-wrap: anywhere; }
+.search-results .text-link { font-size: 1rem; }
