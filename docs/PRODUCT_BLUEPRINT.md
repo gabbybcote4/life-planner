@@ -324,3 +324,16 @@ action. The first increment adds planning inputs only; the guidance widget follo
 - Use compact desktop shortcuts, folded month/detail views, smaller graphics and
   fewer duplicate headings. Keep the retro character, readable controls, saved
   order/width/accent, source records and phone disclosures intact.
+
+### Visual-first interaction preference (owner-confirmed)
+
+- Keep the app visual and scannable: one clear next action, short lists, concise
+  keyword labels, icons, semantic colour cues, progress and compact date chips.
+- Users should not need to read paragraphs to understand what to do.
+- Default guidance shows Next up, task title and Today/Overdue/Priority/Upcoming/
+  Unplanned labels. Detailed evidence and ranking rules belong in optional
+  Why this? / How suggestions work disclosures.
+- Keep text labels alongside colour/icons for accessibility. Errors and saving/
+  conflict feedback must remain clear, visible and honest.
+- Apply this preference to future Inbox, widgets and optional life modules, not
+  just this one guidance card. Do not hide essential deadlines behind explanations.

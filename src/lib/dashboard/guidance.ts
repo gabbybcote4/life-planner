@@ -22,3 +22,19 @@ export function isGuidanceData(value:unknown):value is GuidanceData {
   && data.tasks.every(t=>t&&isRecordId(t.id)&&typeof t.title==="string"&&["none","low","medium","high"].includes(t.priority)&&(t.due_date===null||parseCalendarDate(t.due_date)!==null)&&(t.space_id===null||isRecordId(t.space_id))&&(t.space_title===null||typeof t.space_title==="string"))
   && data.events.every(e=>e&&isRecordId(e.id)&&typeof e.title==="string"&&parseCalendarDate(e.event_date)!==null);
 }
+
+// Short visible labels share the same evidence order as the detailed explanation.
+export function taskCue(task:GuidanceTask,today:string){
+ if(task.due_date && task.due_date<today)return {label:"Overdue",kind:"overdue"} as const;
+ if(task.due_date===today)return {label:"Today",kind:"today"} as const;
+ if(task.priority==="high")return {label:"High priority",kind:"priority"} as const;
+ if(task.due_date)return {label:"Upcoming",kind:"upcoming"} as const;
+ if(task.priority!=="none")return {label:task.priority==="medium"?"Medium priority":"Low priority",kind:"priority"} as const;
+ return {label:"Unplanned",kind:"unplanned"} as const;
+}
+export function shortGuidanceDate(date:string,today:string):string{
+ if(date===today)return "Today";
+ const value=new Date(date+"T12:00:00Z"),reference=new Date(today+"T12:00:00Z");
+ if(value.getTime()-reference.getTime()===86400000)return "Tomorrow";
+ return new Intl.DateTimeFormat("en-US",{month:"short",day:"numeric",...(date.slice(0,4)!==today.slice(0,4)?{year:"numeric" as const}:{}),timeZone:"UTC"}).format(value);
+}

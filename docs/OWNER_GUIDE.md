@@ -301,3 +301,14 @@ content. Recent tasks/events show up to three; open the full pages for everythin
 Edit rule explanations/types in lib/dashboard/guidance.ts, UI in
 app/dashboard/guidance-widget.tsx, and compact styling in app/responsive.css.
 Ranking changes require a new SQL migration and matching explanation/tests.
+
+## Visual-first labels
+
+The dashboard now leads with Next up, a task title, status badge, counts and short
+event rows. Open Why this? for the saved reason, or How suggestions work for the
+rules. Neither disclosure changes the task. Colour always has a readable label.
+
+Edit short status/date labels in lib/dashboard/guidance.ts (taskCue/
+shortGuidanceDate), the card/list in app/dashboard/guidance-widget.tsx, and visual
+styles in responsive.css's Visual-first guidance section. Keep due dates and action
+buttons visible. Keep errors explicit even when shortening other copy.

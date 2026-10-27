@@ -150,3 +150,6 @@ recent previews. Show another and Open task keep you in control; focus reuses th
 timer without overwriting an active session. Desktop previews are more compact,
 with full month/map/task controls available in disclosures or their main pages.
 Run npm run test:guidance and the SQL privacy/ranking checks. No AI service is used.
+
+Guidance is visual-first: Next up, keyword badges, counts and short event rows.
+Why this? and How suggestions work reveal the detailed reasoning on demand.

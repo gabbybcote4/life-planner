@@ -208,3 +208,11 @@ This increment changes no database schema or permission policies.
 - Start focus without changing the task. Existing running/paused timers are never replaced.
 - Check a second account, sparse/no data, malformed date rejection, keyboard, light/dark, 320/390px phones and 1280px desktop.
 - Compare desktop scrolling: compact space cards/counts/dials and three-row previews. Open month/map/task details and confirm real controls are retained.
+
+## Visual-first guidance review
+
+- Check Today/Overdue/Priority/Upcoming/Unplanned cues match task metadata; date chips show Today/Tomorrow or a real date.
+- Default view contains short labels and one task; Why this?/How suggestions work disclose the existing reason/rules.
+- Open task, focus, Show another, refresh, and Unplanned/Calendar links still work.
+- Check keyboard disclosure behavior, readable badge contrast, long titles, empty/error states, and 320/390/1280px layouts.
+- No database migration or permission/ranking change is included.
