@@ -124,3 +124,13 @@ This increment changes no database schema or permission policies.
 - [ ] Restore default creates a seven-widget draft that needs Save.
 - [ ] Two tabs report revision conflicts rather than overwriting saved layouts.
 - [ ] Keyboard, phone stacking, every theme, previews, and actual links still work.
+
+## Expanded palette review
+
+- [ ] Settings shows six light and six dark palettes with readable previews.
+- [ ] Radio selection previews locally; leaving without Save keeps the saved theme.
+- [ ] Save/reload/sign out/in preserves a new light or dark choice.
+- [ ] All pages, SVG artwork, map nodes, calendar, controls, errors, and focus adapt.
+- [ ] Old Sage/Pastel/Midnight choices and default are preserved through setup.
+- [ ] Failed save keeps the choice but does not falsely confirm persistence.
+- [ ] Keyboard/radio controls, phone layout, and separate accounts work.

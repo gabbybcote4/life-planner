@@ -251,3 +251,17 @@ only missing workspace identities without changing existing order/size. Migratio
 updates the SQL default/validator without rewriting rows or revisions. Tests check
 app/database parity and backward compatibility. Existing layout conflict/privacy
 boundaries and metadata-only persistence remain unchanged.
+
+## Expanded palette library
+
+Each registry entry contains explicit light/dark mode and a complete shared token
+set. themeVariables reads that metadata rather than inferring dark mode from one
+legacy name. Shared UI/artwork/graph/calendar styling continues to use semantic
+palette/accent tokens. The twelve-palette allowlist matches the database check;
+legacy IDs/defaults and saved selections are preserved.
+
+ThemePicker groups native radio choices by mode and renders an isolated preview
+using the chosen palette's variables. The root's saved theme is untouched until
+the existing server action confirms a save. Preview text is explicitly illustrative,
+not live task data. No search history/local preference cache or external assets
+are introduced.

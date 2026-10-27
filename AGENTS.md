@@ -179,8 +179,8 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - Preserve the confirmed retro desktop visual direction in PRODUCT_BLUEPRINT.md.
   Reuse DesktopWindow, DeskIcon, SpaceArtwork, semantic palette/accent tokens, and
   the existing shared form controls; do not create disconnected page-specific skins.
-- More light/dark themes and full customization remain planned. Do not hard-code
-  new theme IDs or imply custom colors/backgrounds/covers are already persisted.
+- Keep theme IDs synchronized between the palette registry and database allowlist.
+  Do not imply custom colors/backgrounds/covers are already persisted.
 - Run npm run test:desktop, theme contrast checks, and existing regression suites.
   Check sidebar/keyboard/focus, long content, narrow screens, and every palette.
 - Keep decorative window chrome non-interactive. Dashboard preview data must stay
@@ -195,3 +195,13 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - Reuse embedded DesktopWindow content; preserve source data when removing widgets.
 - Preserve preview bounds, account-scoped reads, and responsive stacking without
   altering saved widths.
+
+### Palette library checks
+
+- Run the theme contrast/allowlist parity tests and existing preference SQL privacy
+  assertions. Check text on every accent surface, action states, focus, and inputs.
+- Use explicit mode metadata for colorScheme. Keep original preference keys/defaults
+  valid and do not automatically change the owner's saved palette.
+- Isolate preview variables from the saved app root; radio selection is not a save.
+- Arbitrary color/CSS persistence requires its own design/validation; do not treat
+  this preset-library increment as completion of full visual customization.

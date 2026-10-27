@@ -1,3 +1,4 @@
+import fs from "node:fs";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { THEMES, DEFAULT_THEME, parseTheme, themeVariables } from "../src/lib/themes/themes.ts";
@@ -31,6 +32,17 @@ for (const [name, theme] of Object.entries(THEMES)) {
     assert.ok(contrast(c.success, c["success-surface"]) >= 4.5, "success contrast");
     assert.ok(contrast(c.focus, c.surface) >= 3, "focus contrast");
     assert.ok(contrast(c["input-border"], c.input) >= 3, "input boundary contrast");
-    assert.equal(themeVariables(name).colorScheme, name === "midnight" ? "dark" : "light");
+    assert.equal(themeVariables(name).colorScheme, theme.mode);
   });
 }
+
+test("theme library has six light and six dark palettes with the same token roles",()=>{
+ const palettes=Object.values(THEMES);assert.equal(palettes.filter(theme=>theme.mode==='light').length,6);assert.equal(palettes.filter(theme=>theme.mode==='dark').length,6);
+ const keys=Object.keys(THEMES.sage.colors).sort();for(const theme of palettes)assert.deepEqual(Object.keys(theme.colors).sort(),keys);
+});
+test("database allowlist matches every preset while preserving original identifiers",()=>{
+ const sql=fs.readFileSync(new URL('../supabase/migrations/20261027001200_desktop_theme_library.sql',import.meta.url),'utf8');
+ const keys=[...sql.matchAll(/'([a-z]+)'/g)].map(match=>match[1]);assert.deepEqual(keys.sort(),Object.keys(THEMES).sort());
+ for(const old of ['sage','rose','midnight'])assert.equal(parseTheme(old),old);
+ assert.doesNotMatch(sql,/update public\.planner_preferences/i);
+});

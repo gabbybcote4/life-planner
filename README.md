@@ -531,3 +531,29 @@ so they have one shared title bar and the same edit controls. Preview limits and
 UTC labels are unchanged. Narrow screens stack cards without changing saved
 widths. No drag-and-drop, free pixel sizing, custom colors, or new source-data
 permissions are added.
+
+## Desktop theme library
+
+Settings now offers twelve palettes, grouped into six light and six dark desktops.
+Light: Sage, Pastel, Classic, Cloud, Peach, Lavender. Dark: Midnight, Plum, Ocean,
+Forest, Espresso, Graphite. All share the retro shell, typography, and semantic
+colors. The original sage/rose/midnight IDs and Sage default remain unchanged.
+
+Selecting a radio updates only the labeled Settings preview. Save theme applies
+and persists the palette across the planner through the existing verified-account
+preference action. Failed saves leave the preview choice available and keep the
+saved theme unconfirmed. No device/system-mode preference is added; each palette
+has explicit light/dark metadata for browser-native controls.
+
+Apply `supabase/migrations/20261027001200_desktop_theme_library.sql` once. It only
+extends the theme check constraint; no saved preferences, ownership policies, or
+grants are rewritten. Run planner_preferences_rls.sql and desktop_theme_library_rls.sql
+and confirm their PASS results. Unit tests check all palette/token/contrast roles
+and app/database allowlist parity; live privacy/persistence still needs SQL/browser
+verification. Arbitrary CSS/custom colors remain invalid stored preference values.
+
+Run npm test, lint, TypeScript, and build. Review one light and one dark palette
+across all pages and every palette's previews, plus keyboard, phone, failed save,
+reload/sign-in, and account isolation. The library is an initial collection, not a
+limit on later palettes. User-defined colors, artwork/background uploads, and
+per-widget styling remain separate future increments.
