@@ -148,3 +148,22 @@ an unavailable label. The shared marker parser handles reading and insertion.
 ResolveLinkPreview performs fresh account checks and owner-filtered target reads
 in batches of 50. It accepts no owner parameter and makes no writes. Preview
 failures never turn a confirmed save into a failed save or discard text.
+
+## Unified search
+
+src/lib/search/types.ts owns validated search inputs, result types, category
+labels, and destination mapping. SearchForm uses shared inputs, buttons, feedback,
+and the planner frame; its explicit action runs a fresh account check each time.
+Search is posted as form state, without query terms in navigation URLs or shared
+caches. Prior results are labeled when the input/category changes, and pagination
+is disabled until the new search runs. Failures are separate from zero matches.
+
+planner_search is a read-only, security-invoker SQL function. Each UNION branch
+filters auth.uid and keeps RLS active; page matches also join their owned parent.
+Literal substring matching does not interpolate SQL or expose a caller owner field.
+The first version scans owned text; profile larger libraries before adding indexes
+or changing search semantics. Result metadata excludes full body content.
+
+loadSelectedTask performs an exact id plus owner query for task result links,
+independent of the normal task-list limit. It reuses TaskList and task actions,
+including existing save-error handling, rather than introducing a second editor.

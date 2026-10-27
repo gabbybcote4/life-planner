@@ -402,3 +402,33 @@ not establish live privacy guarantees. Manually verify both note/page directions
 renames, removal, same-title choices, paging, two accounts, failed requests, stale
 saves, keyboard controls, phone layouts, and all themes. No public/external links,
 graph view, automatic title matching, rich text, or sharing is added here.
+
+## Unified search
+
+Open `/search` to search tasks, calendar events, notes, spaces, and space pages.
+Search is case-insensitive literal substring matching: task/space titles, event
+names or ISO dates, and saved note/page titles or bodies. Page results also match
+their space name. Category filters narrow the same search; results paginate in
+sets of 20, ordered by title/kind/id, with a lookahead row for Next.
+
+Apply `supabase/migrations/20261026000800_unified_search.sql` once after earlier
+feature migrations, then run `supabase/tests/search_rls.sql` and verify the PASS
+result. It adds one read-only security-invoker function, with explicit current-owner
+filters, existing RLS, and authenticated-only execution. No table policies or
+records are rewritten, and no caller-supplied owner is accepted.
+
+The app does not persist search history or put terms in the URL/local storage.
+Blank searches show instructions rather than listing the entire planner. The
+100-character limit counts Unicode code points; `%`, `_`, and quotes are literal.
+This is simple search, without stemming, fuzzy matching, ranking, or highlighting.
+
+Results link directly to notes, pages, spaces, and calendar days. Tasks use an
+owner-checked `/tasks?task=<id>` detail view so older tasks outside the main list's
+200-row window can be opened, edited, and completed. Show all tasks returns to the
+normal list. Invalid/foreign task IDs produce an unavailable state.
+
+Run npm run test:search and the full suite, lint, TypeScript, and build. Check all
+categories, body-only matches, dates, same-title records, pagination, no matches,
+failed requests, signed-out access, two accounts, keyboard, phone, and all themes.
+Search terms and results remain in component memory only; leaving/reloading may
+require searching again.

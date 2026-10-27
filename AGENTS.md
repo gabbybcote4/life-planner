@@ -140,3 +140,12 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - Keep JS/SQL marker parsing aligned: note/page kind, UUID identity, one-line label
   of 1–200 Unicode characters, deduplicated identities, and body limit 20,000.
 - Do not render stored text/labels as HTML or resolve arbitrary external URLs.
+
+### Search checks
+
+- Run npm run test:search and shared navigation/task regressions. Apply the search
+  migration and run supabase/tests/search_rls.sql before claiming live isolation.
+- Preserve read-only security-invoker search, explicit owner filters, authenticated
+  execution grants, literal matching, bounded pagination, and failure states.
+- Do not store search terms/results across accounts or add them to URLs/history.
+- Keep exact task-result reads owner-filtered and independent of list truncation.

@@ -68,3 +68,13 @@ This increment changes no database schema or permission policies.
 - [ ] Another account's items/titles/backlinks remain inaccessible.
 - [ ] Picker, cursor insertion, errors, and lists work by keyboard/on phone/in themes.
 - [ ] Existing note/page saves, plain-text escaping, and navigation still work.
+
+## Unified search review
+
+- [ ] All five categories, body-only note/page matches, and event dates work.
+- [ ] Result links open the correct item; old tasks outside the list window open.
+- [ ] Blank input, no matches, failed requests, and changed-query results are clear.
+- [ ] Previous/Next covers more than 20 results without duplicates or hidden caps.
+- [ ] Terms are not added to the URL; account switches clear search state.
+- [ ] Signed-out/foreign access is denied, including copied task-detail URLs.
+- [ ] Keyboard controls, narrow layouts, and all themes remain usable.
