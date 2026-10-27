@@ -205,3 +205,12 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - Isolate preview variables from the saved app root; radio selection is not a save.
 - Arbitrary color/CSS persistence requires its own design/validation; do not treat
   this preset-library increment as completion of full visual customization.
+
+### Widget accent checks
+
+- Keep optional accent enums synchronized in JS and SQL; automatic uses omission.
+- Preserve id/width/order when changing or clearing accent metadata. Do not
+  auto-rewrite older rows/defaults or let arbitrary CSS/hex values enter layouts.
+- Run layout/contrast regressions and the widget accent SQL privacy/revision tests.
+- Apply accent roles through shared theme tokens and validated data attributes;
+  keep preview-only changes separate from confirmed saves.

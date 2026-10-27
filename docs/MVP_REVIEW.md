@@ -134,3 +134,13 @@ This increment changes no database schema or permission policies.
 - [ ] Old Sage/Pastel/Midnight choices and default are preserved through setup.
 - [ ] Failed save keeps the choice but does not falsely confirm persistence.
 - [ ] Keyboard/radio controls, phone layout, and separate accounts work.
+
+## Widget accent review
+
+- [ ] Each widget previews five title-bar colors and its automatic default.
+- [ ] Save/reload/sign-in preserves choices; changing theme adapts their shades.
+- [ ] Cancel restores saved colors, order, and size.
+- [ ] Reset widget colors preserves arrangement; Restore default resets all as draft.
+- [ ] Reorder/resize/add-workspace operations retain existing accents.
+- [ ] Invalid values and stale writes fail; account layouts stay isolated.
+- [ ] Keyboard, phone layouts, twelve themes, and source-data preservation work.

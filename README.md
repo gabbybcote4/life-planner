@@ -557,3 +557,27 @@ across all pages and every palette's previews, plus keyboard, phone, failed save
 reload/sign-in, and account isolation. The library is an initial collection, not a
 limit on later palettes. User-defined colors, artwork/background uploads, and
 per-widget styling remain separate future increments.
+
+## Per-widget title-bar accents
+
+Customize dashboard now offers Theme default, Pink, Mint, Blue, Butter, and Lilac
+for each widget. Choices preview immediately but persist only through Save layout.
+Cancel restores the saved palette roles along with order/width. Theme default
+removes one override; Reset widget colors clears only overrides, preserving layout.
+Restore default resets the full layout and color overrides as a draft.
+
+Colors are semantic roles from the current theme, not fixed hex values. A Mint
+window stays Mint when changing themes, using that palette's tested light/dark
+shade. Only title bars change; body text/data/artwork retain their shared tokens.
+No arbitrary CSS or custom color input is introduced by this increment.
+
+Apply `supabase/migrations/20261027001300_widget_accents.sql` once after workspace
+widgets setup. It allows an optional accent field with five strict values while
+preserving the previous two-field shape. Existing rows, defaults, revisions,
+policies, and grants are unchanged. Run the dashboard/workspace/widget accent SQL
+assertions and verify their PASS results. The handoff bundles all three scripts.
+
+Run npm test, lint, TypeScript, and build. Review save/reload/sign-in, Cancel,
+resizing/reordering without losing color, reset semantics, conflict handling,
+all twelve themes, keyboard, phone layouts, and account isolation. Removing a
+widget removes only its layout entry, never underlying planner data.

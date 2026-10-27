@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import test from "node:test";
 import assert from "node:assert/strict";
-import { DEFAULT_LAYOUT, LEGACY_LAYOUT,addWorkspaceWidgets, parseLayout, parseLayoutRevision, moveWidget } from "../src/lib/dashboard/layout.ts";
+import { WIDGET_ACCENTS,isWidgetAccent,setWidgetAccent,clearWidgetAccents,DEFAULT_LAYOUT, LEGACY_LAYOUT,addWorkspaceWidgets, parseLayout, parseLayoutRevision, moveWidget } from "../src/lib/dashboard/layout.ts";
 
 test("layouts support the default, subsets, an empty dashboard, and both widths", () => {
   assert.deepEqual(parseLayout(DEFAULT_LAYOUT), DEFAULT_LAYOUT);
@@ -59,4 +59,27 @@ test("database default and widget allowlist match the app without rewriting save
  assert.deepEqual(JSON.parse(match[1]),DEFAULT_LAYOUT);
  assert.doesNotMatch(sql,/update public\.dashboard_layouts/i);
  for(const widget of DEFAULT_LAYOUT)assert.ok(sql.includes("'"+widget.id+"'"));
+});
+
+
+test("widget accents roundtrip without changing legacy layout shapes",()=>{
+ for(const accent of Object.keys(WIDGET_ACCENTS))assert.deepEqual(parseLayout([{id:"calendar",width:"half",accent}]),[{id:"calendar",width:"half",accent}]);
+ assert.deepEqual(parseLayout(LEGACY_LAYOUT),LEGACY_LAYOUT);
+ for(const accent of [null,"auto","#ffffff","url(evil)","constructor",true,{}])assert.equal(parseLayout([{id:"spaces",width:"full",accent}]),null);
+});
+test("accent changes and reset preserve content identity, order and width",()=>{
+ const original=[{id:"calendar",width:"full"},{id:"connections",width:"half",accent:"pink"}],before=JSON.stringify(original);
+ const changed=setWidgetAccent(original,"calendar","mint");assert.deepEqual(changed,[{id:"calendar",width:"full",accent:"mint"},original[1]]);assert.equal(JSON.stringify(original),before);
+ assert.deepEqual(setWidgetAccent(changed,"calendar","auto"),original);
+ assert.deepEqual(clearWidgetAccents(changed),[{id:"calendar",width:"full"},{id:"connections",width:"half"}]);
+ assert.deepEqual(setWidgetAccent(original,"calendar","background:red"),original);
+});
+test("reordering and adding other widgets retain saved accent choices",()=>{
+ const saved=[{id:"calendar",width:"full",accent:"blue"},{id:"progress",width:"half",accent:"lilac"}];
+ assert.deepEqual(moveWidget(saved,"calendar",1),[saved[1],saved[0]]);assert.deepEqual(addWorkspaceWidgets(saved).slice(0,2),saved);
+});
+test("accent allowlist and database validator agree without rewriting saved rows",()=>{
+ const sql=fs.readFileSync(new URL("../supabase/migrations/20261027001300_widget_accents.sql",import.meta.url),"utf8");
+ for(const accent of Object.keys(WIDGET_ACCENTS)){assert.equal(isWidgetAccent(accent),true);assert.ok(sql.includes("'"+accent+"'"));}
+ assert.equal(isWidgetAccent("__proto__"),false);assert.doesNotMatch(sql,/update public\.dashboard_layouts/i);
 });

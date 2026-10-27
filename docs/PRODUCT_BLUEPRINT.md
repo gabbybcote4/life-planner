@@ -230,3 +230,10 @@ dark. Users can preview a preset before explicitly saving it. This is a foundati
 for the broader theme library and full customization, not a cap on available
 palettes or implementation of user-defined colors/backgrounds/covers. Existing
 palette IDs and saved choices remain valid.
+
+### Widget accent follow-up — 2026-10-27
+
+Each widget can now save a theme-relative title-bar accent from five shared roles,
+with Theme default and reset controls. This is a first per-widget styling step;
+it does not implement arbitrary custom colors, uploaded covers/backgrounds, or
+complete visual customization. Older layouts remain valid and unchanged.
