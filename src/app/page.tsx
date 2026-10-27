@@ -1,5 +1,5 @@
 import {Suspense} from "react";
-import {DashboardSpaces,DashboardConnections,DashboardUpcoming} from "./dashboard/workspace-data";
+import {DashboardGuidance,DashboardSpaces,DashboardConnections,DashboardUpcoming} from "./dashboard/workspace-data";
 import {TASK_SELECT,type Task} from "@/lib/tasks/types";
 import { Button } from "@/components/ui/button";
 import { requireAccount } from "@/lib/auth/account";
@@ -16,7 +16,7 @@ async function Dashboard() {
     supabase.from("tasks").select("id", { count: "exact", head: true }).eq("user_id", userId).eq("completed", false),
     supabase.from("tasks").select("id", { count: "exact", head: true }).eq("user_id", userId).eq("completed", true),
     supabase.from("tasks").select(TASK_SELECT).eq("user_id", userId)
-      .order("created_at", { ascending: false }).order("id", { ascending: false }).limit(5),
+      .order("created_at", { ascending: false }).order("id", { ascending: false }).limit(3),
     supabase.from("dashboard_layouts").select("layout,revision").eq("user_id", userId).maybeSingle(),
   ]);
   const loadFailed = open.error || completed.error || recent.error || open.count === null || completed.count === null;
@@ -31,7 +31,7 @@ async function Dashboard() {
 
 
       <TaskWidgets key={userId} open={open.count ?? 0} completed={completed.count ?? 0} tasks={(recent.data ?? []) as unknown as Task[]}
-        layout={parsedLayout ?? DEFAULT_LAYOUT} revision={savedLayout.data?.revision ?? 0} canCustomize={!layoutFailed} workspaceSlots={{spaces:<Suspense fallback={<p role="status">Opening your spaces...</p>}><DashboardSpaces/></Suspense>,calendar:<Suspense fallback={<p role="status">Loading your calendar...</p>}><DashboardUpcoming/></Suspense>,connections:<Suspense fallback={<p role="status">Drawing saved links...</p>}><DashboardConnections/></Suspense>}} />
+        layout={parsedLayout ?? DEFAULT_LAYOUT} revision={savedLayout.data?.revision ?? 0} canCustomize={!layoutFailed} workspaceSlots={{guidance:<Suspense fallback={<p role="status">Checking your plans...</p>}><DashboardGuidance/></Suspense>,spaces:<Suspense fallback={<p role="status">Opening your spaces...</p>}><DashboardSpaces/></Suspense>,calendar:<Suspense fallback={<p role="status">Loading your calendar...</p>}><DashboardUpcoming/></Suspense>,connections:<Suspense fallback={<p role="status">Drawing saved links...</p>}><DashboardConnections/></Suspense>}} />
     </>}
   </>;
 }

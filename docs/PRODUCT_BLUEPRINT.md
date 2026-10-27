@@ -261,3 +261,66 @@ scope. Defaults preserve old spaces; no source tasks/pages are copied or removed
 - Save left/right/top/bottom navigation per account with isolated preview/cancel.
   On phones, left/right adapt to a top bar with side-aligned More; top/bottom use
   the chosen edge. All sections remain reachable.
+
+### Optional focus timer increment
+
+- Focus (25m), short break (5m), long break (15m), with explicit 1-180 minute session
+  length, start/pause/resume/reset and a visual countdown.
+- Optional dashboard widget using existing add/remove/order/size/accent controls.
+  Existing dashboards/defaults do not gain it automatically.
+- Timer continues across internal routes in this browser tab, with status controls
+  elsewhere. Refresh/tab close resets it. No session sync/history or notifications.
+
+## Capture-first guidance and optional wellbeing modules (owner direction)
+
+The planner should act as a useful second brain: a low-friction dumping ground for
+tasks, ideas, notes, and life information across spaces, then a guide toward what
+needs attention. Capture must remain quick; users need not organize everything or
+supply a date/priority before saving a thought. Space organization is optional
+context, not a prerequisite for capture.
+
+Next foundation: optional task due dates and priorities. Then add a Your next step
+dashboard widget that surfaces time-sensitive tasks and commitments, suggests a
+focus task, explains each cue using saved evidence (for example Due today), and
+lets the user choose something else. Missing metadata is a gentle organizing
+prompt, not evidence that a task is urgent. Suggestions should acknowledge sparse
+data and never invent deadlines, commitments, or completed work. Notes/pages must
+not silently become scheduled tasks without explicit user confirmation.
+
+This direction does not yet specify AI models, external processing, automated
+extraction, ranking weights, reminders, or a complete planning algorithm. Begin
+with explainable rules over owned data. Keep any later AI/data-sharing choices
+explicit and consistent with the privacy requirements above.
+
+Optional modules the owner specifically wants:
+- Meals and nutrition, including calorie tracking inspired by their use of
+  Cronometer. Support flexible entries for the different foods/meal components
+  users want to log, without rigid entry limits that make capture frustrating.
+- Workouts and exercise logging.
+- Users choose whether these modules appear as tabs/areas; they are not compulsory
+  parts of the default planner.
+
+Keep nutrition/workout records private by default. Food data sources/licensing,
+portion and unit handling, recipe/meal structure, flexible/bulk entry, nutrient
+scope, workout fields, imports, and links to planning guidance need design before
+implementation. Do not invent nutrition accuracy guarantees or personal targets.
+These modules are roadmap notes, not implemented features or diet/workout advice.
+
+Guidance implementation guardrails: query all relevant owned open/due tasks rather
+than deriving priorities from the truncated Recent tasks preview. Treat date-only
+deadlines using the user's local day, without inventing a time of day. A load
+failure must not look like No tasks need attention. Completed work is not a next
+action. The first increment adds planning inputs only; the guidance widget follows.
+
+### Explainable guidance and compact dashboard
+
+- Your next step is an optional widget that can be explicitly added/promoted to the
+  top. Use complete owned open-task queries for counts and up to three alternatives.
+- Rank overdue, due today, high priority, the next week's dated work, remaining
+  planned work, then oldest unplanned captures. Resolve ties by due date, priority,
+  capture time and ID. Explain why a task appears; missing metadata is not urgency.
+- Show nearby all-day commitments using the browser's local day. Offer an exact
+  task link and focus-session action without changing completion or saved priority.
+- Use compact desktop shortcuts, folded month/detail views, smaller graphics and
+  fewer duplicate headings. Keep the retro character, readable controls, saved
+  order/width/accent, source records and phone disclosures intact.

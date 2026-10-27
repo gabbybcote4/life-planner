@@ -121,3 +121,93 @@
   .desktop-main :is(.notes-pagination a,.upcoming-event-list a,.graph-open-links a,.embedded-panel-heading a,.space-links a) { min-height:44px; display:flex; align-items:center; }
   .desktop-main :focus { scroll-margin-block:90px; }
 }
+
+/* Compact dashboard presentation: same saved half/full layout, less repeated chrome. */
+.add-guidance-shortcut { margin:0 0 1rem; }
+.widget-type-guidance .widget-titlebar { background:linear-gradient(90deg,var(--accent-yellow),var(--surface)); }
+.guidance-heading { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:.5rem; }
+.guidance-heading h2 { font-size:1.3rem; }
+.guidance-counts { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:.6rem; margin:.75rem 0; }
+.guidance-counts > div { padding:.65rem; border:1px solid var(--border); border-radius:7px; background:var(--panel); }
+.guidance-counts dt { font-size:.8rem; color:var(--muted); }
+.guidance-counts dd { font:700 1.7rem var(--font-desktop-display); margin:.25rem 0 0; }
+.guidance-columns { display:grid; grid-template-columns:minmax(0,1.4fr) minmax(0,1fr); gap:1rem; }
+.guidance-focus { padding:.85rem; background:var(--accent-yellow); border:1px solid var(--input-border); border-radius:7px; min-width:0; }
+.guidance-focus h3 { font-size:1.2rem; margin:.35rem 0; overflow-wrap:anywhere; }
+.guidance-focus h3 a { text-decoration:underline; text-underline-offset:3px; }
+.guidance-reason { font-weight:600; margin:.5rem 0; overflow-wrap:anywhere; }
+.guidance-controls { display:flex; flex-wrap:wrap; align-items:center; gap:.5rem; margin:.5rem 0; }
+.guidance-controls :is(.secondary-button,.task-edit-button) { margin:0; min-height:44px; padding:.5rem; }
+.guidance-events { min-width:0; }
+.guidance-events ul { list-style:none; margin:.5rem 0; padding:0; }
+.guidance-events li { display:grid; grid-template-columns:6.5rem minmax(0,1fr); align-items:center; gap:.5rem; border-bottom:1px solid var(--border); min-height:44px; padding:.4rem 0; }
+.guidance-events time { font-size:.8rem; color:var(--muted); }
+.guidance-events a { overflow-wrap:anywhere; text-decoration:underline; }
+.guidance-organize { margin:.8rem 0; font-size:.85rem; overflow-wrap:anywhere; }
+.guidance-organize a { text-decoration:underline; color:var(--primary); }
+.widget-half .guidance-columns { grid-template-columns:1fr; }
+.compact-recent-tasks { list-style:none; padding:0; margin:.6rem 0; }
+.compact-recent-tasks li { border-bottom:1px solid var(--border); }
+.compact-recent-tasks a { display:flex; align-items:center; gap:.7rem; min-height:44px; padding:.4rem; overflow-wrap:anywhere; }
+.compact-recent-tasks .is-done { color:var(--muted); text-decoration:line-through; }
+:is(.compact-task-editor,.compact-month,.compact-map-links) > summary { min-height:44px; align-content:center; cursor:pointer; color:var(--primary); font-size:.85rem; }
+@media (min-width:801px) {
+ .desktop-main .custom-widget-grid { gap:.85rem; }
+ .desktop-main .widget-body > section { padding:.8rem; }
+ .desktop-main .widget-body > .embedded-window { padding:0; }
+ .desktop-main .dashboard-widget .embedded-panel-heading { justify-content:flex-end; padding:.2rem .8rem 0; }
+ .desktop-main .dashboard-widget .embedded-panel-heading h2 { display:none; }
+ .desktop-main :is(.widget-type-overview,.widget-type-capture,.widget-type-progress,.widget-type-recent,.widget-type-timer) .widget-body h2 { display:none; }
+ .desktop-main .dashboard-widget .eyebrow { display:none; }
+ .desktop-main .dashboard-widget .panel-intro { margin:.4rem 0 .7rem; }
+ .desktop-main .dashboard-widget .overview-cards { grid-template-columns:repeat(3,minmax(0,1fr)); gap:.5rem; }
+ .desktop-main .dashboard-widget .overview-card { padding:.5rem; }
+ .desktop-main .dashboard-widget .overview-card dd { display:block; }
+ .desktop-main .dashboard-widget .overview-number { font-size:1.8rem; }
+ .desktop-main .dashboard-widget .overview-note { display:none; }
+ .desktop-main .task-donut { width:105px; padding:8px; margin:.6rem auto; }
+ .desktop-main .task-donut strong { font-size:1.25rem; }
+ .desktop-main .focus-timer-dial { width:150px; padding:8px; margin:.8rem auto; }
+ .desktop-main .focus-timer-dial output { font-size:2rem; }
+ .desktop-main .focus-timer-dial > div { gap:.35rem; }
+ .desktop-main .focus-timer-note { font-size:.8rem; }
+ .desktop-main .desktop-space-cards { grid-template-columns:1fr; gap:.5rem; }
+ .desktop-main .widget-full .desktop-space-cards { grid-template-columns:repeat(3,minmax(0,1fr)); }
+ .desktop-main .desktop-space-card .space-visual { display:grid; grid-template-columns:64px minmax(0,1fr); align-items:center; min-height:64px; }
+ .desktop-main .desktop-space-card .space-artwork { height:64px; width:64px; object-fit:cover; border-bottom:0; border-right:1px solid var(--input-border); }
+ .desktop-main .desktop-space-card .space-card-caption { padding:.5rem; }
+ .desktop-main .desktop-space-card h3 { font-size:.95rem; }
+ .desktop-main .desktop-space-card p { display:none; }
+ .desktop-main .desktop-space-card [data-cover="none"] .space-card-caption { grid-column:1/-1; }
+ .desktop-main .desktop-graph { max-height:170px; }
+ .desktop-main .upcoming-event-list li { padding:.35rem 0; gap:.15rem; }
+}
+@media (max-width:800px) {
+ .guidance-columns { grid-template-columns:minmax(0,1fr); }
+ .guidance-counts { gap:.35rem; }
+ .guidance-counts > div { padding:.5rem; }
+ .guidance-counts dt { font-size:.75rem; }
+ .guidance-controls .secondary-button { width:100%; }
+ .guidance-events a { min-height:44px; display:flex; align-items:center; }
+}
+
+/* Desktop utility widgets use their width before asking for more vertical room. */
+@media (min-width:801px) {
+ .desktop-main .dashboard-capture .add-task-controls { flex-direction:row; align-items:stretch; }
+ .desktop-main .dashboard-capture .add-task-controls .form-control { min-width:0; }
+ .desktop-main .focus-timer { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); column-gap:.7rem; }
+ .desktop-main .focus-timer-modes { grid-column:1/-1; grid-row:1; }
+ .desktop-main .focus-timer-dial { grid-column:1; grid-row:2/4; align-self:center; }
+ .desktop-main .focus-timer > .focus-timer-controls { grid-column:2; grid-row:2; align-self:end; }
+ .desktop-main .focus-timer-duration { grid-column:2; grid-row:3; margin:.25rem 0; align-self:start; min-width:0; }
+ .desktop-main .focus-timer-note { grid-column:1/-1; margin:.5rem 0 0; text-align:left; }
+}
+
+@media (min-width:801px) {
+ .desktop-main .dashboard-intro { padding-bottom:0; margin-bottom:.5rem; }
+ .desktop-main .dashboard-intro h1 { font-size:clamp(1.8rem,2.4vw,2.6rem); }
+ .desktop-main .dashboard-intro .intro { margin:.35rem 0; }
+ .desktop-main .dashboard-intro .eyebrow { margin-bottom:.35rem; }
+ .desktop-main .dashboard-customize-heading > .muted { flex:1; }
+ .desktop-main .dashboard-customize-heading .add-guidance-shortcut { margin:0; }
+}

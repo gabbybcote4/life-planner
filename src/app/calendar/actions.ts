@@ -42,6 +42,7 @@ export async function saveCalendarEvent(_previous: CalendarActionState, formData
     return failure;
   }
   revalidatePath("/calendar");
+  revalidatePath("/");
   return { message: "Event saved.", savedDate: eventDate };
 }
 

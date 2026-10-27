@@ -11,19 +11,19 @@ components; [the blueprint](docs/PRODUCT_BLUEPRINT.md) records product direction
 ## What works now
 
 - Email/password accounts with confirmation and sign-out.
-- Private tasks: add, rename, complete/reopen, and assign to a space.
+- Private tasks: add, rename, complete/reopen, assign to a space, and set optional due dates/priorities.
 - All-day calendar events, plain-text notes, and space pages.
 - Saved internal links/backlinks, private search, and Personal/Work/Study starters.
-- Space icons/covers/accents, seven customizable dashboard widgets, twelve palettes,
+- Space icons/covers/accents, nine available dashboard widgets (seven by default), twelve palettes,
   and saved solid/dots/grid backgrounds.
 
 Saves are explicit; failed saves retain drafts. Removing a widget keeps its data.
-Notes/pages/spaces/layout/backgrounds guard stale edits. Task title/calendar/theme
+Notes/pages/spaces/layout/backgrounds and task planning guard stale edits. Task title/calendar/theme
 updates use the last successful write. Revisions are not history/restore.
 
 Social sign-in, timed/recurring events, reminders, deletion/export/history, sharing,
-offline drafts, rich text, custom databases, uploaded wallpaper, habits, and the
-focus timer remain future work. Notion/Obsidian imports are not implemented.
+offline drafts, rich text, custom databases, uploaded wallpaper, habits, and
+other advanced widgets remain future work. Notion/Obsidian imports are not implemented.
 
 Phone layouts use compact navigation and expandable panels. Settings offers saved
 left/right/top/bottom navigation; left/right adapt to a top bar and side-aligned
@@ -77,6 +77,9 @@ edit applied migrations, or drop tables to get past setup errors.
 | 014 space_appearance | Space styling | space_appearance_rls.sql |
 | 015 desktop_background | Backgrounds | desktop_background_rls.sql |
 | 016 navigation_position | Menu placement | navigation_position_rls.sql |
+| 017 focus_timer_widget | Optional timer placement | focus_timer_widget_rls.sql |
+| 018 task_planning | Task dates/priorities | task_planning_rls.sql |
+| 019 dashboard_guidance | Owned guidance + widget | dashboard_guidance_rls.sql |
 
 Review SQL before running it; use a disposable/test database where possible.
 Assertions create fictional users/records and roll back changes. Confirm every
@@ -121,3 +124,29 @@ The empty public folder is for future assets. Unused starter images were removed
 node_modules, .next, next-env.d.ts and *.tsbuildinfo are generated working files,
 not extra planner features. Explorer hides them without deleting them.
 
+
+## Optional focus timer
+
+After migration 017, use Customize dashboard > Add Focus timer > Save layout.
+Focus/short/long sessions have start/pause/resume/reset and 1-180 minute lengths.
+The countdown continues across planner routes in this tab; refresh/close resets it.
+Its placement saves, but active sessions/history do not sync or persist. No sound,
+OS notification, or automatic next session. Run npm run test:timer.
+
+## Task planning foundation
+
+Quick capture remains title-only. Open Add a date or priority on any saved task,
+choose optional planning details, then Save task plan. Clearing/canceling stays
+draft-only until confirmed. Apply migration 018 and run test:task-planning plus
+the SQL privacy checks. Due dates are date-only; no events/reminders are created.
+The blueprint records optional nutrition/workout modules as future work. Capture-first
+guidance is implemented in the subsequent increment described below.
+
+## Your next step and compact widgets
+
+After migration 019, add/promote Your next step at the top and Save layout. It uses
+explainable rules over all owned open tasks and upcoming all-day events, not just
+recent previews. Show another and Open task keep you in control; focus reuses the
+timer without overwriting an active session. Desktop previews are more compact,
+with full month/map/task controls available in disclosures or their main pages.
+Run npm run test:guidance and the SQL privacy/ranking checks. No AI service is used.

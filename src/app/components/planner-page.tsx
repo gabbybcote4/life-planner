@@ -1,3 +1,4 @@
+import { FocusTimerStatus } from "@/app/dashboard/focus-timer";
 import type { ReactNode } from "react";
 import { Suspense } from "react";
 import type { PlannerSection } from "@/lib/navigation";
@@ -26,7 +27,7 @@ export function PlannerHeading({ eyebrow, title, description, email, className =
 }) {
   return <div className={`planner-intro ${className}`.trim()}>
     <div><p className="eyebrow">{eyebrow}</p><h1>{title}</h1><p className="intro">{description}</p></div>
-    <div className="planner-account"><p className="muted">{email}</p><SignOutButton /></div>
+    <div className="planner-account"><p className="muted">{email}</p><SignOutButton /><FocusTimerStatus /></div>
   </div>;
 }
 

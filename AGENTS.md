@@ -188,7 +188,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 ### Workspace widget checks
 
-- Keep all seven widget IDs and validation in sync across app and database.
+- Keep registered widget IDs and validation in sync across app and database.
 - Never auto-rewrite existing/empty layouts when expanding the registry. New-widget
   additions and Restore default remain draft changes until Save confirms.
 - Run dashboard layout and desktop tests plus SQL privacy/revision assertions.
@@ -246,3 +246,26 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - Keep position enums in JS/SQL aligned, explicit preview/save and owner/revision guards. Palette/background writes must preserve navigation.
 - Check 320/390/768/1280 CSS pixels, keyboard/More dismissal, 44px touch controls, and bottom safe area. Reset temporary browser viewport overrides.
 - Run test:navigation, full regressions, and navigation_position_rls.sql after migration 016. Do not claim live SQL or physical-device verification from mocks/emulation.
+
+### Focus timer checks
+
+- Keep active countdown state in the keyed account provider, not layout JSON, database history, localStorage, or a shared cache.
+- Supply live clock values only from events/effects. Derive remaining time from a deadline; do not subtract assumed interval ticks.
+- Preserve paused subsecond time, stop at zero, and never automatically start the next session. Keep countdown announcements off; announce completion once.
+- The timer is an optional eighth widget. Keep existing seven-widget defaults, saved layouts, widths/accents, revision guards, and RLS unchanged.
+- Run test:timer plus full regressions and focus_timer_widget_rls.sql after migration 017. Check route navigation, reset, refresh, account change, and mobile controls.
+
+### Task planning checks
+
+- Keep title-only capture valid; defaults are null due_date and none priority. Reuse TaskPlanning everywhere TaskList is used.
+- Use shared date-only validation/UTC formatting. Do not infer urgency from missing fields or create calendar events/reminders silently.
+- Save only due_date/priority with verified owner/id/planning_revision; preserve failed drafts. Title/completion/assignment must not reset metadata or bump its revision.
+- Run test:task-planning and regressions plus tasks_rls.sql/task_planning_rls.sql after migration 018. Keep applied migration history unchanged.
+
+### Guidance and compact dashboard checks
+
+- Use the verified-owner, security-invoker guidance RPC over all relevant open tasks. Do not rank from recent/limited previews or invent task deadlines/urgency.
+- Derive local today only in client effects/events; refresh on source-version/local-day changes. Failures must not show empty-success guidance.
+- Keep rule explanations aligned with SQL ordering, all-day calendar labels, and a user choice of another task. Never overwrite an active timer.
+- Guidance is an optional ninth widget; explicit promotion/save preserves metadata and seven-widget defaults. Compact styling must keep readable fonts, real actions and phone touch targets.
+- Run test:guidance plus regressions and dashboard_guidance_rls.sql after migration 019; confirm live privacy/ranking/older-record tests before claiming verification.
