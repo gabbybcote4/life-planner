@@ -1,5 +1,4 @@
 import {Suspense} from "react";
-import Link from "next/link";
 import {DashboardSpaces,DashboardConnections,DashboardUpcoming} from "./dashboard/workspace-data";
 import {TASK_SELECT,type Task} from "@/lib/tasks/types";
 import { Button } from "@/components/ui/button";
@@ -29,12 +28,10 @@ async function Dashboard() {
     {loadFailed ? <LoadError title="Your dashboard could not be loaded." description="Refresh to try again. Your saved tasks have not been changed." action="/" /> : <>
       {layoutFailed && <div className="form-error" role="alert">Your layout settings could not be loaded. You can still use the dashboard; reload before customizing.
         <form action="/" method="get"><Button variant="text" type="submit">Reload layout settings</Button></form></div>}
-      <div className="desktop-dashboard-columns"><div className="desktop-dashboard-center">
-      <Suspense fallback={<p role="status">Opening your spaces...</p>}><DashboardSpaces/></Suspense>
+
+
       <TaskWidgets key={userId} open={open.count ?? 0} completed={completed.count ?? 0} tasks={(recent.data ?? []) as unknown as Task[]}
-        layout={parsedLayout ?? DEFAULT_LAYOUT} revision={savedLayout.data?.revision ?? 0} canCustomize={!layoutFailed} />
-      <Suspense fallback={<p role="status">Drawing your saved connections...</p>}><DashboardConnections/></Suspense>
-      </div><aside className="desktop-dashboard-rail" aria-label="Calendar and shortcuts"><Suspense fallback={<p role="status">Loading upcoming events...</p>}><DashboardUpcoming/></Suspense><div className="desktop-shortcuts"><p className="eyebrow">QUICK ACCESS</p><Link href="/search">⌕ Find something</Link><Link href="/notes?note=new">＋ A fresh note</Link><Link href="/spaces">▧ Your spaces</Link><Link href="/settings">✧ Theme settings</Link></div></aside></div>
+        layout={parsedLayout ?? DEFAULT_LAYOUT} revision={savedLayout.data?.revision ?? 0} canCustomize={!layoutFailed} workspaceSlots={{spaces:<Suspense fallback={<p role="status">Opening your spaces...</p>}><DashboardSpaces/></Suspense>,calendar:<Suspense fallback={<p role="status">Loading your calendar...</p>}><DashboardUpcoming/></Suspense>,connections:<Suspense fallback={<p role="status">Drawing saved links...</p>}><DashboardConnections/></Suspense>}} />
     </>}
   </>;
 }

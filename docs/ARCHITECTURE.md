@@ -236,3 +236,18 @@ Typography uses local font-role tokens: Tahoma/Verdana for classic desktop UI,
 Trebuchet MS for softer 2000s headings, and Lucida Console/Courier New for title
 bars and small console labels. These apply across palettes without external font
 requests. Adjust roles in retro.css rather than changing each component's fonts.
+
+## Unified workspace widgets
+
+All seven widget identities now live in the dashboard registry, with matching
+application/database validation. TaskWidgets composes task content and passed
+server-rendered workspace slots into DashboardWidgets. DesktopWindow embedded mode
+avoids nested window chrome. Fixed workspace placement/rail was removed; the saved
+layout alone determines which panels are shown and their order/width.
+
+LEGACY_LAYOUT documents the old four-widget arrangement. It remains valid unchanged.
+DEFAULT_LAYOUT is the seven-widget starting point, and addWorkspaceWidgets appends
+only missing workspace identities without changing existing order/size. Migration
+updates the SQL default/validator without rewriting rows or revisions. Tests check
+app/database parity and backward compatibility. Existing layout conflict/privacy
+boundaries and metadata-only persistence remain unchanged.

@@ -114,3 +114,12 @@
 .desktop-main .window-titlebar h2 { font:inherit; font-weight:700; }
 .desktop-main .overview-number { font-weight:700; font-variant-numeric:tabular-nums; }
 .desktop-main .desktop-graph text { font-family:var(--font-desktop-ui); }
+.desktop-main .dashboard-widget > .embedded-window { padding:0; }
+.embedded-panel-heading { display:flex; align-items:center; justify-content:space-between; gap:.75rem; flex-wrap:wrap; padding:1rem 1rem 0; }
+.embedded-panel-heading a { min-height:36px; display:inline-flex; align-items:center; text-decoration:underline; font-size:.8rem; }
+.widget-type-spaces .widget-titlebar { background:linear-gradient(90deg,var(--accent-blue),var(--surface)); }
+.widget-type-calendar .widget-titlebar { background:linear-gradient(90deg,var(--accent-pink),var(--surface)); }
+.widget-type-connections .widget-titlebar { background:linear-gradient(90deg,var(--accent-lilac),var(--surface)); }
+.widget-half .desktop-space-cards { grid-template-columns:1fr; }
+.widget-half .space-artwork { max-height:150px; }
+.widget-full .desktop-mini-calendar { max-width:430px; margin:auto; }

@@ -1,0 +1,35 @@
+begin;
+insert into auth.users(id,email) values('af77172a-f871-43b3-a610-a838d8b7e001','widgets-a@example.invalid'),('af77172a-f871-43b3-a610-a838d8b7e002','widgets-b@example.invalid');
+insert into public.spaces(id,user_id,title) values('af77172a-f871-43b3-a610-a838d8b7a001','af77172a-f871-43b3-a610-a838d8b7e001','Keep space');
+insert into public.tasks(user_id,title) values('af77172a-f871-43b3-a610-a838d8b7e001','Keep task');
+insert into public.notes(user_id,title,body) values('af77172a-f871-43b3-a610-a838d8b7e001','Keep note','Keep links');
+insert into public.calendar_events(user_id,title,event_date) values('af77172a-f871-43b3-a610-a838d8b7e001','Keep event','2026-10-27');
+insert into public.dashboard_layouts(user_id,layout) values('af77172a-f871-43b3-a610-a838d8b7e002','[]');
+set local role authenticated;
+select set_config('request.jwt.claim.sub','',true);
+select set_config('request.jwt.claims','{"sub":"af77172a-f871-43b3-a610-a838d8b7e001","role":"authenticated"}',true);
+do $$ declare full_layout jsonb; changed integer;begin
+ if not public.is_valid_dashboard_layout('[{"id":"overview","width":"full"},{"id":"capture","width":"half"},{"id":"progress","width":"half"},{"id":"recent","width":"full"}]') then raise exception 'FAIL: legacy layout compatibility';end if;
+ insert into public.dashboard_layouts(user_id) values('af77172a-f871-43b3-a610-a838d8b7e001');
+ select layout into full_layout from public.dashboard_layouts;
+ if jsonb_array_length(full_layout)<>7 or not full_layout @> '[{"id":"spaces"},{"id":"calendar"},{"id":"connections"}]'::jsonb then raise exception 'FAIL: seven widget default';end if;
+ update public.dashboard_layouts set layout='[{"id":"connections","width":"half"},{"id":"calendar","width":"full"},{"id":"spaces","width":"half"}]' where revision=1;
+ if not exists(select 1 from public.dashboard_layouts where revision=2 and layout->0->>'id'='connections' and layout->1->>'width'='full') then raise exception 'FAIL: saved workspace order/size';end if;
+ update public.dashboard_layouts set layout=full_layout where revision=1;get diagnostics changed=row_count;
+ if changed<>0 then raise exception 'FAIL: stale workspace overwrite';end if;
+ update public.dashboard_layouts set layout='[]' where revision=2;
+ if (select count(*) from public.spaces)<>1 or (select count(*) from public.tasks)<>1 or (select count(*) from public.notes)<>1 or (select count(*) from public.calendar_events)<>1 then raise exception 'FAIL: removed widget deleted source';end if;
+ begin update public.dashboard_layouts set layout='[{"id":"calendar","width":"full"},{"id":"calendar","width":"half"}]';raise exception 'FAIL: duplicate workspace widget';exception when check_violation then null;end;
+ begin update public.dashboard_layouts set layout='[{"id":"spaces","width":"full","body":"private content"}]';raise exception 'FAIL: layout content injection';exception when check_violation then null;end;
+ update public.dashboard_layouts set layout=full_layout where revision=3;
+ if not exists(select 1 from public.dashboard_layouts where revision=4 and layout=full_layout) then raise exception 'FAIL: workspace restore';end if;
+ update public.dashboard_layouts set layout='[]' where user_id='af77172a-f871-43b3-a610-a838d8b7e002';get diagnostics changed=row_count;
+ if changed<>0 then raise exception 'FAIL: cross-account layout write';end if;
+end;$$;
+select set_config('request.jwt.claims','{"sub":"af77172a-f871-43b3-a610-a838d8b7e002","role":"authenticated"}',true);
+do $$ begin
+ if (select count(*) from public.dashboard_layouts)<>1 or not exists(select 1 from public.dashboard_layouts where layout='[]'::jsonb and revision=1) then raise exception 'FAIL: second account isolation';end if;
+end;$$;
+reset role;
+rollback;
+select 'PASS: seven widgets, legacy compatibility, layout save/order/size, revision conflicts, source data preservation, and owner isolation' as result;

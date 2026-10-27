@@ -14,7 +14,7 @@ bad jsonb;
 begin
   if (select count(*) from public.dashboard_layouts) <> 0 then raise exception 'FAIL: cross-account layout read'; end if;
   insert into public.dashboard_layouts (user_id) values ('cf22172a-f871-43b3-a610-a838d8b7b101');
-  if not exists (select 1 from public.dashboard_layouts where jsonb_array_length(layout) = 4 and revision = 1) then
+  if not exists (select 1 from public.dashboard_layouts where jsonb_array_length(layout) = 7 and revision = 1) then
     raise exception 'FAIL: default layout/own insert';
   end if;
   update public.dashboard_layouts set layout = '[{"id":"recent","width":"half"},{"id":"overview","width":"full"}]'

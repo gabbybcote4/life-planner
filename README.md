@@ -506,3 +506,28 @@ Run npm run test:task-spaces plus all regressions, lint, TypeScript, and build.
 Manually verify assign/move/remove, quick add inside a space, reload/sign-in,
 more than 20 matching spaces/tasks, stale tabs, failed requests, keyboard, phone,
 themes, and two accounts. Save page drafts before changing task-list pages.
+
+## Seven-widget dashboard library
+
+Spaces, Calendar & upcoming, and Connection map now use the same saved layout
+controls as Task overview, Quick add, Task progress, and Recent tasks. All seven
+support add/remove, up/down reordering, half/full width, explicit Save, Cancel,
+and Restore default. Widget removal never deletes source planner records.
+
+Apply `supabase/migrations/20261027001100_workspace_widgets.sql` once after the
+existing dashboard migration. It widens the allowlist from four to seven and
+updates the default for future rows only. Existing layouts, including empty ones,
+are not rewritten or given a new revision. Run dashboard_layouts_rls.sql and
+workspace_widgets_rls.sql and confirm both PASS results.
+
+Old four-widget arrangements remain exactly as saved. Open Customize dashboard
+and choose Add workspace widgets to append missing workspace widgets as a draft,
+then save. Existing order and widths remain intact. Individual Add buttons also
+work. New accounts and Restore default use the seven-widget starting layout.
+No automatic layout conversion occurs just because the app was updated.
+
+Workspace panels reuse the same content/data loaders in embedded window mode,
+so they have one shared title bar and the same edit controls. Preview limits and
+UTC labels are unchanged. Narrow screens stack cards without changing saved
+widths. No drag-and-drop, free pixel sizing, custom colors, or new source-data
+permissions are added.

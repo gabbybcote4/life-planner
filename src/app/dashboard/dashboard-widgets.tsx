@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import type { ReactNode } from "react";
 import { useActionState, useState } from "react";
 import { saveDashboardLayout } from "./actions";
-import { DEFAULT_LAYOUT, WIDGETS, moveWidget, type Widget, type WidgetId, type LayoutState } from "@/lib/dashboard/layout";
+import { DEFAULT_LAYOUT, addWorkspaceWidgets, WIDGETS, moveWidget, type Widget, type WidgetId, type LayoutState } from "@/lib/dashboard/layout";
 
 export function DashboardWidgets({ savedLayout, savedRevision, canCustomize, slots }: {
   savedLayout: Widget[]; savedRevision: number; canCustomize: boolean; slots: Record<WidgetId, ReactNode>;
@@ -43,12 +43,13 @@ export function DashboardWidgets({ savedLayout, savedRevision, canCustomize, slo
     </div>
     {editing && <section className="widget-library" aria-labelledby="widget-library-heading">
       <h2 id="widget-library-heading">Arrange your dashboard</h2>
-      <p className="muted">Add a widget, move it up or down, and choose half or full width. Removing a widget keeps your saved tasks safe.</p>
+      <p className="muted">Add a widget, move it up or down, and choose half or full width. Removing a widget keeps your tasks, events, spaces, notes, and links safe.</p>
       <div className="widget-library-options">{missing.length === 0 ? <p className="muted">All available widgets are on your dashboard.</p> :
         missing.map((id) => <Button variant="secondary" key={id} type="button" disabled={pending || !canCustomize}
           onClick={() => change([...draft, { id, width: "half" }], `${WIDGETS[id].label} added.`)}>
           Add {WIDGETS[id].label}
         </Button>)}</div>
+      {missing.some(id=>["spaces","calendar","connections"].includes(id))&&<Button variant="secondary" disabled={pending||!canCustomize} onClick={()=>change(addWorkspaceWidgets(draft),"Workspace widgets added to your draft. Save to keep them.")}>Add workspace widgets</Button>}
       <div className="layout-save-controls">
         <form action={action}>
           <Button variant="primary" type="submit" disabled={pending || !dirty || !canCustomize} pending={pending} pendingLabel="Saving...">Save layout</Button>
