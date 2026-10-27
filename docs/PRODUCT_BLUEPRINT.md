@@ -213,3 +213,12 @@ preview into saved layout editing is follow-up scope. Do not substitute demo dat
 for live tasks/events/links or render decorative window dots as fake controls.
 The connection map must derive edges from saved private links and disclose any
 preview bounds. A focus timer shown in a concept is not yet a shipped feature.
+
+### Workspace layout follow-up — 2026-10-27
+
+The three workspace previews now join the four task widgets in the saved library.
+All seven can be added, removed, reordered, and set to half/full width. Existing
+layouts remain unchanged until the owner explicitly adds widgets and saves.
+This completes the first retro pass's fixed-panel follow-up; custom colors,
+backgrounds, uploaded covers, free sizing, and more light/dark palettes remain
+future customization increments.

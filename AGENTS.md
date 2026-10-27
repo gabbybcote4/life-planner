@@ -185,3 +185,13 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
   Check sidebar/keyboard/focus, long content, narrow screens, and every palette.
 - Keep decorative window chrome non-interactive. Dashboard preview data must stay
   account-scoped, real, bounded with clear labels, and separate from saved widgets.
+
+### Workspace widget checks
+
+- Keep all seven widget IDs and validation in sync across app and database.
+- Never auto-rewrite existing/empty layouts when expanding the registry. New-widget
+  additions and Restore default remain draft changes until Save confirms.
+- Run dashboard layout and desktop tests plus SQL privacy/revision assertions.
+- Reuse embedded DesktopWindow content; preserve source data when removing widgets.
+- Preserve preview bounds, account-scoped reads, and responsive stacking without
+  altering saved widths.

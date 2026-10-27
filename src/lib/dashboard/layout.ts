@@ -1,4 +1,7 @@
 export const WIDGETS = {
+  spaces: {label:"Your spaces",description:"Illustrated shortcuts to your first three saved spaces."},
+  calendar: {label:"Calendar & upcoming",description:"A compact month and your next five all-day events (UTC)."},
+  connections: {label:"Connection map",description:"A preview of saved links between your first twelve notes and pages."},
   overview: { label: "Task overview", description: "Your open, completed, and total task counts." },
   capture: { label: "Quick add", description: "Capture a new task from your dashboard." },
   progress: { label: "Task progress", description: "See progress across your saved tasks." },
@@ -7,10 +10,16 @@ export const WIDGETS = {
 export type WidgetId = keyof typeof WIDGETS;
 export type Widget = { id: WidgetId; width: "half" | "full" };
 export type LayoutState = { error?: string; message?: string; revision?: number };
-export const DEFAULT_LAYOUT: Widget[] = [
+export const LEGACY_LAYOUT: Widget[] = [
   { id: "overview", width: "full" }, { id: "capture", width: "half" },
   { id: "progress", width: "half" }, { id: "recent", width: "full" },
 ];
+
+export const DEFAULT_LAYOUT:Widget[] = [{id:"spaces",width:"full"},...LEGACY_LAYOUT.map(widget=>({...widget})),{id:"calendar",width:"half"},{id:"connections",width:"full"}];
+export function addWorkspaceWidgets(layout:Widget[]):Widget[] {
+ const additions:Widget[]=[{id:"spaces",width:"full"},{id:"calendar",width:"half"},{id:"connections",width:"full"}];
+ return [...layout.map(widget=>({...widget})),...additions.filter(widget=>!layout.some(saved=>saved.id===widget.id))];
+}
 
 export function parseLayout(value: unknown): Widget[] | null {
   if (!Array.isArray(value) || value.length > Object.keys(WIDGETS).length) return null;

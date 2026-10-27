@@ -1,8 +1,8 @@
-import type {CSSProperties} from "react";
+import type {ReactNode,CSSProperties} from "react";
 import Link from "next/link";
 import { EmptyState } from "@/components/ui/empty-state";
 import type { Task } from "@/lib/tasks/types";
-import type { Widget } from "@/lib/dashboard/layout";
+import type { Widget,WidgetId } from "@/lib/dashboard/layout";
 import { AddTaskForm, TaskList } from "../tasks/task-board";
 import { DashboardWidgets } from "./dashboard-widgets";
 
@@ -48,10 +48,10 @@ export function RecentTasksWidget({ tasks, headingId = "recent-heading" }: { tas
   </section>;
 }
 
-export function TaskWidgets({ open, completed, tasks, layout, revision, canCustomize }: {
-  open: number; completed: number; tasks: Task[]; layout: Widget[]; revision: number; canCustomize: boolean;
+export function TaskWidgets({ open, completed, tasks, layout, revision, canCustomize,workspaceSlots }: {
+  open: number; completed: number; tasks: Task[]; layout: Widget[]; revision: number; canCustomize: boolean; workspaceSlots:Pick<Record<WidgetId,ReactNode>,"spaces"|"calendar"|"connections">;
 }) {
-  return <DashboardWidgets savedLayout={layout} savedRevision={revision} canCustomize={canCustomize} slots={{
+  return <DashboardWidgets savedLayout={layout} savedRevision={revision} canCustomize={canCustomize} slots={{...workspaceSlots,
     overview: <TaskOverviewWidget open={open} completed={completed} />,
     capture: <QuickAddWidget />,
     progress: <TaskProgressWidget open={open} completed={completed} />,

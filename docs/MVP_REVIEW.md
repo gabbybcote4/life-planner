@@ -113,3 +113,14 @@ This increment changes no database schema or permission policies.
 - [ ] Empty/failed spaces/events/links show honest states without demo data.
 - [ ] Tasks, Notes, Spaces, templates, assignments, search, and themes still work.
 - [ ] Two accounts keep data, preferences, and layout isolated.
+
+## Workspace widget review
+
+- [ ] Existing four-widget or empty layouts remain saved unchanged after setup.
+- [ ] Add workspace widgets appends only missing panels, preserving order/width.
+- [ ] Each new panel supports individual add/remove/up/down/half/full/save/cancel.
+- [ ] Reload and sign out/in preserve the seven-widget arrangement.
+- [ ] Removing every widget leaves source tasks/events/spaces/notes/links intact.
+- [ ] Restore default creates a seven-widget draft that needs Save.
+- [ ] Two tabs report revision conflicts rather than overwriting saved layouts.
+- [ ] Keyboard, phone stacking, every theme, previews, and actual links still work.
