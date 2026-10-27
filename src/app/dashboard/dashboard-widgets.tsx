@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import type { ReactNode } from "react";
 import { useActionState, useState } from "react";
 import { saveDashboardLayout } from "./actions";
-import { DEFAULT_LAYOUT, addWorkspaceWidgets, WIDGETS, moveWidget, type Widget, type WidgetId, type LayoutState } from "@/lib/dashboard/layout";
+import { WIDGET_ACCENTS, setWidgetAccent,clearWidgetAccents,DEFAULT_LAYOUT, addWorkspaceWidgets, WIDGETS, moveWidget, type Widget, type WidgetId, type LayoutState } from "@/lib/dashboard/layout";
 
 export function DashboardWidgets({ savedLayout, savedRevision, canCustomize, slots }: {
   savedLayout: Widget[]; savedRevision: number; canCustomize: boolean; slots: Record<WidgetId, ReactNode>;
@@ -59,13 +59,14 @@ export function DashboardWidgets({ savedLayout, savedRevision, canCustomize, slo
         <Button variant="text" type="button" disabled={pending || !canCustomize}
           onClick={() => change(DEFAULT_LAYOUT.map((widget) => ({ ...widget })), "Default layout restored. Save to keep it.")}>Restore default layout</Button>
       </div>
-      <p className="muted">Save before leaving this page. Layout changes are not saved automatically.</p>
+      <Button variant="text" disabled={pending||!canCustomize||!draft.some(widget=>widget.accent)} onClick={()=>change(clearWidgetAccents(draft),"Widget colors reset in your draft. Save to keep them.")}>Reset widget colors</Button>
+      <p className="muted">Colors follow your current theme. Save before leaving this page. Layout changes are not saved automatically.</p>
       <FormFeedback error={state.error} />
     </section>}
     <p className="layout-announcement" role="status" aria-live="polite">{pending ? "Saving your layout..." : announcement}</p>
     {draft.length === 0 && <EmptyState title="A little breathing room.">Use Customize dashboard to add widgets. Your saved tasks are still on the Tasks page.</EmptyState>}
     <div className="custom-widget-grid">{draft.map((widget, index) => <article key={widget.id}
-      className={`dashboard-widget widget-${widget.width} widget-type-${widget.id}`} aria-label={WIDGETS[widget.id].label}>
+      data-accent={widget.accent} className={`dashboard-widget widget-${widget.width} widget-type-${widget.id}`} aria-label={WIDGETS[widget.id].label}>
       <div className="window-titlebar widget-titlebar"><WindowDots/><span>{WIDGETS[widget.id].label}</span></div>
       {editing && <div className="widget-controls">
         <span className="widget-control-title">{WIDGETS[widget.id].label}</span>
@@ -78,6 +79,11 @@ export function DashboardWidgets({ savedLayout, savedRevision, canCustomize, slo
             onChange={(event) => { const width = event.target.value === "full" ? "full" : "half";
               change(draft.map((item) => item.id === widget.id ? { ...item, width } : item), `${WIDGETS[widget.id].label} set to ${width} width.`); }}>
             <option value="half">Half</option><option value="full">Full</option>
+          </select>
+        </label>
+        <label className="widget-size-label">Color
+          <select value={widget.accent??"auto"} disabled={pending||!canCustomize} aria-label={"Color of "+WIDGETS[widget.id].label} onChange={event=>change(setWidgetAccent(draft,widget.id,event.target.value),WIDGETS[widget.id].label+" color changed. Save to keep it.")}>
+            <option value="auto">Theme default</option>{Object.entries(WIDGET_ACCENTS).map(([value,label])=><option key={value} value={value}>{label}</option>)}
           </select>
         </label>
         <Button type="button" disabled={pending || !canCustomize} aria-label={`Remove ${WIDGETS[widget.id].label} widget`}

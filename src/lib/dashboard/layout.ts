@@ -8,7 +8,10 @@ export const WIDGETS = {
   recent: { label: "Recent tasks", description: "View and edit your five most recently added tasks." },
 };
 export type WidgetId = keyof typeof WIDGETS;
-export type Widget = { id: WidgetId; width: "half" | "full" };
+export const WIDGET_ACCENTS = {pink:"Pink",mint:"Mint",blue:"Blue",yellow:"Butter",lilac:"Lilac"};
+export type WidgetAccent = keyof typeof WIDGET_ACCENTS;
+export function isWidgetAccent(value:unknown):value is WidgetAccent {return typeof value==="string"&&Object.hasOwn(WIDGET_ACCENTS,value);}
+export type Widget = { id: WidgetId; width: "half" | "full"; accent?:WidgetAccent };
 export type LayoutState = { error?: string; message?: string; revision?: number };
 export const LEGACY_LAYOUT: Widget[] = [
   { id: "overview", width: "full" }, { id: "capture", width: "half" },
@@ -26,12 +29,13 @@ export function parseLayout(value: unknown): Widget[] | null {
   const seen = new Set<string>();
   const result: Widget[] = [];
   for (const item of value) {
-    if (!item || typeof item !== "object" || Array.isArray(item) || Object.keys(item).length !== 2) return null;
+    if (!item || typeof item !== "object" || Array.isArray(item) || (Object.keys(item).length < 2 || Object.keys(item).length > 3 || Object.keys(item).some(key=>!["id","width","accent"].includes(key)))) return null;
     if (!Object.hasOwn(item, "id") || !Object.hasOwn(item, "width")) return null;
     if (typeof item.id !== "string" || !Object.hasOwn(WIDGETS, item.id) || seen.has(item.id)) return null;
     if (item.width !== "half" && item.width !== "full") return null;
+    if (Object.hasOwn(item,"accent") && !isWidgetAccent(item.accent)) return null;
     seen.add(item.id);
-    result.push({ id: item.id as WidgetId, width: item.width });
+    result.push({ id: item.id as WidgetId, width: item.width, ...(Object.hasOwn(item,"accent") ? {accent:item.accent as WidgetAccent}: {}) });
   }
   return result;
 }
@@ -48,3 +52,9 @@ export function moveWidget(layout: Widget[], id: WidgetId, direction: -1 | 1): W
   [moved[index], moved[next]] = [moved[next], moved[index]];
   return moved;
 }
+
+export function setWidgetAccent(layout:Widget[],id:WidgetId,accent:unknown):Widget[] {
+ if(accent!=="auto"&&!isWidgetAccent(accent))return layout;
+ return layout.map(widget=>{const next={...widget};if(next.id===id){if(accent==="auto")delete next.accent;else next.accent=accent;}return next;});
+}
+export function clearWidgetAccents(layout:Widget[]):Widget[] {return layout.map(widget=>{const next={...widget};delete next.accent;return next;});}

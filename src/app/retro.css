@@ -140,3 +140,10 @@
 .theme-accent-dots i { width:15px; height:15px; border-radius:50%; border:1px solid var(--input-border); }
 @media(max-width:950px) { .theme-library-group .theme-options { grid-template-columns:repeat(2,minmax(0,1fr)); } .theme-preview-widgets { grid-template-columns:1fr; } }
 @media(max-width:500px) { .theme-library-group .theme-options { grid-template-columns:1fr; } .theme-preview-desktop { grid-template-columns:1fr; } .theme-preview-navigation { display:none; } }
+/* User-selected accent roles resolve through the current light/dark palette. */
+.dashboard-widget[data-accent="pink"] { --widget-accent:var(--accent-pink); }
+.dashboard-widget[data-accent="mint"] { --widget-accent:var(--accent-mint); }
+.dashboard-widget[data-accent="blue"] { --widget-accent:var(--accent-blue); }
+.dashboard-widget[data-accent="yellow"] { --widget-accent:var(--accent-yellow); }
+.dashboard-widget[data-accent="lilac"] { --widget-accent:var(--accent-lilac); }
+.dashboard-widget[data-accent] > .widget-titlebar { background:linear-gradient(90deg,var(--widget-accent),var(--surface)); }

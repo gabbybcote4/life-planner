@@ -265,3 +265,17 @@ using the chosen palette's variables. The root's saved theme is untouched until
 the existing server action confirms a save. Preview text is explicitly illustrative,
 not live task data. No search history/local preference cache or external assets
 are introduced.
+
+## Widget accent metadata
+
+Widget optionally stores one semantic accent enum alongside id/width. App and SQL
+validators accept the legacy two-field shape and only the five registered values;
+unknown keys, null accents, hex/CSS strings, and extra payload remain invalid.
+Automatic color is represented by omitting accent, not storing an auto string.
+
+setWidgetAccent/clearWidgetAccents return new arrays and preserve identities,
+positions, and widths. Existing movement/width operations retain optional metadata.
+Only the validated data-accent attribute selects a CSS token rule; no user string
+is interpolated into a style declaration. Palette changes resolve the same role
+through existing theme variables, preserving tested readable foreground colors.
+Draft save/cancel/revision behavior remains in the existing layout action/component.
