@@ -176,3 +176,18 @@ After migration 022, Today combines original due tasks, scheduled/logged habits 
 ## Connected Projects
 
 After migration 023, Projects links existing tasks, notes and pages, with optional Space context and progress from all linked tasks. Unlink/restore keeps original records; source detail pages show project backlinks. Run test:projects plus tasks_rls.sql/projects_rls.sql. General database builders, project widgets and AI remain future work.
+
+## Task project controls
+
+After migration 024, task pencil editors let you browse/search existing projects and link, unlink or restore them. Tasks shows a Projects column; shared task cards show linked project badges. Three names plus a full count keep previews small. Run test:task-projects, tasks_rls.sql and task_project_picker_rls.sql. No source records are copied or moved.
+
+
+### Settings workspace and display preferences
+
+Settings has six compact keyboard-accessible categories: Appearance, Workspace, Accessibility, Account, Data & privacy, and About. Appearance groups Colours, Background, Fonts & text, and Zoom in expandable sections; Workspace owns navigation and the dashboard shortcut. Panels stay mounted to retain drafts when switching tabs. Existing theme/background/navigation forms keep their own saves.
+
+Migration 025 adds font presets (classic desktop/system/rounded/monospace), 14/16/18px text, 90/100/110/125% app zoom, reduced motion, stronger focus and simpler backgrounds/shadows to existing owner-protected preferences. Text, zoom and accessibility have independent revision checks and narrow update grants. Missing setup permits a local preview but disables these new saves; it does not block existing controls or reset their saved preferences.
+
+DisplayPicker owns preview/cancel/save. ThemeRoot reads saved display options separately from palette/navigation so a missing new column cannot erase the older choices. settings.css applies font roles, reading sizes, app zoom and accessibility attributes. App zoom is separate from browser zoom; very large combined settings can require scrolling. OS reduced motion is respected. About describes the current product without invented versions or AI/offline claims.
+
+Run test:display, full regressions, TypeScript, lint/build. Apply 025 then run planner_preferences_rls.sql and display_preferences_rls.sql, checking both PASS results before claiming live privacy verification. Review font/text/zoom saves across refresh, phone overflow at 125%, keyboard tabs/strong focus and reduced motion; preserve theme/navigation settings.

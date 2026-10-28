@@ -8,14 +8,14 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: Arial, Helvetica, sans-serif;
-  --font-mono: Consolas, monospace;
+  --font-sans: var(--font-desktop-ui, Arial, Helvetica, sans-serif);
+  --font-mono: var(--font-desktop-mono, Consolas, monospace);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-desktop-ui, Arial, Helvetica, sans-serif);
 }
 
 .planner-shell {
@@ -42,14 +42,14 @@ body {
 .brand {
   display: inline-block;
   margin: 0 0 2.5rem;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-desktop-display, Georgia, "Times New Roman", serif);
   font-size: 1.4rem;
   font-weight: 700;
   color: var(--primary);
 }
 
 .eyebrow { margin-bottom: 0.75rem; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
-h1 { font-family: Georgia, "Times New Roman", serif; font-size: clamp(2rem, 6vw, 2.65rem); line-height: 1.12; letter-spacing: -0.035em; }
+h1 { font-family: var(--font-desktop-display, Georgia, "Times New Roman", serif); font-size: clamp(2rem, 6vw, 2.65rem); line-height: 1.12; letter-spacing: -0.035em; }
 .intro { margin: 1rem 0 1.75rem; line-height: 1.7; color: var(--muted); overflow-wrap: anywhere; }
 .muted { font-size: 0.85rem; line-height: 1.6; color: var(--muted); }
 .auth-form { display: grid; gap: 0.6rem; }
@@ -75,7 +75,7 @@ a:focus-visible, button:focus-visible, input:focus-visible { outline: 3px solid 
 .planner-intro .intro { margin-bottom: 2.5rem; }
 .planner-account { max-width: 14rem; text-align: right; overflow-wrap: anywhere; }
 .planner-account .secondary-button { margin-top: 0.7rem; }
-h2 { font-family: Georgia, "Times New Roman", serif; font-size: 1.7rem; line-height: 1.2; }
+h2 { font-family: var(--font-desktop-display, Georgia, "Times New Roman", serif); font-size: 1.7rem; line-height: 1.2; }
 .task-board { border-top: 1px solid var(--border); padding-top: 2rem; }
 .tasks-heading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.75rem; }
 .task-count { color: var(--primary); background: var(--tint); border: 1px solid var(--border); border-radius: 20px; padding: 0.45rem 0.85rem; font-size: 0.85rem; white-space: nowrap; }
@@ -97,7 +97,7 @@ h2 { font-family: Georgia, "Times New Roman", serif; font-size: 1.7rem; line-hei
 .edit-task-form { flex: 1; min-width: 0; }
 .edit-task-controls { display: flex; align-items: baseline; gap: 0.75rem; flex-wrap: wrap; }
 .task-empty { margin-top: 2rem; padding: 2rem 1rem; text-align: center; border: 1px dashed var(--border); border-radius: 9px; background: var(--panel); }
-.empty-title { font-family: Georgia, "Times New Roman", serif; font-size: 1.4rem; margin-bottom: 0.6rem; }
+.empty-title { font-family: var(--font-desktop-display, Georgia, "Times New Roman", serif); font-size: 1.4rem; margin-bottom: 0.6rem; }
 .task-load-error { padding: 1.5rem; background: var(--panel); border: 1px solid var(--border); border-radius: 9px; }
 .task-load-error .muted { margin-top: 0.75rem; }
 @media (max-width: 600px) {
@@ -122,13 +122,13 @@ h2 { font-family: Georgia, "Times New Roman", serif; font-size: 1.7rem; line-hei
 .overview-completed { background: var(--tint); border-color: var(--border); }
 .overview-card dt { color: var(--primary); font-size: 0.9rem; font-weight: 600; }
 .overview-card dd { margin: 0; }
-.overview-number { display: block; font-family: Georgia, "Times New Roman", serif; font-size: 3rem; line-height: 1.15; margin-top: 0.6rem; font-variant-numeric: tabular-nums; }
+.overview-number { display: block; font-family: var(--font-desktop-display, Georgia, "Times New Roman", serif); font-size: 3rem; line-height: 1.15; margin-top: 0.6rem; font-variant-numeric: tabular-nums; }
 .overview-note { display: block; margin-top: 0.75rem; font-size: 0.8rem; line-height: 1.5; color: var(--muted); }
 .panel-intro { margin-top: 0.9rem; margin-bottom: 1.5rem; }
 .dashboard-capture .add-task-controls { flex-direction: column; }
 .dashboard-capture .add-task-controls .primary-button { align-self: flex-start; }
-.progress-value { margin: 1.25rem 0 0.75rem; font-family: Georgia, "Times New Roman", serif; font-size: 2.6rem; }
-.progress-value span { font-family: Arial, Helvetica, sans-serif; font-size: 0.85rem; margin-left: 0.5rem; color: var(--muted); }
+.progress-value { margin: 1.25rem 0 0.75rem; font-family: var(--font-desktop-display, Georgia, "Times New Roman", serif); font-size: 2.6rem; }
+.progress-value span { font-family: var(--font-desktop-ui, Arial, Helvetica, sans-serif); font-size: 0.85rem; margin-left: 0.5rem; color: var(--muted); }
 .text-link { display: inline-flex; align-items: center; gap: 0.5rem; min-height: 44px; color: var(--primary); font-size: 0.9rem; font-weight: 600; text-decoration: underline; text-underline-offset: 4px; }
 .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 @media (max-width: 760px) {
@@ -171,7 +171,7 @@ h2 { font-family: Georgia, "Times New Roman", serif; font-size: 1.7rem; line-hei
 .calendar-event-summary { display: flex; align-items: flex-start; gap: 0.75rem; }
 .calendar-event-title { flex: 1; padding-top: 0.6rem; min-width: 0; line-height: 1.5; overflow-wrap: anywhere; }
 .calendar-add-event { margin-top: 1.75rem; padding-top: 1.25rem; border-top: 1px solid var(--border); }
-.calendar-add-event h3 { font-family: Georgia, "Times New Roman", serif; font-size: 1.25rem; margin-bottom: 1rem; }
+.calendar-add-event h3 { font-family: var(--font-desktop-display, Georgia, "Times New Roman", serif); font-size: 1.25rem; margin-bottom: 1rem; }
 .calendar-event-form { display: grid; gap: 0.6rem; }
 .calendar-event-form label { font-size: 0.85rem; font-weight: 600; margin-top: 0.25rem; }
 .calendar-notice:empty { display: none; }
@@ -216,7 +216,7 @@ h2 { font-family: Georgia, "Times New Roman", serif; font-size: 1.7rem; line-hei
 .theme-root { display: flex; flex-direction: column; flex: 1; min-height: 100svh; color: var(--foreground); background: var(--background); }
 .settings-card { max-width: 65rem; }
 .theme-form fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
-.theme-form legend { font-family: Georgia, "Times New Roman", serif; font-size: 1.6rem; margin-bottom: 1.5rem; }
+.theme-form legend { font-family: var(--font-desktop-display, Georgia, "Times New Roman", serif); font-size: 1.6rem; margin-bottom: 1.5rem; }
 .theme-options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
 .theme-option { display: block; cursor: pointer; border: 2px solid var(--border); border-radius: 11px; padding: 1rem; background: var(--input); }
 .theme-option.is-chosen { border-color: var(--primary); }

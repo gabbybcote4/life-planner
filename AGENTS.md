@@ -315,4 +315,26 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - Keep projects and sources independent. Relations reference verified-owner record IDs; unlink never deletes source content. Preserve inactive relation rows/revisions for explicit restore and stale-write protection.
 - Counts use all active linked tasks, not the paginated preview. Show current titles, complete counts and bounded catalog/item/backlink lists. Project status/Space must not silently alter linked task completion, dates or assignments.
 - Reuse search, TaskList, SpacePicker and EditDialog. Keep creation identity stable until confirmed; close/reset only after success. Preserve selected project identity when catalog sort changes.
-- ProjectBacklinks is source-kind-specific and owner-filtered. General databases, habit relations, inline project selectors everywhere and AI remain separately scoped.
+- ProjectBacklinks is source-kind-specific and owner-filtered. General databases, habit relations, project selectors for non-task records and AI remain separately scoped.
+
+### Task project picker checks
+
+- Run test:task-projects and regressions; migration 024 adds read-only project choices/badges. Run tasks_rls.sql and task_project_picker_rls.sql before claiming live privacy verification.
+- Reuse ProjectLinkControl and its confirmed-save callback. Keep relation revision baselines for unlink/restore; never overwrite task title, completion, planning or Space.
+- Enrich task lists with one bounded owner-scoped batch (up to 200 IDs, three badges plus exact total). Metadata failure is unknown, not zero. Load searchable twenty-project choices only when opened or explicitly refreshed.
+
+
+### Browse-first record pickers
+
+Spaces, project item links and note/page links load existing choices when opened; project type changes load that type. Search is optional, with bounded pages and explicit refresh/error states. Space and project-item pickers share useRecordChoices and browsePlanner. Blank browsing uses verified-owner reads under existing RLS; normal global search still waits for a term. No new migration is needed. Selection does not save or copy source records; existing confirmation flows stay intact.
+
+
+### Settings workspace and display preferences
+
+Settings has six compact keyboard-accessible categories: Appearance, Workspace, Accessibility, Account, Data & privacy, and About. Appearance groups Colours, Background, Fonts & text, and Zoom in expandable sections; Workspace owns navigation and the dashboard shortcut. Panels stay mounted to retain drafts when switching tabs. Existing theme/background/navigation forms keep their own saves.
+
+Migration 025 adds font presets (classic desktop/system/rounded/monospace), 14/16/18px text, 90/100/110/125% app zoom, reduced motion, stronger focus and simpler backgrounds/shadows to existing owner-protected preferences. Text, zoom and accessibility have independent revision checks and narrow update grants. Missing setup permits a local preview but disables these new saves; it does not block existing controls or reset their saved preferences.
+
+DisplayPicker owns preview/cancel/save. ThemeRoot reads saved display options separately from palette/navigation so a missing new column cannot erase the older choices. settings.css applies font roles, reading sizes, app zoom and accessibility attributes. App zoom is separate from browser zoom; very large combined settings can require scrolling. OS reduced motion is respected. About describes the current product without invented versions or AI/offline claims.
+
+Run test:display, full regressions, TypeScript, lint/build. Apply 025 then run planner_preferences_rls.sql and display_preferences_rls.sql, checking both PASS results before claiming live privacy verification. Review font/text/zoom saves across refresh, phone overflow at 125%, keyboard tabs/strong focus and reduced motion; preserve theme/navigation settings.

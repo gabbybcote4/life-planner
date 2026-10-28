@@ -8,9 +8,11 @@
  --font-desktop-mono: "Lucida Console", "Courier New", monospace;
  font-family: var(--font-desktop-ui);
 }
+.theme-root :is(button,input,textarea,select,option,optgroup) { font-family:var(--font-desktop-ui); }
 .theme-root h1, .theme-root h2, .theme-root h3 { font-family:var(--font-desktop-display); font-weight:700; }
 .theme-root .empty-title, .theme-root .overview-number, .theme-root .progress-value { font-family:var(--font-desktop-display); }
-.theme-root .brand { font-family:var(--font-desktop-display); }
+.theme-root .brand, .theme-root legend { font-family:var(--font-desktop-display); }
+.theme-root .progress-value span { font-family:var(--font-desktop-ui); }
 
 .desktop-app { min-height:100svh; display:grid; grid-template-columns:220px minmax(0,1fr); background:var(--background); color:var(--foreground); }
 .desktop-sidebar { position:sticky; top:0; height:100svh; display:flex; flex-direction:column; padding:1.8rem 1rem; border-right:2px solid var(--foreground); background:linear-gradient(160deg,var(--surface),var(--accent-lilac)); overflow-y:auto; }

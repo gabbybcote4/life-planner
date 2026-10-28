@@ -8,6 +8,9 @@ export type Task = {
   planning_revision?: number;
   space_id?: string | null;
   space?: {title:string} | null;
+  projects?: {id:string;title:string}[];
+  project_count?:number;
+  projects_error?:boolean;
 };
 
 export type TaskActionState = {

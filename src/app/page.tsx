@@ -1,3 +1,4 @@
+import {withTaskProjects} from "@/lib/projects/task-projects";
 import Link from "next/link";
 import {Suspense} from "react";
 import {DashboardGuidance,DashboardSpaces,DashboardConnections,DashboardUpcoming} from "./dashboard/workspace-data";
@@ -20,6 +21,7 @@ async function Dashboard() {
       .order("created_at", { ascending: false }).order("id", { ascending: false }).limit(3),
     supabase.from("dashboard_layouts").select("layout,revision").eq("user_id", userId).maybeSingle(),
   ]);
+  const enrichedTasks=await withTaskProjects(supabase,(recent.data??[]) as unknown as Task[]);
   const loadFailed = open.error || completed.error || recent.error || open.count === null || completed.count === null;
   const parsedLayout = savedLayout.data ? parseLayout(savedLayout.data.layout) : DEFAULT_LAYOUT;
   const layoutFailed = Boolean(savedLayout.error || !parsedLayout);
@@ -32,7 +34,7 @@ async function Dashboard() {
         <form action="/" method="get"><Button variant="text" type="submit">Reload layout settings</Button></form></div>}
 
 
-      <TaskWidgets key={userId} open={open.count ?? 0} completed={completed.count ?? 0} tasks={(recent.data ?? []) as unknown as Task[]}
+      <TaskWidgets key={userId} open={open.count ?? 0} completed={completed.count ?? 0} tasks={enrichedTasks}
         layout={parsedLayout ?? DEFAULT_LAYOUT} revision={savedLayout.data?.revision ?? 0} canCustomize={!layoutFailed} workspaceSlots={{guidance:<Suspense fallback={<p role="status">Checking your plans...</p>}><DashboardGuidance/></Suspense>,spaces:<Suspense fallback={<p role="status">Opening your spaces...</p>}><DashboardSpaces/></Suspense>,calendar:<Suspense fallback={<p role="status">Loading your calendar...</p>}><DashboardUpcoming/></Suspense>,connections:<Suspense fallback={<p role="status">Drawing saved links...</p>}><DashboardConnections/></Suspense>}} />
     </>}
   </>;

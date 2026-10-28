@@ -1,0 +1,140 @@
+/* APP DENSITY: change these shared values to adjust spacing consistently.
+   Loaded last; palette, saved widget widths/order and source data stay separate. */
+.theme-root {
+ --density-gap: .65rem;
+ --density-panel: .7rem;
+ --density-control: 36px;
+ font-size: .875rem;
+ line-height: 1.45;
+}
+.theme-root .desktop-main.planner-shell { padding:1rem clamp(.75rem,1.5vw,1.5rem); }
+.desktop-main .planner-intro { gap:.75rem; margin-bottom:.75rem; }
+.desktop-main h1 { font-size:clamp(1.6rem,2.1vw,2rem); line-height:1.15; }
+.desktop-main h2,.desktop-main .dashboard-widget h2 { font-size:1.15rem; }
+.desktop-main h3 { font-size:1rem; }
+.desktop-main .planner-intro .intro { margin:.35rem 0 .5rem; font-size:.85rem; line-height:1.4; }
+.desktop-main .eyebrow { margin-bottom:.3rem; }
+.desktop-main .muted { line-height:1.45; }
+.desktop-main :is(.custom-widget-grid,.notes-layout,.calendar-layout,.today-columns,.project-layout,.inbox-grid,.habit-grid) { gap:var(--density-gap); }
+.desktop-main :is(.window-content,.widget-body > section,.dashboard-widget > section,.spaces-library,.notes-library,.note-editor,.calendar-agenda,.today-section,.habit-card,.inbox-card,.project-detail) { padding:var(--density-panel); }
+.desktop-main .window-content:has(> .embedded-window),.desktop-main .widget-body > .embedded-window { padding:0; }
+.desktop-main .window-titlebar { min-height:30px; padding:.25rem .6rem; gap:.45rem; }
+.desktop-main :is(.tasks-heading,.dashboard-section-heading,.notes-library-heading,.notes-editor-heading,.calendar-toolbar) { gap:.5rem; margin-bottom:.6rem; }
+.desktop-main .task-board { padding-top:.8rem; }
+.desktop-main .task-list { margin:.5rem 0; }
+.desktop-main .task-row { padding:.5rem 0; }
+.desktop-main .task-table-container { margin-top:.65rem; }
+.desktop-main .task-table :is(th,td) { padding:.5rem .6rem; }
+.desktop-main .task-table .task-title { font-size:.875rem; }
+.desktop-main .task-plan-badges,.desktop-main .task-project-badges { gap:.25rem; }
+.desktop-main :is(.task-project-badges a,.project-backlinks a) { min-height:var(--density-control); padding:.2rem .4rem; }
+.desktop-main :is(.ui-button,.text-link,.primary-button,.secondary-button,.project-link-control .ui-button) { min-height:var(--density-control); }
+.desktop-main :is(.primary-button,.secondary-button) { padding:.4rem .65rem; }
+.desktop-main .form-control { padding:.45rem .6rem; font-size:.875rem; }
+.desktop-main .form-error,.desktop-main .form-message { padding:.5rem .65rem; margin-top:.5rem; line-height:1.4; }
+.desktop-main :is(.notes-list,.project-items,.inbox-grid,.habit-grid) { margin-top:.6rem; }
+.desktop-main .notes-list a { padding:.45rem .5rem; min-height:var(--density-control); }
+.desktop-main .space-task-panel { padding:.7rem; margin:.75rem 0; }
+.desktop-main :is(.project-linked-item,.project-picker-results li,.task-project-choices li) { padding:.45rem; }
+.desktop-main :is(.project-form fieldset,.project-item-search,.habit-form fieldset) { gap:.4rem; margin:.5rem 0; }
+.desktop-main .habit-card .habit-labels { margin:.35rem 0; }
+.desktop-main .inbox-card h2 { margin:.45rem 0; }
+.desktop-main .today-counts { margin:.6rem 0; gap:.4rem; }
+.desktop-main .today-counts > a { min-height:56px; padding:.5rem .65rem; }
+.desktop-main .today-counts strong { font-size:1.4rem; }
+.desktop-main .notes-pagination { margin-top:.5rem; gap:.5rem; }
+.desktop-main .calendar-day { min-height:60px; padding:.35rem; }
+.desktop-main .calendar-table th { padding:.35rem .2rem; }
+.desktop-main .note-form textarea { min-height:15rem; line-height:1.6; }
+.desktop-main .guidance-counts { gap:.4rem; margin:.5rem 0; }
+.desktop-main .guidance-counts > div { padding:.4rem .5rem; }
+.desktop-main .guidance-counts dd { font-size:1.4rem; margin:0; }
+.desktop-main .guidance-focus { padding:.6rem; }
+.desktop-main .guidance-controls { gap:.4rem; margin:.4rem 0; }
+.desktop-main .guidance-footer { gap:.4rem; margin:.4rem 0 .1rem; }
+.desktop-main :is(.guidance-why,.guidance-logic,.guidance-inbox,.guidance-meta a,.guidance-meta .guidance-date) { font-size:.8rem; }
+.desktop-main :is(.guidance-why,.guidance-logic) summary { min-height:var(--density-control); }
+.desktop-main .guidance-meta { gap:.3rem; margin:.3rem 0; }
+.desktop-main .task-donut { width:112px; margin:.6rem auto; padding:10px; }
+.desktop-main .focus-timer-dial { width:min(100%,150px); margin:.6rem auto; }
+.desktop-main .desktop-graph { max-height:200px; }
+.desktop-main .desktop-space-cards { gap:.5rem; }
+.desktop-main .desktop-space-card .space-artwork { max-height:100px; object-fit:cover; }
+.desktop-main .desktop-space-card > div { padding:.45rem .6rem; }
+.desktop-main .upcoming-event-list li { padding:.5rem 0; gap:.25rem; }
+.desktop-main .overview-number { font-size:1.8rem; margin-top:.2rem; }
+.desktop-main .overview-note { margin-top:.35rem; }
+.entry-edit-content,.capture-content { padding:var(--density-panel); }
+.entry-edit-dialog :is(.task-planning,.task-space-assignment,.task-project-assignment) { padding:.5rem; margin:.4rem 0; }
+@media(min-width:801px) {
+ .theme-root[data-nav-position="left"] .desktop-app { grid-template-columns:185px minmax(0,1fr); }
+ .theme-root[data-nav-position="right"] .desktop-app { grid-template-columns:minmax(0,1fr) 185px; }
+ .desktop-sidebar { padding:1rem .65rem; }
+ .desktop-brand { font-size:1.3rem; gap:.6rem; padding:.3rem .5rem .8rem; }
+ .desktop-brand svg { width:32px; height:36px; }
+ .desktop-sidebar nav { gap:.15rem; }
+ .desktop-sidebar nav a { min-height:36px; padding:.4rem .6rem; gap:.6rem; font-size:.85rem; }
+ .desktop-sidebar-bottom { padding:1rem .5rem .25rem; }
+ .desktop-main .task-checkbox { width:28px; height:28px; }
+ .desktop-main .edit-pencil { width:32px; min-width:32px; height:32px; min-height:32px; }
+ .desktop-main .widget-titlebar { min-height:36px; }
+}
+@media(min-width:1200px) {
+ .desktop-main .widget-half .guidance-columns { grid-template-columns:minmax(0,2.2fr) minmax(0,1fr); gap:.6rem; }
+}
+/* Phone inputs stay at 16px, and interactive controls keep 44px targets.
+   Compact outer spacing still lets more content fit without changing saved widths. */
+@media(max-width:800px),(pointer:coarse) {
+ .theme-root { --density-control:44px; }
+ .desktop-main :is(input,textarea,select) { font-size:1rem; }
+ .desktop-main :is(.task-checkbox,.edit-pencil) { min-width:44px; min-height:44px; }
+ .desktop-main .calendar-day { min-height:64px; }
+}
+@media(max-width:800px) {
+ .desktop-main h1 { font-size:1.6rem; }
+ .desktop-main .widget-titlebar { min-height:48px; }
+ .desktop-main .task-table :is(th,td) { padding:.45rem .6rem; }
+ .desktop-main .task-title,.desktop-main .task-table .task-title { font-size:1rem; }
+}
+
+/* Compact repeated utilities and remove legacy large margins inside widgets. */
+.desktop-main .planner-account { display:flex; justify-content:flex-end; align-items:center; flex-wrap:wrap; gap:.35rem; max-width:18rem; }
+.desktop-main .planner-account > .muted { flex-basis:100%; margin:0; }
+.desktop-main .planner-account form { margin:0; }
+.desktop-main .planner-account .secondary-button { margin:0; }
+.desktop-main .planner-account .quick-capture-launch { margin:0; }
+.desktop-main .today-shortcut { margin:.25rem 0 .4rem; }
+.desktop-main .today-shortcut a { min-height:var(--density-control); }
+.desktop-main .dashboard-customize-heading { margin-bottom:.4rem; gap:.5rem; }
+.desktop-main .guidance-focus h3 { font-size:1.1rem; margin:.35rem 0; }
+.desktop-main .guidance-inbox { min-height:var(--density-control); padding:.25rem .45rem; }
+.desktop-main .guidance-controls :is(.secondary-button,.task-edit-button),
+.desktop-main .task-edit-button { min-height:var(--density-control); padding:.3rem .45rem; font-size:.8rem; }
+.desktop-main :is(.compact-recent-tasks a,.compact-task-editor > summary,.compact-month > summary,.compact-map-links > summary) { min-height:var(--density-control); padding:.25rem; }
+@media(min-width:801px) {
+ .desktop-main .desktop-space-card .space-visual { grid-template-columns:44px minmax(0,1fr); min-height:44px; }
+ .desktop-main .desktop-space-card .space-artwork { width:44px; height:44px; }
+ .desktop-main .desktop-space-card h3 { font-size:.875rem; }
+ .desktop-main .desktop-graph { max-height:150px; }
+ .desktop-main .focus-timer-dial { width:125px; }
+ .desktop-main .focus-timer-note { margin:.25rem 0 0; line-height:1.35; }
+}
+@media(max-width:800px) {
+ .desktop-main .planner-account { justify-content:flex-start; max-width:none; }
+}
+
+.desktop-main .guidance-events-heading { gap:.25rem; }
+.desktop-main .guidance-events-heading h3 { font-size:.875rem; }
+.desktop-main .guidance-events p { margin:.25rem 0; }
+.desktop-main .guidance-small-tag { padding:.15rem .3rem; font-size:.75rem; }
+.desktop-main .guidance-meta :is(a,.guidance-date,.guidance-priority-tag) { min-height:28px; padding:.2rem .35rem; }
+@media(max-width:800px),(pointer:coarse) {
+ .desktop-main .guidance-meta :is(a,.guidance-date,.guidance-priority-tag) { min-height:44px; }
+}
+
+.desktop-main .window-titlebar h2 { font:inherit; font-weight:700; }
+
+@media(max-width:800px),(pointer:coarse) {
+ .desktop-main .form-control,.entry-edit-dialog .form-control,.quick-capture-dialog .form-control { font-size:1rem; }
+ .desktop-sidebar nav a { min-height:44px; }
+}

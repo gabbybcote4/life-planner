@@ -1,3 +1,4 @@
+import {DEFAULT_DISPLAY,validDisplay,displayVariables} from "@/lib/themes/display";
 import {QuickCaptureProvider} from "@/app/inbox/quick-capture";
 import { FocusTimerProvider } from "@/app/dashboard/focus-timer";
 import {DEFAULT_NAV_POSITION,parseNavPosition} from "@/lib/navigation";
@@ -9,6 +10,7 @@ import { DEFAULT_THEME, parseTheme, themeVariables, type Theme } from "@/lib/the
 
 export async function ThemeRoot({ children }: { children: ReactNode }) {
   let theme: Theme = DEFAULT_THEME;
+  let display=DEFAULT_DISPLAY;
   let timerOwner: string | null = null;
   let background=DEFAULT_BACKGROUND;
   let navigation=DEFAULT_NAV_POSITION;
@@ -20,10 +22,12 @@ export async function ThemeRoot({ children }: { children: ReactNode }) {
         const { data, error } = await account.supabase.from("planner_preferences").select("theme,background_pattern,background_intensity,nav_position")
           .eq("user_id", account.userId).maybeSingle();
         if (!error) { navigation=parseNavPosition(data?.nav_position)??DEFAULT_NAV_POSITION; theme = parseTheme(data?.theme) ?? DEFAULT_THEME; background=parseBackground(data?.background_pattern,data?.background_intensity)??DEFAULT_BACKGROUND; }
+        const displayRead=await account.supabase.from("planner_preferences").select("font_preset,text_size,app_zoom,reduce_motion,strong_focus,simple_background").eq("user_id",account.userId).maybeSingle();
+        if(!displayRead.error&&validDisplay(displayRead.data))display=displayRead.data;
       }
     } catch {
       // Keep the planner usable; Settings reports preference-service errors.
     }
   }
-  return <div className="theme-root" {...backgroundAttributes(background)} data-theme={theme} data-nav-position={navigation} style={themeVariables(theme) as CSSProperties}><FocusTimerProvider key={timerOwner ?? "signed-out"}><QuickCaptureProvider>{children}</QuickCaptureProvider></FocusTimerProvider></div>;
+  return <div className="theme-root" {...backgroundAttributes(background)} data-theme={theme} data-nav-position={navigation} data-text-size={display.text_size} data-reduce-motion={display.reduce_motion} data-strong-focus={display.strong_focus} data-simple-background={display.simple_background} style={{...themeVariables(theme),...displayVariables(display)} as CSSProperties}><FocusTimerProvider key={timerOwner ?? "signed-out"}><QuickCaptureProvider>{children}</QuickCaptureProvider></FocusTimerProvider></div>;
 }
