@@ -134,3 +134,11 @@ test("shared dropdown preserves native selection, labels, disabled state, and es
   assert.match(html, /value="grid" selected=""/);
   assert.match(html, /&lt;Grid&gt;/);
 });
+
+test("shared pencil editor prerenders closed, labels the dialog and retains mounted forms",()=>{
+ const {EditDialog}=require("../src/components/ui/edit-dialog.tsx");
+ const html=render(EditDialog,{title:"Edit <entry>",children:React.createElement("input",{name:"draft",defaultValue:"Keep me"})});
+ assert.match(html,/aria-label="Edit &lt;entry&gt;"/);assert.match(html,/<svg[^>]+aria-hidden="true"/);
+ assert.match(html,/<dialog[^>]+aria-labelledby=/);assert.match(html,/aria-describedby=/);assert.doesNotMatch(html,/<dialog[^>]+ open/);
+ assert.match(html,/name="draft" value="Keep me"/);assert.match(html,/Close editor/);assert.match(html,/Closing keeps drafts/);
+});

@@ -1,3 +1,4 @@
+import {EditDialog} from "@/components/ui/edit-dialog";
 import {MobileSection} from "@/components/ui/mobile-section";
 import { KnowledgeConnections } from "@/app/knowledge/connections";
 import {AddTaskForm,TaskList} from "@/app/tasks/task-board";
@@ -52,7 +53,7 @@ async function SpacesContent({searchParams}:{searchParams:Search}) {
  <nav className="notes-pagination" aria-label="Space list pages">{spacesPage>1&&<Link href={'/spaces?spacesPage='+(spacesPage-1)}>Previous spaces</Link>}{(list.count??0)>spacesPage*SIZE&&spacesPage<9999&&<Link href={'/spaces?spacesPage='+(spacesPage+1)}>Next spaces</Link>}</nav>
  <SpaceForm key={userId} templates={templates} templatesError={templatesError}/></MobileSection>
  {unavailable ? <LoadError title="This space is unavailable." description="Choose a space from your list." action="/spaces"/> : space ? <>
- <MobileSection className="spaces-library" title="Space appearance and name"><div className="space-hero"><SpaceVisual space={space} description="Your pages, tasks, and ideas — together."/></div><SpaceForm key={userId+space.id} space={space}/></MobileSection>
+ <MobileSection className="spaces-library" title="Space appearance and name"><div className="space-hero"><SpaceVisual space={space} description="Your pages, tasks, and ideas — together."/></div><EditDialog key={userId+space.id} title={"Edit space: "+space.title}><SpaceForm space={space}/></EditDialog></MobileSection>
  <MobileSection className="space-task-panel" title={"Tasks in "+space.title}><h2>Tasks in {space.title}</h2>
  <AddTaskForm key={userId+space.id} spaceId={space.id}/>
  {tasks?.error?<LoadError title="Space tasks could not be loaded." description="Check the task-space setup and try again. Saved tasks have not changed." action={base}/>:<><p className="muted">{tasks?.count??0} saved tasks · newest first</p><TaskList tasks={(tasks?.data??[]) as unknown as Task[]}/>{!tasks?.data?.length&&<p className="muted">No tasks here yet. Add one above or assign an existing task from Tasks.</p>}

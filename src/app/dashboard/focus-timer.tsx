@@ -1,6 +1,7 @@
 "use client";
 import { createContext, useContext, useEffect, useReducer, useState, type ReactNode, type Dispatch, type CSSProperties, type FormEvent } from "react";
 import Link from "next/link";
+import {EditDialog} from "@/components/ui/edit-dialog";
 import { Button } from "@/components/ui/button";
 import { TextInput } from "@/components/ui/fields";
 import { FormFeedback } from "@/components/ui/feedback";
@@ -40,10 +41,10 @@ function TimerDuration() {
     if (state.status === "running") return;
     dispatch({ type: "duration", minutes }); setError(undefined);
   }
-  return <details className="focus-timer-duration"><summary>Session length</summary><form onSubmit={apply}>
+  return <EditDialog title="Edit timer session length"><form onSubmit={apply}>
     <label htmlFor="focus-minutes">Minutes (1–180)</label><div className="focus-duration-fields"><TextInput key={state.mode + state.durationMs} id="focus-minutes" name="minutes" type="number" min={1} max={180} step={1} required defaultValue={state.durationMs / 60000} disabled={state.status === "running"} /><Button type="submit" variant="secondary" disabled={state.status === "running"}>Set &amp; reset</Button></div>
     <p className="muted">Changing the session or length resets the countdown. Pause first.</p><FormFeedback error={error} />
-  </form></details>;
+  </form></EditDialog>;
 }
 export function FocusTimerWidget() {
   const { state, dispatch } = useFocusTimer();

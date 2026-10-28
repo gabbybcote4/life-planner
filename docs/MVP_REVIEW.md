@@ -224,3 +224,20 @@ This increment changes no database schema or permission policies.
 - Close/reopen an unsaved draft, switch routes and confirm it remains; discard explicitly. Refresh clears unsaved drafts.
 - Edit a saved source, then mark its receipt Reviewed. Source edits/completion remain intact; restore via Reviewed tab.
 - Check keyboard open/close/focus, failed-save feedback, long text, phone widths and both theme modes. Confirm account changes cannot expose the previous draft or queue.
+
+## Tasks table review
+
+- Full Tasks: check headers, completed and unplanned rows, long titles, empty list and 200-record notice.
+- Rename, complete/reopen, save/clear/cancel date and priority, assign/change/unlink a Space. Confirm the same saved task in its space/dashboard and after refresh.
+- Keep a failed edit draft; test planning conflicts in two tabs using existing revision protections.
+- Check table semantics/keyboard, open editor width, theme modes and 320/390/768/1280px. Phone rows must not clip controls or require page-wide horizontal scrolling.
+- Existing selected-task, dashboard and space lists should retain working controls. No new migration is required.
+
+## Pencil editor review
+
+- Tasks (table, selected task, space/dashboard lists), calendar entries, saved notes/pages and space settings: pencil opens the right record; Save persists through existing actions.
+- Check Escape/Close and focus return; close/reopen a temporary draft without saving. Restore/discard temporary review text before leaving.
+- While saving, Close/Escape must not dismiss the editor. Errors/conflicts remain visible inside it.
+- Dashboard/global widget pencils: width/colour/order changes stay drafts until Save layout. Closing retains draft; global Cancel restores saved layout. Removing a widget still keeps source records.
+- New note Read/Edit toggle remains usable. Note/page links work in Read view; existing save/revision behavior remains.
+- Check 320/390px phones, long titles, scrolling to save buttons, keyboard focus and light/dark themes. No new SQL migration.

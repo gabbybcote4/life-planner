@@ -324,3 +324,38 @@ Inbox keeps the original capture. Open its source to edit, plan, move or complet
 To change capture fields/labels, edit src/app/inbox/quick-capture.tsx. Inbox cards are in capture-card.tsx; shared space choices are in src/app/components/space-picker.tsx. Validation belongs in src/lib/inbox/types.ts and actions in app/inbox/actions.ts. Styles are in responsive.css's Inbox section. Run npm run test:inbox after changes. Database changes require a new migration; never rewrite applied migration 020.
 
 Apply migration 020 after earlier migrations, then run supabase/tests/inbox_capture_rls.sql. Check its PASS result. Voice capture, AI organization and tags remain planned features.
+
+## Small edits: start here
+
+You can experiment locally without publishing every change. Save, preview, then Undo if you dislike the result. GitHub receives changes only when you commit and publish; ordinary font/style changes need no Supabase update. A separate assistant review copy does not sync automatically.
+
+| I want to change... | Open this file | What to look for |
+| --- | --- | --- |
+| App fonts everywhere | src/app/retro.css | The three --font-desktop variables at the top: ui, display and mono |
+| Palette colours | src/lib/themes/themes.ts | Existing semantic palette values; keep theme keys unchanged |
+| Buttons everywhere | src/components/ui/button.tsx | Shared button markup; appearance also uses CSS classes |
+| Inputs everywhere | src/components/ui/fields.tsx | Shared inputs and selects |
+| Tasks table columns | src/app/tasks/task-board.tsx | TaskList's table header and TaskRow's table cells |
+| Tasks table spacing/phone layout | src/app/responsive.css | Tasks table section at the end |
+
+For a first experiment, change one existing font name, keep the fallback fonts, save and view the app. Check both a heading and an input. Ctrl+Z reverses an unsaved experiment while the editor history is available. For saved file changes, inspect the Source Control diff; Discard Changes removes all uncommitted changes in that file, so use it only when every listed change is unwanted.
+
+When ready to keep/share changes, use the existing branch/review workflow. Do not overwrite unrelated edits or commit .env.local. Publishing and database setup are separate from trying a visual edit.
+
+## Tasks table foundation
+
+The full Tasks page now uses three columns: Task, Date & priority, Space. Use Edit to rename; open the plan cell for date/priority pickers and Save task plan; open assignment for the shared Space picker and save. The checkbox completes/reopens the original task.
+
+Phones show the same mounted controls as labeled stacked rows. There is no separate mobile copy of task data or draft state. Dashboard, selected-task and space lists retain the existing list presentation. Tables do not add custom databases, saved views, sorting/filtering, general relations or habit tracking yet. Tasks still show up to 200 recent records with an explicit notice; the table is not an all-record report.
+
+No new SQL setup is needed for this presentation increment. Existing task planning and assignment permissions remain in use.
+
+## Pencil editors
+
+Saved tasks, calendar events, notes/pages and space settings now use a top-right pencil to open an editor popup. Dashboard and individual widget layout settings use the same pattern; timer length has its own labeled pencil. Completion and timer start/pause stay directly accessible.
+
+Shared popup source: src/components/ui/edit-dialog.tsx. Shared styling: responsive.css, Shared pencil editing section. Each feature keeps its existing form, save buttons, validation, permissions and conflict handling. Task title, planning and assignment remain separate explicit saves inside one popup; closing does not save them.
+
+Close or Escape returns to the card and keeps its mounted draft on this page. A pending save blocks closing. Navigating away, refreshing or changing accounts can discard unsaved drafts; this is not offline draft storage. Read each save message before leaving. Inbox original snapshots remain immutable; open their source to edit it.
+
+Creation forms and Settings remain dedicated forms. Informational disclosures such as Why this? are not editors. The shared pencil does not grant editing to read-only data.

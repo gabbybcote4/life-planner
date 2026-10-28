@@ -60,7 +60,7 @@ test("timer is optional and preserves existing defaults, metadata, and layout va
  assert.match(sql,/jsonb_array_length\(candidate\) > 8/);assert.doesNotMatch(sql,/update public\.dashboard_layouts|set default/i);
 });
 test("actual timer can prerender with no clock reads and uses labeled native controls",()=>{
- const deps={"next/link":({children,...props})=>React.createElement("a",props,children),"@/components/ui/button":compile("../src/components/ui/button.tsx"),"@/components/ui/fields":compile("../src/components/ui/fields.tsx"),"@/components/ui/feedback":compile("../src/components/ui/feedback.tsx"),"@/lib/timer/timer":timer};
+ const deps={"@/components/ui/edit-dialog":editDialogs,"next/link":({children,...props})=>React.createElement("a",props,children),"@/components/ui/button":compile("../src/components/ui/button.tsx"),"@/components/ui/fields":compile("../src/components/ui/fields.tsx"),"@/components/ui/feedback":compile("../src/components/ui/feedback.tsx"),"@/lib/timer/timer":timer};
  const ui=compile("../src/app/dashboard/focus-timer.tsx",deps),old=Date.now;
  try{
  Date.now=()=>{throw Error("Live clock during prerender");};
@@ -73,3 +73,5 @@ function compile(path,deps={}){
  const code=ts.transpileModule(fs.readFileSync(new URL(path,import.meta.url),"utf8"),{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX,esModuleInterop:true}}).outputText,loaded={exports:{}};
  new Function("require","exports",code)(name=>Object.hasOwn(deps,name)?deps[name]:require(name),loaded.exports);return loaded.exports;
 }
+
+const editDialogs=compile("../src/components/ui/edit-dialog.tsx",{"./button":compile("../src/components/ui/button.tsx"),"./desktop-window":compile("../src/components/ui/desktop-window.tsx")});

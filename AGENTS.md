@@ -282,3 +282,14 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - Quick capture creates a real task/note/space page and immutable original receipt atomically. Reviewed changes only queue status; preserve source data and revision guards.
 - Keep stable request IDs until confirmed success. Matching retries must not overwrite later edits or review status. Never accept caller-supplied ownership.
 - Run test:inbox, full regressions and inbox_capture_rls.sql after migration 020. Confirm live SQL and browser checks separately; voice/AI/tags remain future work.
+
+### Tables and low-typing interaction direction
+
+- Speech-to-text is deferred; read the latest priority update in PRODUCT_BLUEPRINT.md.
+- Prefer selecting existing records, compact inline controls and linked views over repeated entry. Preserve the retro theme, visual-first labels and usable phone layouts.
+- Scope the existing Tasks table before general custom databases. Relations use record IDs and verified same-owner access; unlinking never deletes source records.
+- Preserve explicit save/error/conflict feedback and reuse controls without combining unrelated feature permissions. Roadmap notes are not implemented capabilities.
+
+- Apply low-typing choices, presets, context defaults and useful suggestions across every module, not only habits. Keep advanced editing discoverable and AI proposals reviewable; do not claim future AI is implemented.
+
+- Keep life areas connected through shared source records, selectable relations and a unified daily view. Do not duplicate records for different views or conflate task completion with habit check-in history.
