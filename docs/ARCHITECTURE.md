@@ -268,3 +268,11 @@ Shared popup source: src/components/ui/edit-dialog.tsx. Shared styling: responsi
 Close or Escape returns to the card and keeps its mounted draft on this page. A pending save blocks closing. Navigating away, refreshing or changing accounts can discard unsaved drafts; this is not offline draft storage. Read each save message before leaving. Inbox original snapshots remain immutable; open their source to edit it.
 
 Creation forms and Settings remain dedicated forms. Informational disclosures such as Why this? are not editors. The shared pencil does not grant editing to read-only data.
+
+## Habits and check-in snapshots
+
+Habits are independent from task completion. Migration 021 stores settings/revisions in habits and one amount per habit/date in habit_checkins. A before-insert trigger copies the target/unit/type from the owned habit. Only amount can be updated on a log; settings changes cannot rewrite its snapshot. Save/check RPCs are security-invoker, use authenticated identity, same-owner Space constraints, locks and revision baselines. Creation retries confirm matching settings; uncertain existing-write retries fail safely if revisions changed.
+
+HabitsView loads explicit browser-local dates through a bounded owner-scoped RPC, retaining previous matching-page results on read errors. It validates response shape, guards day/page tags, and keeps drafts within the account-keyed page/widget tree. Week totals count target-met days using recorded snapshots, with Monday boundaries. Due cues stay deterministic; no AI, recurrence-generated tasks or notification service is involved.
+
+The habits widget is optional and expands the registry to ten while retaining seven-widget defaults. Migration 021 updates the allowlist only; no existing layout rows are rewritten. Server pages, proxy and navigation registry expose the protected module. Existing shared fields, SpacePicker and EditDialog supply presentation.

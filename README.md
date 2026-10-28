@@ -14,7 +14,7 @@ components; [the blueprint](docs/PRODUCT_BLUEPRINT.md) records product direction
 - Private tasks: add, rename, complete/reopen, assign to a space, and set optional due dates/priorities.
 - All-day calendar events, plain-text notes, and space pages.
 - Saved internal links/backlinks, private search, and Personal/Work/Study starters.
-- Space icons/covers/accents, nine available dashboard widgets (seven by default), twelve palettes,
+- Space icons/covers/accents, ten available dashboard widgets (seven by default), twelve palettes,
   and saved solid/dots/grid backgrounds.
 
 Saves are explicit; failed saves retain drafts. Removing a widget keeps its data.
@@ -22,7 +22,7 @@ Notes/pages/spaces/layout/backgrounds and task planning guard stale edits. Task 
 updates use the last successful write. Revisions are not history/restore.
 
 Social sign-in, timed/recurring events, reminders, deletion/export/history, sharing,
-offline drafts, rich text, custom databases, uploaded wallpaper, habits, and
+offline drafts, rich text, custom databases, uploaded wallpaper, and
 other advanced widgets remain future work. Notion/Obsidian imports are not implemented.
 
 Phone layouts use compact navigation and expandable panels. Settings offers saved
@@ -81,6 +81,7 @@ edit applied migrations, or drop tables to get past setup errors.
 | 018 task_planning | Task dates/priorities | task_planning_rls.sql |
 | 019 dashboard_guidance | Owned guidance + widget | dashboard_guidance_rls.sql |
 | 020 inbox_capture | Atomic quick capture + review queue | inbox_capture_rls.sql |
+| 021 habits | Habits, check-in snapshots, optional widget | habits_rls.sql |
 
 Review SQL before running it; use a disposable/test database where possible.
 Assertions create fictional users/records and roll back changes. Confirm every
@@ -161,3 +162,7 @@ After migration 020, use + Capture for a task or note, optionally in a space.
 Inbox links to the saved source; Reviewed clears only its queue entry. Unsaved drafts
 survive closing the dialog/routes within this tab, but refresh/sign-out clears them.
 Run npm run test:inbox and the Inbox SQL privacy assertions. See OWNER_GUIDE for editing notes.
+
+## Habits
+
+After migration 021, choose Habits for presets, flexible schedules and binary/amount check-ins. Dates open history; saved check-ins retain their recorded targets. Add the optional Habits today widget through the dashboard pencil and Save layout. Run test:habits and the live SQL checks. Multi-step routines and AI remain future work.

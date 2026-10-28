@@ -241,3 +241,12 @@ This increment changes no database schema or permission policies.
 - Dashboard/global widget pencils: width/colour/order changes stay drafts until Save layout. Closing retains draft; global Cancel restores saved layout. Removing a widget still keeps source records.
 - New note Read/Edit toggle remains usable. Note/page links work in Read view; existing save/revision behavior remains.
 - Check 320/390px phones, long titles, scrolling to save buttons, keyboard focus and light/dark themes. No new SQL migration.
+
+## Habits increment
+
+- Apply migration 021; run habits_rls.sql and dashboard_layouts_rls.sql, confirming both PASS results. Unit tests do not prove live privacy.
+- Create a preset amount habit, a binary habit and a weekly/weekday habit. Pick a Space and verify its link. Close/reopen an unsaved creation draft, then save; a confirmed creation closes the popup and the next opening starts fresh.
+- Check in/undo binary; save amounts and refresh. Change a target/type/unit and verify the existing day's snapshot remains intact. New entries use new settings. Pause retains history and prevents new entries.
+- Use dates to view/correct logs. Weeks start Monday; due cues respect weekdays/start/paused state. Check another-tab stale settings/log writes and account isolation.
+- Add Habits today through the dashboard popup; Save layout; remove the widget without deleting habits. Verify prior layouts/defaults/widths/accents.
+- Check phone/keyboard/light/dark, setup error and failed refresh/drafts. Reload the page after a revision conflict while preserving any unsaved text first.

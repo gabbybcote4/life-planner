@@ -1,3 +1,4 @@
+import {HabitsView} from "@/app/habits/habits-view";
 import { FocusTimerWidget } from "./focus-timer";
 import type {ReactNode,CSSProperties} from "react";
 import Link from "next/link";
@@ -53,7 +54,7 @@ export function TaskWidgets({ open, completed, tasks, layout, revision, canCusto
   open: number; completed: number; tasks: Task[]; layout: Widget[]; revision: number; canCustomize: boolean; workspaceSlots:Pick<Record<WidgetId,ReactNode>,"spaces"|"calendar"|"connections"|"guidance">;
 }) {
   return <DashboardWidgets savedLayout={layout} savedRevision={revision} canCustomize={canCustomize} slots={{...workspaceSlots,
-    timer: <FocusTimerWidget />,
+    habits: <HabitsView compact/>, timer: <FocusTimerWidget />,
     overview: <TaskOverviewWidget open={open} completed={completed} />,
     capture: <QuickAddWidget />,
     progress: <TaskProgressWidget open={open} completed={completed} />,

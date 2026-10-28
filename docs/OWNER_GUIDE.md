@@ -359,3 +359,19 @@ Shared popup source: src/components/ui/edit-dialog.tsx. Shared styling: responsi
 Close or Escape returns to the card and keeps its mounted draft on this page. A pending save blocks closing. Navigating away, refreshing or changing accounts can discard unsaved drafts; this is not offline draft storage. Read each save message before leaving. Inbox original snapshots remain immutable; open their source to edit it.
 
 Creation forms and Settings remain dedicated forms. Informational disclosures such as Why this? are not editors. The shared pencil does not grant editing to read-only data.
+
+## Habits: presets, schedules and check-ins
+
+After migration 021 and its privacy checks, open Habits (More on phones). Add habit opens the familiar popup. Choose a preset or a short name, Done/not done or Count/amount, a target/unit, and a schedule. Preset targets are editable. Optional Space uses the same shared picker.
+
+Schedules: daily, selected weekdays, or a number of successful days per Monday-start week. A successful day meets that check-in's recorded daily target. You can log an extra day even when it is not due. No missed-day penalties or automatic tasks/reminders are created.
+
+Binary habits check in/undo with one tap. Counts use plus/minus or an amount and Save. The date picker opens past check-ins for corrections. New habits start today; no earlier entries can be created. Editing targets/units/types does not rewrite a check-in already recorded that day: changes apply to new entries. Existing history uses its original target and unit. Pause stops new entries but keeps history/corrections. No permanent delete is included.
+
+Dashboard > pencil > Add Habits today > Save layout adds the optional tenth widget. Existing layouts/defaults are unchanged. The preview shows up to five due/logged habits from a bounded twenty-record result, ordered toward relevant days. All habits opens the paginated full page. The local day comes from your browser; weeks start Monday. The full habit page keeps your chosen date when midnight passes; the dashboard follows today.
+
+Source map: src/lib/habits/types.ts holds presets, validation and due labels; src/app/habits/habit-form.tsx handles settings; habits-view.tsx handles cards/date/check-ins; actions.ts authenticates and calls saved-data functions. Migration 021 owns tables, snapshots and permissions. Tests are scripts/test-habits.mjs and supabase/tests/habits_rls.sql. Use the shared EditDialog/SpacePicker/fields instead of adding new skins.
+
+A failed refresh retains previous in-page drafts and labels the data as previous results. Another-tab conflicts require reloading the page to use the latest revisions; copy any unsaved draft first. Active drafts are not stored offline. Routines with multiple steps, AI suggestions, full Today aggregation and habit connections in the knowledge map are future work.
+
+Creating a habit closes its popup only after confirmed success. The next opening starts a fresh form; failed or uncertain saves keep the popup and draft intact.

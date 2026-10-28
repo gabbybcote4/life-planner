@@ -1,6 +1,7 @@
 // Widget labels/default arrangement live here. Saved ids are a database contract:
 // adding/removing ids or widths also requires a new SQL migration and privacy tests.
 export const WIDGETS = {
+  habits: {label:"Habits today",description:"Check in on your habits for your local day."},
   guidance: {label:"Your next step",description:"Explained task suggestions and upcoming commitments from your saved plans."},
   timer: { label: "Focus timer", description: "A focus or break countdown that stays active in this tab." },
   spaces: {label:"Your spaces",description:"Illustrated shortcuts to your first three saved spaces."},
