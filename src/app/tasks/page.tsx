@@ -1,3 +1,4 @@
+import {ProjectBacklinks} from "@/app/projects/project-backlinks";
 import {TASK_SELECT,type Task} from "@/lib/tasks/types";
 import Link from "next/link";
 import { requireAccount } from "@/lib/auth/account";
@@ -16,7 +17,7 @@ async function Planner({searchParams}:{searchParams:TaskSearch}) {
     return <>
       <PlannerHeading eyebrow="One thing at a time" title="Your selected task." description="Edit or complete this task, or return to your task list." email={email}/>
       <Link className="text-link" href="/tasks">Show all tasks</Link>
-      {selected.error||!selected.task ? <LoadError title="This task is unavailable." description="Open a task from your list or search again." action="/tasks"/> : <TaskList key={userId+selected.task.id} tasks={[selected.task]}/>}
+      {selected.error||!selected.task ? <LoadError title="This task is unavailable." description="Open a task from your list or search again." action="/tasks"/> : <><TaskList key={userId+selected.task.id} tasks={[selected.task]}/><ProjectBacklinks kind="task" id={selected.task.id}/></>}
     </>;
   }
   const { data: tasks, error: tasksError } = await supabase.from("tasks")

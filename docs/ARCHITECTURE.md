@@ -284,3 +284,11 @@ The account-keyed TodayView loads an explicit client-local day with independent 
 TaskList accepts optional onChanged/day inputs; confirmed completion/title/planning/assignment changes notify Today. HabitCard is extracted from HabitsView and reused with its original check-in actions and snapshot rules. Calendar EventForm is exported for the shared popup. No save permissions, source validation or mutation implementations are merged.
 
 Client state is tagged by day and all offsets to avoid displaying another date/page's results. Same-page read failures retain labeled previous results; fresh auth is checked per call. Visibility/local-day refresh uses browser effects, never a render-time live clock. The dashboard shortcut and protected navigation register the page; saved dashboard layouts remain unchanged.
+
+## Connected Projects
+
+Migration 023 stores private project settings and typed project_items relations. Same-owner composite foreign keys connect a project to original tasks/notes/space pages. A unique project/kind/target identity allows many projects per source without duplicating it. Unlink toggles active and increments relation revision; restore uses the new baseline, avoiding stale unlink/restore overwrites. Narrow grants prevent ownership/target/revision changes and permanent deletion through authenticated clients.
+
+Authenticated security-invoker RPCs save settings, change relations and read catalog/detail summaries. Progress counts all active related tasks, independently of the twenty-item detail page; metadata joins use current source titles. Catalog pages are twelve records with deterministic title/id ordering. Creation retries confirm matching settings rather than replacing later edits.
+
+Server page reads use fresh verified identity, validate returned shapes and retain exact selected project identity in the URL. Client ProjectEditor/ProjectLinkControl use stable requests, explicit save feedback and router refresh after confirmation. Search reuses planner_search with explicit task/note/page kinds and stale-query hiding. ProjectDetail reuses TaskList and the shared modal/picker primitives. ProjectBacklinks adds bounded owner-filtered reverse navigation to source detail pages. Failed setup/read results stay distinct from empty success; source editors remain usable if project backlinks are unavailable.

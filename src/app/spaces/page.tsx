@@ -1,3 +1,4 @@
+import {ProjectBacklinks} from "@/app/projects/project-backlinks";
 import {EditDialog} from "@/components/ui/edit-dialog";
 import {MobileSection} from "@/components/ui/mobile-section";
 import { KnowledgeConnections } from "@/app/knowledge/connections";
@@ -65,7 +66,7 @@ async function SpacesContent({searchParams}:{searchParams:Search}) {
  <ul className="notes-list">{pages?.data?.map(page=><li key={page.id}><Link href={base+'&pagesPage='+pagesPage+'&entry='+page.id} aria-current={selected?.id===page.id?'page':undefined}>{page.title}</Link></li>)}</ul>
  {!pages?.data?.length&&<p className="muted">Start with a fresh page.</p>}
  <nav className="notes-pagination" aria-label="Pages in this space">{pagesPage>1&&<Link href={base+'&pagesPage='+(pagesPage-1)}>Previous</Link>}{(pages?.count??0)>pagesPage*SIZE&&pagesPage<9999&&<Link href={base+'&pagesPage='+(pagesPage+1)}>Next</Link>}</nav></MobileSection>
- {entryError ? <LoadError title="This page is unavailable." description="Choose a page from this space." action={base}/> : <div><TextDocumentEditor key={userId+space.id+(selected?.id??'new')} note={selected} spaceId={space.id} saveAction={saveSpacePage} destination={base+'&entry='}/>{selected && <KnowledgeConnections kind="page" id={selected.id}/>}</div>}
+ {entryError ? <LoadError title="This page is unavailable." description="Choose a page from this space." action={base}/> : <div><TextDocumentEditor key={userId+space.id+(selected?.id??'new')} note={selected} spaceId={space.id} saveAction={saveSpacePage} destination={base+'&entry='}/>{selected && <><KnowledgeConnections kind="page" id={selected.id}/><ProjectBacklinks kind="page" id={selected.id}/></>}</div>}
  </div>}</> : null}
  </>}
  </>;

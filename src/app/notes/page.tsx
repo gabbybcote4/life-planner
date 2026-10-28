@@ -1,3 +1,4 @@
+import {ProjectBacklinks} from "@/app/projects/project-backlinks";
 import {MobileSection} from "@/components/ui/mobile-section";
 import { KnowledgeConnections } from "@/app/knowledge/connections";
 import Link from "next/link";
@@ -53,7 +54,7 @@ async function NotesContent({ searchParams }: { searchParams: NotesSearch }) {
       {selectedError ? <section className="task-load-error"><h2>This note isn’t available.</h2>
         <p className="muted">Try opening a note from your list, or start a new one.</p>
         <Link className="text-link" href="/notes?note=new">New note</Link></section> :
-        <div><TextDocumentEditor key={`${userId}:${selected?.id ?? "new"}`} note={selected} saveAction={saveNote} destination="/notes?note=" />{selected && <KnowledgeConnections kind="note" id={selected.id}/>}</div>}
+        <div><TextDocumentEditor key={`${userId}:${selected?.id ?? "new"}`} note={selected} saveAction={saveNote} destination="/notes?note=" />{selected && <><KnowledgeConnections kind="note" id={selected.id}/><ProjectBacklinks kind="note" id={selected.id}/></>}</div>}
     </div>}
   </>;
 }

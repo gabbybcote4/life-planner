@@ -83,6 +83,7 @@ edit applied migrations, or drop tables to get past setup errors.
 | 020 inbox_capture | Atomic quick capture + review queue | inbox_capture_rls.sql |
 | 021 habits | Habits, check-in snapshots, optional widget | habits_rls.sql |
 | 022 today | Connected daily read + complete counts | today_rls.sql |
+| 023 projects | Projects + reversible typed relations | projects_rls.sql |
 
 Review SQL before running it; use a disposable/test database where possible.
 Assertions create fictional users/records and roll back changes. Confirm every
@@ -171,3 +172,7 @@ After migration 021, choose Habits for presets, flexible schedules and binary/am
 ## Connected Today
 
 After migration 022, Today combines original due tasks, scheduled/logged habits and same-day all-day events. It reuses source editors and saves; counts cover all matching records with independent five-item pages. Open Today from navigation or the dashboard. Run test:today and the live SQL privacy/count checks.
+
+## Connected Projects
+
+After migration 023, Projects links existing tasks, notes and pages, with optional Space context and progress from all linked tasks. Unlink/restore keeps original records; source detail pages show project backlinks. Run test:projects plus tasks_rls.sql/projects_rls.sql. General database builders, project widgets and AI remain future work.

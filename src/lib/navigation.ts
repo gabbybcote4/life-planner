@@ -8,6 +8,7 @@ export const PLANNER_ROUTES = [
   { id: "tasks", label: "Tasks", href: "/tasks" },
   { id: "calendar", label: "Calendar", href: "/calendar" },
   { id: "notes", label: "Notes", href: "/notes" },
+  { id: "projects", label: "Projects", href: "/projects" },
   { id: "spaces", label: "Spaces", href: "/spaces" },
   { id: "search", label: "Search", href: "/search" },
   { id: "settings", label: "Settings", href: "/settings" },
