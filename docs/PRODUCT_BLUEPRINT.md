@@ -493,3 +493,9 @@ Owner preference: keep cards/entries visually clean with a small labeled pencil 
 The first habits increment adds editable presets, binary or amount check-ins, daily/selected-weekday/days-per-week schedules, pause, optional Space links and date-based history/corrections. Shared pencil dialogs and quick controls minimize typing. Check-in snapshots preserve original targets/units/types across later setting edits. Same-owner RLS, narrow grants and independent habit/log revision guards protect persistence.
 
 Habits today is an optional tenth dashboard widget; existing seven-widget defaults remain unchanged. Data is paginated and previews labeled. Browser-local day and Monday-start weeks are explicit. Multi-step routines, AI suggestions, streak scoring, map-wide habit relations and the combined Today view are not part of this increment. Live SQL and owner save/refresh checks remain required before release.
+
+## Connected Today — prepared for owner/database review
+
+A dedicated Today page combines original due/overdue tasks, scheduled or recorded habits, and today's all-day calendar entries. It uses short labeled counters, five-item independently paginated sections, original Space links, shared check-in/completion controls and pencil editors. Counts include all relevant records rather than only recent previews. Undated tasks remain unscheduled with a separate organizing count.
+
+Migration 022 adds only an authenticated, owner-filtered read function under existing RLS. Browser-local day and Monday habit weeks remain explicit. Shared source saves refresh Today; no duplicate records, automatic deadlines, times, tasks or reminders are generated. The customizable dashboard stays available with an Open Today shortcut. AI, project/general relation models and broader life-module aggregation remain future increments. Live SQL and owner verification are required before release.

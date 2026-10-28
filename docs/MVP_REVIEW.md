@@ -250,3 +250,13 @@ This increment changes no database schema or permission policies.
 - Use dates to view/correct logs. Weeks start Monday; due cues respect weekdays/start/paused state. Check another-tab stale settings/log writes and account isolation.
 - Add Habits today through the dashboard popup; Save layout; remove the widget without deleting habits. Verify prior layouts/defaults/widths/accents.
 - Check phone/keyboard/light/dark, setup error and failed refresh/drafts. Reload the page after a revision conflict while preserving any unsaved text first.
+
+## Connected Today review
+
+- Apply migration 022, then tasks_rls.sql and today_rls.sql. Confirm both live PASS results independently from unit checks.
+- Date a task today and another earlier; create a matching habit and an all-day calendar entry today. Verify all three sources and Space links appear in Today.
+- Complete/edit/reassign a task; check/undo/save a habit amount; edit an event through its pencil. Verify refreshed counts and the same source record in its original module.
+- Move a task/event to a future date: it leaves Today but remains saved. Undated/high-priority future work is not silently included as due.
+- Check paused/logged habits, selected weekdays, weekly target-met exclusions and original snapshot targets after settings changes.
+- Test more than five items in a section, independent paging, older records and empty pages after completion. Counts must remain global for the selected day.
+- Verify two-account isolation, setup/load failures, retained previous results/drafts, mobile/keyboard/light/dark, local midnight and browser-tab return. No new widget layout/default changes.

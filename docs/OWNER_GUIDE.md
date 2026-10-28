@@ -375,3 +375,17 @@ Source map: src/lib/habits/types.ts holds presets, validation and due labels; sr
 A failed refresh retains previous in-page drafts and labels the data as previous results. Another-tab conflicts require reloading the page to use the latest revisions; copy any unsaved draft first. Active drafts are not stored offline. Routines with multiple steps, AI suggestions, full Today aggregation and habit connections in the knowledge map are future work.
 
 Creating a habit closes its popup only after confirmed success. The next opening starts a fresh form; failed or uncertain saves keep the popup and draft intact.
+
+## Today: one connected daily view
+
+Open Today in navigation (More on phones), or Open Today on the dashboard. It brings together open tasks due today/earlier, habits scheduled or recorded today, and today's all-day calendar items. Space links open the original context. The underlying records stay in their existing modules.
+
+Tasks and habits use their shared completion/check-in controls. Pencils open the same editors, including calendar entries. Confirmed saves refresh Today. Moving a due date/event to another day can remove it from this view; its source remains saved. Habits retain their recorded targets and independent history rules.
+
+Each section shows five items with its own Previous/Next controls. Counts cover all matching owned records, including older tasks. Undated tasks have a separate count/link to Tasks and are never assigned a deadline automatically. Calendar items have no invented times. Weeks start Monday; the browser supplies the local day.
+
+Refresh Today after changes elsewhere. Returning to the browser tab refreshes data; a local-day change resets pagination. Failed refreshes label previous results and retain mounted drafts for the same page. Save before changing pages/sections or navigating away.
+
+Edit the layout/labels in src/app/today/today-view.tsx and its Today CSS section in responsive.css. Validation/page size is in src/lib/today/types.ts; the bounded owner-scoped read is in migration 022. Source editors stay in their existing task/habit/calendar files. Do not change only the JavaScript page size: SQL limits/offset validation and tests must agree.
+
+Apply migration 022 after 001–021. Run tasks_rls.sql plus today_rls.sql and confirm both PASS results. Run npm run test:today after code changes. This is rule-based aggregation, not AI organization, project relations or a replacement for the customizable dashboard.

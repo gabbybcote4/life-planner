@@ -9,7 +9,7 @@ import { PlannerNavigation } from "./planner-navigation";
 import { SignOutButton } from "../sign-out-button";
 
 const cards: Record<PlannerSection, string> = {
-  habits: "planner-card", inbox: "notes-card", dashboard: "dashboard-card", tasks: "planner-card", calendar: "calendar-card", notes: "notes-card", settings: "settings-card", spaces: "notes-card", search: "notes-card",
+  today: "dashboard-card", habits: "planner-card", inbox: "notes-card", dashboard: "dashboard-card", tasks: "planner-card", calendar: "calendar-card", notes: "notes-card", settings: "settings-card", spaces: "notes-card", search: "notes-card",
 };
 
 export function PlannerPage({ active, loading, children }: { active: PlannerSection; loading: string; children: ReactNode }) {

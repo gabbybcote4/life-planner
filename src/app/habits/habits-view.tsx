@@ -25,6 +25,11 @@ function HabitCheckin({habit,day,onSaved}:{habit:Habit;day:string;onSaved:()=>vo
  <FormFeedback {...state} pending={pending}/>{habit.log&&<span className="muted">Target when recorded</span>}
  </form>;
 }
+export function HabitCard({habit:h,day,onSaved,editable=true}:{habit:Habit;day:string;onSaved:()=>void;editable?:boolean}){return <article className="habit-card">
+ <header><h3>{h.title}</h3>{editable&&<EditDialog title={"Edit habit: "+h.title}><HabitForm habit={h} today={day} onSaved={onSaved}/></EditDialog>}</header>
+ <div className="habit-labels"><span>{h.paused?"Paused":isHabitDue(h,day)?"Due":"Not due"}</span><span>{scheduleLabel(h)}</span>{h.schedule==="weekly"&&<span>{h.week_done} / {h.weekly_goal} days this week</span>}{h.space_id&&<Link href={"/spaces?space="+h.space_id}>{h.space_title??"Space"}</Link>}</div>
+ <HabitCheckin habit={h} day={day} onSaved={onSaved}/>
+ </article>;}
 export function HabitsView({compact=false}:{compact?:boolean}){
  const [today,setToday]=useState(""),[day,setDay]=useState(""),[offset,setOffset]=useState(0),[version,setVersion]=useState(0),[created,setCreated]=useState(0);
  const [state,load,pending]=useActionState(async(previous:HabitDayState)=>{
@@ -41,11 +46,7 @@ export function HabitsView({compact=false}:{compact?:boolean}){
  {!compact&&<label className="habit-day">Check-ins for <TextInput type="date" min="1900-01-01" max={today||"2100-12-31"} value={day} onChange={e=>{setDay(e.target.value);setOffset(0);}}/> <span className="muted">Local day · weeks start Monday</span></label>}
  {!today||!current?<p role="status">Opening your habits…</p>:<>
  {state.error&&<p role="alert" className="form-error">{state.error} {state.items?"Previous results remain below; refresh before making further changes.":""}</p>}{pending&&<p role="status">Refreshing habits…</p>}{!state.error&&!visible.length&&<p className="muted">{compact?"No habits due in this preview.":"Choose the pencil to add a habit from a preset."}</p>}
- <div className="habit-grid">{visible.map(h=><article key={h.id+selected} className="habit-card">
- <header><h3>{h.title}</h3>{!compact&&<EditDialog title={"Edit habit: "+h.title}><HabitForm habit={h} today={today} onSaved={refresh}/></EditDialog>}</header>
- <div className="habit-labels"><span>{h.paused?"Paused":isHabitDue(h,selected)?"Due":"Not due"}</span><span>{scheduleLabel(h)}</span>{h.schedule==="weekly"&&<span>{h.week_done} / {h.weekly_goal} days this week</span>}{h.space_id&&<Link href={"/spaces?space="+h.space_id}>{h.space_title??"Space"}</Link>}</div>
- <HabitCheckin habit={h} day={selected} onSaved={refresh}/>
- </article>)}</div>
+ <div className="habit-grid">{visible.map(h=><HabitCard key={h.id+selected} habit={h} day={selected} onSaved={refresh} editable={!compact}/>)}</div>
  {!compact&&state.total!==undefined&&<nav className="notes-pagination" aria-label="Habit pages"><Button variant="text" disabled={offset===0} onClick={()=>setOffset(Math.max(0,offset-20))}>Previous</Button><span>{state.total??0} habits</span><Button variant="text" disabled={offset+20>=(state.total??0)} onClick={()=>setOffset(offset+20)}>Next</Button></nav>}
  {compact&&state.items&&<p className="muted">Up to 5 due/logged habits from your first 20. Open All habits for the full list.</p>}
  </>}

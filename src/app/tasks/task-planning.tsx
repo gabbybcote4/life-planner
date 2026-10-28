@@ -9,7 +9,7 @@ import { formatCalendarDate } from "@/lib/calendar/dates";
 import { saveTaskPlanning } from "./planning-actions";
 
 // One planning control is shared by Tasks, dashboard lists, and space task lists.
-export function TaskPlanning({ task, disabled, expanded = false }: { task: Task; disabled: boolean; expanded?: boolean }) {
+export function TaskPlanning({ task, disabled, expanded = false, onSaved }: { task: Task; disabled: boolean; expanded?: boolean; onSaved?:()=>void }) {
   const field = useId();
   const [dueDate, setDueDate] = useState(task.due_date ?? ""), [priority, setPriority] = useState<TaskPriority>(task.priority ?? "none");
   const [confirmed, setConfirmed] = useState({ dueDate: task.due_date ?? "", priority: task.priority ?? "none" });
@@ -17,7 +17,7 @@ export function TaskPlanning({ task, disabled, expanded = false }: { task: Task;
   const changed = dueDate !== confirmed.dueDate || priority !== confirmed.priority;
   const [state, action, pending] = useActionState<TaskPlanningState, FormData>(async (previous, data) => {
     const result = await runAction(() => saveTaskPlanning(previous, data), UNCONFIRMED_SAVE);
-    if (!result.error && result.revision) { setRevision(result.revision); setConfirmed({ dueDate, priority }); }
+    if (!result.error && result.revision) { setRevision(result.revision); setConfirmed({ dueDate, priority });onSaved?.(); }
     return result;
   }, {});
   return <details className="task-planning" open={expanded}><summary>

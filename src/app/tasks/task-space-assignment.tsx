@@ -7,11 +7,11 @@ import {runAction,UNCONFIRMED_SAVE} from "@/lib/shared/client-actions";
 import type {Task,TaskActionState} from "@/lib/tasks/types";
 import type {SpaceChoice} from "@/lib/inbox/types";
 import {assignTaskSpace} from "./space-actions";
-export function TaskSpaceAssignment({task,disabled,expanded=false}:{task:Task;disabled:boolean;expanded?:boolean}){
+export function TaskSpaceAssignment({task,disabled,expanded=false,onSaved}:{task:Task;disabled:boolean;expanded?:boolean;onSaved?:()=>void}){
  const [choice,setChoice]=useState<SpaceChoice|null>(task.space_id?{id:task.space_id,title:task.space?.title??"Space"}:null),[baseline,setBaseline]=useState(task.space_id??"");
  const [state,save,pending]=useActionState<TaskActionState,FormData>(async(previous,data)=>{
   const result=await runAction(()=>assignTaskSpace(previous,data),UNCONFIRMED_SAVE);
-  if(!result.error)setBaseline(choice?.id??"");return result;
+  if(!result.error){setBaseline(choice?.id??"");onSaved?.();}return result;
  },{});
  const busy=disabled||pending;
  return <details className="task-space-assignment" open={expanded}><summary>{task.space_id?"Change task space":"Assign a space"}</summary>

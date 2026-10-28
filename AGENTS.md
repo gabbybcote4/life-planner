@@ -300,3 +300,11 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - Keep settings and check-ins separate. Preserve recorded target/unit/type on later settings edits; only amount is mutable in logs. Respect both habit/log revisions and stable creation IDs.
 - Derive local day only in client events/effects. Keep Monday week boundaries, explicit dates, bounded pagination/preview labels, and same-owner Space references. Do not infer deadlines or silently generate tasks.
 - Reuse shared editors/pickers and presets. Keep the optional tenth widget and existing seven-widget defaults/metadata. Multi-step routines, AI, streaks and full Today aggregation remain separately scoped.
+
+### Connected Today checks
+
+- Run test:today and all regressions; after migration 022 run tasks_rls.sql and today_rls.sql before claiming live aggregation/privacy verification.
+- Keep Today read-only: aggregate original owner-scoped tasks/habits/events, not recent previews or copied records. Counts precede bounded independent pagination.
+- Keep due-date, scheduled/logged habit and all-day event inclusion explicit. Never invent urgency for undated work or merge task completion with habit check-in history.
+- Reuse TaskList/HabitCard/EventForm and confirm saves before refreshing counts. Preserve existing source ownership, revisions and draft/error protections.
+- Read local day in effects/events only. Tag responses by day/offsets; failures must not become false zero counters. Preserve saved dashboard layouts and navigation placement.
