@@ -9,7 +9,7 @@ import { formatCalendarDate } from "@/lib/calendar/dates";
 import { saveTaskPlanning } from "./planning-actions";
 
 // One planning control is shared by Tasks, dashboard lists, and space task lists.
-export function TaskPlanning({ task, disabled }: { task: Task; disabled: boolean }) {
+export function TaskPlanning({ task, disabled, expanded = false }: { task: Task; disabled: boolean; expanded?: boolean }) {
   const field = useId();
   const [dueDate, setDueDate] = useState(task.due_date ?? ""), [priority, setPriority] = useState<TaskPriority>(task.priority ?? "none");
   const [confirmed, setConfirmed] = useState({ dueDate: task.due_date ?? "", priority: task.priority ?? "none" });
@@ -20,7 +20,7 @@ export function TaskPlanning({ task, disabled }: { task: Task; disabled: boolean
     if (!result.error && result.revision) { setRevision(result.revision); setConfirmed({ dueDate, priority }); }
     return result;
   }, {});
-  return <details className="task-planning"><summary>
+  return <details className="task-planning" open={expanded}><summary>
     {task.due_date || (task.priority && task.priority !== "none") ? <span className="task-plan-badges">
       {task.due_date && <span>Due <time dateTime={task.due_date}>{formatCalendarDate(task.due_date)}</time></span>}
       {task.priority && task.priority !== "none" && <span className="task-priority" data-priority={task.priority}>{TASK_PRIORITIES[task.priority]} priority</span>}

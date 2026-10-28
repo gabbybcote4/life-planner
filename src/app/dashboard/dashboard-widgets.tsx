@@ -2,6 +2,7 @@
 
 import { runAction, UNCONFIRMED_SAVE } from "@/lib/shared/client-actions";
 
+import {EditDialog} from "@/components/ui/edit-dialog";
 import {WindowTitleBar} from "@/components/ui/desktop-window";
 import { EmptyState } from "@/components/ui/empty-state";
 import { FormFeedback } from "@/components/ui/feedback";
@@ -40,11 +41,7 @@ export function DashboardWidgets({ savedLayout, savedRevision, canCustomize, slo
   return <div className="dashboard-customization">
     <div className="dashboard-customize-heading">
       <p className="muted">{editing && dirty ? "Unsaved layout changes" : "Your dashboard, arranged your way"}</p>
-      {!editing && <Button variant="secondary" type="button" disabled={!canCustomize}
-        onClick={() => { setEditing(true); setAnnouncement(""); }}>Customize dashboard</Button>}
-    {!editing && draft[0]?.id!=="guidance" && <Button className="add-guidance-shortcut" variant="secondary" disabled={!canCustomize} onClick={()=>{setDraft(withGuidanceFirst(draft));setEditing(true);setMobileOpen(current=>Array.from(new Set<WidgetId>([...current,"guidance"])));setAnnouncement("Your next step is at the top of your draft. Save layout to keep it.");}}>{missing.includes("guidance")?"Add Your next step at the top":"Move Your next step to the top"}</Button>}
-    </div>
-    {editing && <section className="widget-library" aria-labelledby="widget-library-heading">
+      <EditDialog title="Customize dashboard" disabled={!canCustomize||pending} onOpen={()=>{setEditing(true);setAnnouncement("");}}><section className="widget-library" aria-labelledby="widget-library-heading">
       <h2 id="widget-library-heading">Arrange your dashboard</h2>
       <p className="muted">Add a widget, move it up or down, and choose half or full width. Removing a widget keeps your tasks, events, spaces, notes, and links safe.</p>
       <div className="widget-library-options">{missing.length === 0 ? <p className="muted">All available widgets are on your dashboard.</p> :
@@ -54,7 +51,7 @@ export function DashboardWidgets({ savedLayout, savedRevision, canCustomize, slo
         </Button>)}</div>
       {missing.some(id=>["spaces","calendar","connections"].includes(id))&&<Button variant="secondary" disabled={pending||!canCustomize} onClick={()=>change(addWorkspaceWidgets(draft),"Workspace widgets added to your draft. Save to keep them.")}>Add workspace widgets</Button>}
       <div className="layout-save-controls">
-        <form action={action}>
+        <form action={action} aria-busy={pending}>
           <Button variant="primary" type="submit" disabled={pending || !dirty || !canCustomize} pending={pending} pendingLabel="Saving...">Save layout</Button>
         </form>
         <Button variant="text" type="button" disabled={pending || !canCustomize}
@@ -65,13 +62,14 @@ export function DashboardWidgets({ savedLayout, savedRevision, canCustomize, slo
       <Button variant="text" disabled={pending||!canCustomize||!draft.some(widget=>widget.accent)} onClick={()=>change(clearWidgetAccents(draft),"Widget colors reset in your draft. Save to keep them.")}>Reset widget colors</Button>
       <p className="muted">Colors follow your current theme. Save before leaving this page. Layout changes are not saved automatically.</p>
       <FormFeedback error={state.error} />
-    </section>}
+    </section></EditDialog>
+    {!editing && draft[0]?.id!=="guidance" && <Button className="add-guidance-shortcut" variant="secondary" disabled={!canCustomize} onClick={()=>{setDraft(withGuidanceFirst(draft));setEditing(true);setMobileOpen(current=>Array.from(new Set<WidgetId>([...current,"guidance"])));setAnnouncement("Your next step is at the top of your draft. Save layout to keep it.");}}>{missing.includes("guidance")?"Add Your next step at the top":"Move Your next step to the top"}</Button>}
+    </div>
     <p className="layout-announcement" role="status" aria-live="polite">{pending ? "Saving your layout..." : announcement}</p>
     {draft.length === 0 && <EmptyState title="A little breathing room.">Use Customize dashboard to add widgets. Your saved tasks are still on the Tasks page.</EmptyState>}
     <div className="custom-widget-grid">{draft.map((widget, index) => <article key={widget.id}
       data-accent={widget.accent} className={`dashboard-widget widget-${widget.width} widget-type-${widget.id}`} aria-label={WIDGETS[widget.id].label}>
-      <WindowTitleBar className="widget-titlebar"><span>{WIDGETS[widget.id].label}</span><Button className="mobile-widget-toggle" aria-label={(editing || mobileOpen.includes(widget.id)?"Close ":"Open ")+WIDGETS[widget.id].label} aria-expanded={editing || mobileOpen.includes(widget.id)} aria-controls={"widget-body-"+widget.id} disabled={editing} onClick={()=>setMobileOpen(current=>current.includes(widget.id)?current.filter(id=>id!==widget.id):[...current,widget.id])}>{editing || mobileOpen.includes(widget.id)?"Close":"Open"}</Button></WindowTitleBar>
-      {editing && <div className="widget-controls">
+      <WindowTitleBar className="widget-titlebar"><span>{WIDGETS[widget.id].label}</span><EditDialog title={"Edit widget: "+WIDGETS[widget.id].label} disabled={!canCustomize||pending} onOpen={()=>{setEditing(true);setAnnouncement("");}}><div className="widget-controls" aria-busy={pending}>
         <span className="widget-control-title">{WIDGETS[widget.id].label}</span>
         <Button type="button" disabled={pending || !canCustomize || index === 0} aria-label={`Move ${WIDGETS[widget.id].label} up`}
           onClick={() => change(moveWidget(draft, widget.id, -1), `${WIDGETS[widget.id].label} moved up.`)}>↑</Button>
@@ -91,7 +89,7 @@ export function DashboardWidgets({ savedLayout, savedRevision, canCustomize, slo
         </label>
         <Button type="button" disabled={pending || !canCustomize} aria-label={`Remove ${WIDGETS[widget.id].label} widget`}
           onClick={() => change(draft.filter((item) => item.id !== widget.id), `${WIDGETS[widget.id].label} removed from the dashboard.`)}>Remove</Button>
-      </div>}
+      </div><form action={action} aria-busy={pending}><Button type="submit" variant="primary" disabled={!dirty||pending||!canCustomize} pending={pending}>Save layout</Button></form><p className="muted">Saves all current layout changes. Close to return to your draft.</p></EditDialog><Button className="mobile-widget-toggle" aria-label={(editing || mobileOpen.includes(widget.id)?"Close ":"Open ")+WIDGETS[widget.id].label} aria-expanded={editing || mobileOpen.includes(widget.id)} aria-controls={"widget-body-"+widget.id} disabled={editing} onClick={()=>setMobileOpen(current=>current.includes(widget.id)?current.filter(id=>id!==widget.id):[...current,widget.id])}>{editing || mobileOpen.includes(widget.id)?"Close":"Open"}</Button></WindowTitleBar>
       <div className="widget-body" id={"widget-body-"+widget.id} data-mobile-collapsed={!editing && !mobileOpen.includes(widget.id)}>{slots[widget.id]}</div>
     </article>)}</div>
   </div>;

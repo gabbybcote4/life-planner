@@ -62,7 +62,7 @@ test("phone section keeps its actual draft content mounted with a labeled toggle
  assert.match(html,/aria-expanded="false"/);assert.match(html,/aria-controls=/);assert.match(html,/data-collapsed="true"/);assert.match(html,/Unsaved draft/);assert.match(html,/Browse notes/);
 });
 test("phone widget disclosures preserve the saved layout and real content slots",()=>{
- const deps={"@/lib/shared/client-actions":{},"@/components/ui/desktop-window":windows,"@/components/ui/empty-state":load("../src/components/ui/empty-state.tsx"),"@/components/ui/feedback":load("../src/components/ui/feedback.tsx"),"@/components/ui/button":buttons,"./actions":{saveDashboardLayout:async()=>({})},"@/lib/dashboard/layout":layout};
+ const deps={"@/components/ui/edit-dialog":editDialogs,"@/lib/shared/client-actions":{},"@/components/ui/desktop-window":windows,"@/components/ui/empty-state":load("../src/components/ui/empty-state.tsx"),"@/components/ui/feedback":load("../src/components/ui/feedback.tsx"),"@/components/ui/button":buttons,"./actions":{saveDashboardLayout:async()=>({})},"@/lib/dashboard/layout":layout};
  const {DashboardWidgets}=load("../src/app/dashboard/dashboard-widgets.tsx",deps);
  const saved=[{id:"capture",width:"half"},{id:"progress",width:"full",accent:"mint"}],before=JSON.stringify(saved);
  const slots=Object.fromEntries(Object.keys(layout.WIDGETS).map(id=>[id,React.createElement("p",null,"Actual "+id)]));
@@ -77,3 +77,5 @@ test("database position allowlist matches app and no existing preference rows ar
  assert.deepEqual([...list.matchAll(/'([^']+)'/g)].map(m=>m[1]).sort(),Object.keys(nav.NAV_POSITIONS).sort());
  assert.doesNotMatch(sql,/update public\.planner_preferences/);assert.match(sql,/new.nav_revision=2/);
 });
+
+const editDialogs=load("../src/components/ui/edit-dialog.tsx",{"./button":load("../src/components/ui/button.tsx"),"./desktop-window":load("../src/components/ui/desktop-window.tsx")});

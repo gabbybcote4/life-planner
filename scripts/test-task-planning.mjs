@@ -51,7 +51,7 @@ test("task projections carry planning into all existing shared list destinations
  const board=fs.readFileSync(new URL("../src/app/tasks/task-board.tsx",import.meta.url),"utf8");assert.match(board,/<TaskPlanning task=\{task\}/);
 });
 test("actual planning controls render optional labeled fields and date-only metadata",()=>{
- const deps={"@/components/ui/button":compile("../src/components/ui/button.tsx"),"@/components/ui/fields":compile("../src/components/ui/fields.tsx"),"@/components/ui/feedback":compile("../src/components/ui/feedback.tsx"),"@/lib/shared/client-actions":{},"@/lib/tasks/types":types,"@/lib/calendar/dates":dates,"./planning-actions":{}};
+ const deps={"@/components/ui/edit-dialog":editDialogs,"@/components/ui/button":compile("../src/components/ui/button.tsx"),"@/components/ui/fields":compile("../src/components/ui/fields.tsx"),"@/components/ui/feedback":compile("../src/components/ui/feedback.tsx"),"@/lib/shared/client-actions":{},"@/lib/tasks/types":types,"@/lib/calendar/dates":dates,"./planning-actions":{}};
  const {TaskPlanning}=compile("../src/app/tasks/task-planning.tsx",deps);
  const html=renderToStaticMarkup(React.createElement(TaskPlanning,{task:{id,title:"Task",completed:false,due_date:"2028-02-29",priority:"high",planning_revision:4},disabled:false}));
  assert.match(html,/dateTime="2028-02-29"/i);assert.match(html,/February 29, 2028/);assert.match(html,/High priority/);assert.match(html,/type="date"/);assert.match(html,/min="1900-01-01"/);assert.match(html,/max="2100-12-31"/);
@@ -65,3 +65,18 @@ test("database priorities match app and migration leaves old rows and ownership 
  assert.doesNotMatch(sql,/update public\.tasks|create policy|drop|grant.*planning_revision/i);
  assert.match(sql,/new.due_date is distinct from old.due_date or new.priority is distinct from old.priority/);
 });
+
+test("task table reuses real completion, planning and relation controls without copying source records",()=>{
+ const planning=compile("../src/app/tasks/task-planning.tsx",{"@/components/ui/button":compile("../src/components/ui/button.tsx"),"@/components/ui/fields":compile("../src/components/ui/fields.tsx"),"@/components/ui/feedback":compile("../src/components/ui/feedback.tsx"),"@/lib/shared/client-actions":{},"@/lib/tasks/types":types,"@/lib/calendar/dates":dates,"./planning-actions":{}});
+ const board=compile("../src/app/tasks/task-board.tsx",{"@/components/ui/edit-dialog":editDialogs,"./task-planning":planning,"@/lib/shared/request-id":{},"@/lib/shared/client-actions":{},"next/link":({children,...props})=>React.createElement("a",props,children),"./task-space-assignment":{TaskSpaceAssignment:()=>React.createElement("button",null,"Assign a space")},"@/components/ui/empty-state":compile("../src/components/ui/empty-state.tsx"),"@/components/ui/feedback":compile("../src/components/ui/feedback.tsx"),"@/components/ui/fields":compile("../src/components/ui/fields.tsx"),"@/components/ui/button":compile("../src/components/ui/button.tsx"),"./actions":{},"@/lib/tasks/types":types});
+ const task={id,title:"<b>Saved task</b>",completed:true,due_date:"2028-02-29",priority:"high",planning_revision:4,space_id:id,space:{title:"Work"}};
+ const html=renderToStaticMarkup(React.createElement(board.TaskList,{tasks:[task],table:true}));
+ assert.match(html,/<table[^>]+role="table"/);assert.match(html,/scope="col"/);assert.match(html,/scope="row"/);
+ assert.match(html,/aria-checked="true"/);assert.match(html,/&lt;b&gt;Saved task&lt;\/b&gt;/);assert.doesNotMatch(html,/<b>Saved task/);
+ assert.match(html,/February 29, 2028/);assert.match(html,/name="revision" value="4"/);assert.match(html,/High priority/);assert.match(html,/Assign a space/);assert.match(html,/href="\/spaces\?space=/);
+ const list=renderToStaticMarkup(React.createElement(board.TaskList,{tasks:[task]}));assert.match(list,/<ul[^>]+aria-label="Saved tasks"/);assert.doesNotMatch(list,/<table/);
+ const empty=renderToStaticMarkup(React.createElement(board.TaskBoard,{tasks:[],hasMore:false}));assert.match(empty,/Add your first task/);assert.doesNotMatch(empty,/<table/);
+ const capped=renderToStaticMarkup(React.createElement(board.TaskBoard,{tasks:[task],hasMore:true}));assert.match(capped,/200 most recent/);assert.match(capped,/<table/);
+});
+
+const editDialogs=compile("../src/components/ui/edit-dialog.tsx",{"./button":compile("../src/components/ui/button.tsx"),"./desktop-window":compile("../src/components/ui/desktop-window.tsx")});

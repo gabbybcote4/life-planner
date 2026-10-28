@@ -299,3 +299,87 @@
  .capture-actions .primary-button { flex:1; }
  .inbox-card { padding:.8rem; }
 }
+
+/* Tasks table: same task controls, one source, stacked labeled rows on phones. */
+.task-table-container { margin-top:1.25rem; min-width:0; }
+.task-table { width:100%; table-layout:fixed; border-collapse:collapse; text-align:left; }
+.task-table caption { text-align:left; color:var(--muted); font-size:.8rem; padding:.5rem 0; }
+.task-table thead { background:var(--panel); }
+.task-table :is(th,td) { padding:.75rem; border-bottom:1px solid var(--border); vertical-align:top; overflow-wrap:anywhere; }
+.task-table thead th { font:.85rem var(--font-desktop-mono); color:var(--muted); }
+.task-table thead th:first-child { width:42%; }
+.task-table thead th:nth-child(2) { width:32%; }
+.task-table .task-table-name { font-weight:400; }
+.task-table .task-main { flex-wrap:wrap; align-items:center; }
+.task-table .task-title { flex-basis:55%; font-size:1rem; }
+.task-table .task-main > form:first-child { flex-shrink:0; }
+.task-table .edit-task-form { flex-basis:70%; }
+.task-table :is(.task-planning,.task-space-assignment) { margin:0; padding:.25rem .5rem; font-size:.85rem; }
+.task-table :is(.task-planning,.task-space-assignment) summary { min-height:44px; align-content:center; }
+.task-table .task-plan-badges { display:flex; flex-wrap:wrap; gap:.4rem; }
+.task-table .task-space-assignment .space-form { margin-top:.5rem; }
+.task-table .task-space-assignment .space-form p { overflow-wrap:anywhere; }
+.task-table .task-space-assignment .primary-button { width:100%; }
+.task-table .task-feedback { font-size:.85rem; }
+.task-table .form-control { min-width:0; width:100%; }
+.task-table .task-plan-controls { display:flex; flex-wrap:wrap; gap:.5rem; }
+.task-table .ui-button { min-height:44px; }
+.task-table-row:hover { background:var(--panel); }
+@media(max-width:800px) {
+ .task-table,.task-table tbody { display:block; }
+ .task-table caption { display:block; }
+ .task-table thead { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
+ .task-table tr { display:block; margin:.75rem 0; border:1px solid var(--border); border-radius:8px; background:var(--surface); }
+ .task-table :is(th,td) { display:block; width:auto; padding:.6rem .75rem; }
+ .task-table td:last-child { border-bottom:0; }
+ .task-table td::before { content:attr(data-label); display:block; font:.75rem var(--font-desktop-mono); color:var(--muted); margin-bottom:.35rem; }
+ .task-table .task-title { font-size:1rem; }
+ .task-table .form-control { font-size:1rem; }
+}
+
+/* Shared pencil editing: real dialog, mounted drafts, feature-owned saves. */
+.edit-pencil { display:inline-grid; place-items:center; width:44px; height:44px; min-width:44px; padding:.5rem; border:1px solid var(--input-border); border-radius:7px; background:var(--surface); color:var(--primary); flex-shrink:0; margin-left:auto; }
+.edit-pencil:hover { background:var(--panel); }
+.entry-edit-dialog { width:min(44rem,calc(100vw - 1.5rem)); max-height:calc(100svh - 2rem); padding:0; border:2px solid var(--input-border); border-radius:10px; background:var(--surface); color:var(--foreground); overflow:auto; }
+.entry-edit-dialog::backdrop { background:rgb(0 0 0 / .45); }
+.entry-edit-dialog > .window-titlebar { position:sticky; top:0; z-index:2; display:flex; align-items:center; gap:.5rem; background:var(--panel); }
+.entry-edit-dialog .window-titlebar h2 { flex:1; margin:0; font-size:1rem; overflow-wrap:anywhere; min-width:0; }
+.edit-dialog-close { min-width:44px; min-height:44px; font-size:1.5rem; }
+.entry-edit-content { padding:1rem; min-width:0; }
+.entry-edit-content > .muted:first-child { font-size:.8rem; margin-top:0; }
+.entry-edit-content :is(form,fieldset) { min-width:0; }
+.entry-edit-content .widget-controls { flex-wrap:wrap; }
+.entry-edit-content .form-control { max-width:100%; }
+.task-table .task-main { position:relative; padding-right:48px; }
+.task-table .task-main > .edit-pencil { position:absolute; top:0; right:0; }
+.task-row .task-main > .edit-pencil { margin-left:auto; }
+.task-plan-badges { display:flex; flex-wrap:wrap; gap:.4rem; align-items:center; font-size:.85rem; }
+.notes-editor-heading { padding-right:3rem; }
+.note-editor { position:relative; }
+.note-editor > .edit-pencil { position:absolute; right:.75rem; top:.75rem; }
+.space-hero { position:relative; }
+.spaces-library:has(> .entry-edit-dialog) { position:relative; }
+.spaces-library > .edit-pencil { position:absolute; top:1rem; right:1rem; }
+.focus-timer-panel { position:relative; }
+.widget-titlebar > span { flex:1; }
+.entry-edit-content .text-view-controls { margin-bottom:.5rem; }
+@media(max-width:800px) {
+ .entry-edit-dialog { width:calc(100vw - 1rem); max-height:calc(100svh - 1rem); }
+ .entry-edit-content { padding:.75rem; }
+ .entry-edit-dialog :is(input,textarea,select) { font-size:1rem; }
+}
+.task-row,.calendar-event,.focus-timer { position:relative; }
+.task-row .task-main { padding-right:48px; }
+.task-row .task-main > .edit-pencil { position:absolute; top:.75rem; right:.75rem; }
+.calendar-event-summary { padding-right:48px; }
+.calendar-event-summary > .edit-pencil { position:absolute; top:.5rem; right:.5rem; }
+.focus-timer > .edit-pencil { position:absolute; top:0; right:0; }
+.focus-timer > h2 { padding-right:48px; }
+.entry-edit-dialog { font-family:var(--font-desktop-ui); font-weight:400; letter-spacing:normal; }
+.entry-edit-content .widget-library { margin:0; }
+.task-table-row { position:relative; }
+.task-table .task-main { position:static; padding-right:0; }
+.task-table .task-main > .edit-pencil { top:.75rem; right:.75rem; }
+.task-table td:last-child { padding-right:60px; }
+@media(max-width:800px) { .task-table .task-table-name { padding-right:60px; } }
+.entry-edit-dialog { inset:0; margin:auto; }

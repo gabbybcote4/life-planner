@@ -1,4 +1,5 @@
 "use client";
+import {EditDialog} from "@/components/ui/edit-dialog";
 import {TaskPlanning} from "./task-planning";
 
 import { createRequestId } from "@/lib/shared/request-id";
@@ -23,7 +24,7 @@ export function TaskBoard({ tasks, hasMore }: { tasks: Task[]; hasMore: boolean 
       <span className="task-count">{remaining} to do{hasMore ? " shown" : ""}</span>
     </header>
     <AddTaskForm />
-    {tasks.length === 0 ? <EmptyState title="A little room to begin.">Add your first task above. Small steps count.</EmptyState> : <TaskList tasks={tasks} />}
+    {tasks.length === 0 ? <EmptyState title="A little room to begin.">Add your first task above. Small steps count.</EmptyState> : <TaskList tasks={tasks} table />}
     {hasMore && <p className="muted">Showing your 200 most recent tasks. Older tasks remain saved.</p>}
   </section>;
 }
@@ -58,13 +59,12 @@ export function AddTaskForm({spaceId}:{spaceId?:string} = {}) {
   </form>;
 }
 
-function TaskRow({ task }: { task: Task }) {
+function TaskRow({ task, table = false }: { task: Task; table?: boolean }) {
   const [editing, setEditing] = useState(false);
   const [editMessage, setEditMessage] = useState("");
   const [state, action, pending] = useActionState<TaskActionState, FormData>((previous, data) => runAction(() => setTaskCompleted(previous, data), { error: "We could not confirm this change. Check your connection and try again." }), {});
 
-  return <li className={`task-row${task.completed ? " is-complete" : ""}`}>
-    <div className="task-main">
+  const main = <div className="task-main">
       <form action={action} aria-busy={pending} onSubmit={() => setEditMessage("")}>
         <input type="hidden" name="id" value={task.id} />
         <input type="hidden" name="completed" value={String(!task.completed)} />
@@ -74,18 +74,30 @@ function TaskRow({ task }: { task: Task }) {
           <span aria-hidden="true">{pending ? "…" : task.completed ? "✓" : ""}</span>
         </Button>
       </form>
-      {editing ? <EditTaskForm task={task} onCancel={() => setEditing(false)}
-        onSaved={() => { setEditing(false); setEditMessage("Changes saved."); }} /> : <>
-        <span className="task-title">{task.title}</span>
-        <Button variant="text" type="button" disabled={pending}
-          aria-label={`Edit task: ${task.title}`}
-          onClick={() => { setEditMessage(""); setEditing(true); }}>Edit</Button>
-      </>}
-    </div>
-    {task.space_id && task.space && <p className="muted">Space: <Link className="text-link" href={"/spaces?space="+task.space_id}>{task.space.title}</Link></p>}
-    <TaskPlanning task={task} disabled={pending||editing}/>
-    <TaskSpaceAssignment task={task} disabled={pending||editing}/>
-    {!editing && <FormFeedback {...(editMessage ? { message: editMessage } : state)} pending={pending} className="task-feedback" />}
+      <span className="task-title">{task.title}</span>
+      <EditDialog title={`Edit task: ${task.title}`} disabled={pending} onOpen={()=>{setEditMessage("");setEditing(true);}} onClose={()=>setEditing(false)}>
+       {close=><>
+        <EditTaskForm task={task} onCancel={close} onSaved={()=>setEditMessage("Title saved.")} />
+        <TaskPlanning task={task} disabled={pending} expanded/>
+        <TaskSpaceAssignment task={task} disabled={pending} expanded/>
+       </>}
+      </EditDialog>
+    </div>;
+  const feedback = !editing && <FormFeedback {...(editMessage ? { message: editMessage } : state)} pending={pending} className="task-feedback" />;
+  const space = <>
+    {task.space_id && task.space ? <p className="muted"><Link className="text-link" href={"/spaces?space="+task.space_id}>{task.space.title}</Link></p>:<span className="muted">No space</span>}
+
+  </>;
+  if (table) return <tr role="row" className={`task-table-row${task.completed ? " is-complete" : ""}`}>
+    <th role="rowheader" scope="row" className="task-table-name" data-label="Task">{main}{feedback}</th>
+    <td role="cell" data-label="Date & priority"><TaskPlanSummary task={task}/></td>
+    <td role="cell" data-label="Space">{space}</td>
+  </tr>;
+  return <li className={`task-row${task.completed ? " is-complete" : ""}`}>
+    {main}
+    <TaskPlanSummary task={task}/>
+    {space}
+    {feedback}
   </li>;
 }
 
@@ -107,13 +119,22 @@ function EditTaskForm({ task, onCancel, onSaved }: {
       required maxLength={TASK_TITLE_LIMIT} readOnly={pending} autoFocus />
     <div className="edit-task-controls">
       <Button type="submit" variant="primary" disabled={pending || !title.trim()} pending={pending} pendingLabel="Saving...">Save changes</Button>
-      <Button type="button" variant="text" disabled={pending} onClick={onCancel}>Cancel</Button>
+      <Button type="button" variant="text" disabled={pending} onClick={onCancel}>Close</Button>
     </div>
     <FormFeedback {...state} pending={pending} className="task-feedback" />
   </form>;
 }
 
-export function TaskList({ tasks }: { tasks: Task[] }) {
+function TaskPlanSummary({task}:{task:Task}){
+ return <div className="task-plan-badges">{task.due_date?<time dateTime={task.due_date}>{task.due_date}</time>:<span className="muted">No date</span>}{task.priority&&task.priority!=="none"&&<span className="task-priority" data-priority={task.priority}>{task.priority} priority</span>}</div>;
+}
+
+export function TaskList({ tasks, table = false }: { tasks: Task[]; table?: boolean }) {
+  if (table) return <div className="task-table-container"><table className="task-table" role="table">
+    <caption>Saved tasks · pencil to edit</caption>
+    <thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">Task</th><th scope="col" role="columnheader">Date &amp; priority</th><th scope="col" role="columnheader">Space</th></tr></thead>
+    <tbody role="rowgroup">{tasks.map(task => <TaskRow key={task.id} task={task} table />)}</tbody>
+  </table></div>;
   return <ul className="task-list" aria-label="Saved tasks">
     {tasks.map((task) => <TaskRow key={task.id} task={task} />)}
   </ul>;

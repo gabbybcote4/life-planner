@@ -6,6 +6,7 @@ import { createRequestId } from "@/lib/shared/request-id";
 import { runAction, UNCONFIRMED_SAVE } from "@/lib/shared/client-actions";
 import { FormFeedback } from "@/components/ui/feedback";
 import { TextInput, TextArea } from "@/components/ui/fields";
+import {EditDialog} from "@/components/ui/edit-dialog";
 import { Button } from "@/components/ui/button";
 import { LinkPicker } from "@/app/knowledge/link-picker";
 import { LinkedText } from "@/app/knowledge/linked-text";
@@ -55,23 +56,7 @@ export function PlainTextEditor({ note, saveAction, destination, spaceId, initia
     setBody(result.text);setLinkNotice({message:"Link inserted. Save to see and follow it in Read view."});
     requestAnimationFrame(() => { textarea?.focus(); textarea?.setSelectionRange(result.caret,result.caret); });
   }
-  return <section className="note-editor" aria-labelledby="note-editor-heading">
-    <div className="notes-editor-heading"><h2 id="note-editor-heading">{note ? (spaceId ? "Your page" : "Your note") : "A fresh page"}</h2>
-      <span className="muted">{pending ? "Saving..." : dirty ? "Unsaved changes" : note || state.id ? "Saved" : "Not saved yet"}</span>
-    </div>
-    <form action={readAction} className="text-view-controls" aria-label="Text view">
-      <input type="hidden" name="body" value={body}/>
-      <Button type="submit" variant="secondary" disabled={pending} pending={previewPending} pendingLabel="Opening..." aria-pressed={reading}>Read</Button>
-      <Button variant="secondary" disabled={busy} aria-pressed={!reading} onClick={()=>setReading(false)}>Edit</Button>
-    </form>
-    {reading && <section aria-label="Readable text" className="text-reading-view">
-      <h3>{title || "Untitled"}</h3>
-      {dirty && <p className="muted">This is your unsaved draft. Save before following links.</p>}
-      <FormFeedback error={preview.error}/>
-      {body ? <LinkedText body={body} targets={preview.items}/> : <p className="muted">This page is empty. Choose Edit to start writing.</p>}
-      {dirty && <Button variant="text" disabled={busy} onClick={()=>setReading(false)}>Return to editing to save</Button>}
-    </section>}
-    <form action={action} className="note-form" aria-busy={pending} hidden={reading}>
+  const editContent = <>    <form action={action} className="note-form" aria-busy={pending}>
       <input type="hidden" name="mode" value={note ? "edit" : "create"} />
       <label htmlFor={`${fieldId}-title`}>Title</label>
       <TextInput id={`${fieldId}-title`} name="title" value={title} onChange={(event) => setTitle(Array.from(event.target.value).slice(0, NOTE_TITLE_LIMIT).join(""))}
@@ -82,8 +67,26 @@ export function PlainTextEditor({ note, saveAction, destination, spaceId, initia
       <p className="muted note-save-hint">Save before opening another page or leaving this screen. Drafts are not saved automatically. Inserted links appear as reference markers while editing; Read shows them as clickable text.</p>
       <Button variant="primary" type="submit" disabled={busy || !title.trim() || (Boolean(note) && !dirty)} pending={pending} pendingLabel="Saving...">{spaceId ? "Save page" : "Save note"}</Button>
     </form>
-    <FormFeedback error={state.error} message={!dirty ? state.message : undefined}/>
-    <div hidden={reading}><LinkPicker onInsert={addLink} disabled={busy}/><FormFeedback error={linkNotice.error} message={linkNotice.message}/></div>
+    <div><LinkPicker onInsert={addLink} disabled={busy}/><FormFeedback error={linkNotice.error} message={linkNotice.message}/></div>
     {!reading && <FormFeedback error={previewState.error}/>}
+    <FormFeedback error={state.error} message={!dirty ? state.message : undefined}/></>;
+  return <section className="note-editor" aria-labelledby="note-editor-heading">
+    <div className="notes-editor-heading"><h2 id="note-editor-heading">{note ? (spaceId ? "Your page" : "Your note") : "A fresh page"}</h2>
+      <span className="muted">{pending ? "Saving..." : dirty ? "Unsaved changes" : note || state.id ? "Saved" : "Not saved yet"}</span>
+    </div>
+    <form action={readAction} className="text-view-controls" aria-label="Text view">
+      <input type="hidden" name="body" value={body}/>
+      <Button type="submit" variant="secondary" disabled={pending} pending={previewPending} pendingLabel="Opening..." aria-pressed={reading}>Read</Button>{!note&&<Button variant="secondary" disabled={busy} onClick={()=>setReading(false)}>Edit</Button>}
+
+    </form>
+    {(reading || Boolean(note)) && <section aria-label="Readable text" className="text-reading-view">
+      <h3>{title || "Untitled"}</h3>
+      {dirty && <p className="muted">This is your unsaved draft. Save before following links.</p>}
+      <FormFeedback error={preview.error}/>
+      {body ? <LinkedText body={body} targets={preview.items}/> : <p className="muted">This page is empty. Choose Edit to start writing.</p>}
+
+    </section>}
+    {note?<EditDialog title={spaceId?"Edit page":"Edit note"} disabled={busy} onOpen={()=>setReading(false)} onClose={()=>setReading(true)}>{editContent}</EditDialog>:<div hidden={reading}>{editContent}</div>}
+    <FormFeedback error={state.error} message={!dirty ? state.message : undefined}/>
   </section>;
 }

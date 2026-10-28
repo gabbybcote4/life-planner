@@ -393,3 +393,97 @@ AI service, transcription integration or tagging system is added by this note.
 Confirmed next increment: Inbox and quick capture before speech-to-text. Global capture offers Task/Note and optional space context. It saves an actual task, note or space page immediately and preserves the original capture in a private review queue. Reviewed removes queue clutter without completing/deleting the source; reviewed entries can return to the queue. Existing source editors handle planning and completion.
 
 Reuse the account-scoped capture dialog and shared space picker. Keep unsaved drafts in tab memory, explicit saves, stable retry identities, atomic persistence, per-user RLS and revision-protected review. Preserve compact keyword/action layouts and existing retro theme tokens. Speech, AI, tagging and automatic interpretation are not part of this increment. Database and owner browser verification remain required before release.
+
+## Priority update: intuitive tables and relations — October 27, 2026
+
+### Owner-confirmed direction
+
+- Defer speech-to-text. It remains on the roadmap, but is no longer the next increment. This priority update supersedes the earlier proposed capture > speech > AI sequence.
+- Bring Notion-inspired table and relation interactions into Life Planner. The owner values how connected information works, alongside its visual presentation.
+- Minimize typing and repeated data entry. Prefer picking existing records, short menus, checkboxes, date controls, templates and useful context defaults.
+- Keep everything intuitive, visual and scannable. Preserve the approved retro desktop themes, mobile usability, optional modules and full-customization goal.
+- Review useful ideas from earlier planner/app conversations; incorporate compatible lessons without importing their entire feature lists or replacing Life Planner's architecture.
+
+### Earlier conversation evidence and limits
+
+Reviewed accessible messages from:
+
+- [Planner app design](chatgpt-conversation://6adc1d68-3e1c-83e8-9450-f2a836ae5196): the owner chose hybrid app navigation/digital notebook styling and advanced customization. Several older assistant replies resolve only to content references; their missing details have not been reconstructed.
+- [Notion Workspace Prompt](chatgpt-conversation://6ad77838-cc80-83e8-81d5-3229cdee1392): accessible recent turns confirm an HQ iteration, but do not expose its actual table schemas. No exact HQ database design has been recovered.
+- [AI Life Inbox Idea](chatgpt-conversation://6a69434b-f7f0-83e8-9305-a7c4c6663721): accessible Nook discussion supports a common polished core with optional specialized modules. Retrieved assistant design proposals emphasize visual cards and short forms; these are inspiration, not independently confirmed Life Planner requirements.
+- [Nook Prototype Prompt](chatgpt-conversation://6a710320-a05c-83e8-992a-96fc80657e39): the owner explicitly found the earlier architecture too complicated. Selecting owned items for projects is a useful proposed interaction to adapt as selecting existing related records. Do not copy its local-only prototype storage/auth choices into Life Planner.
+- [App Ideas Summary](chatgpt-conversation://6aaf2465-ba18-83e8-8856-4cbff27cd8cd): retrieved assistant summaries describe Life Inbox/Holden as capture-first and Nook as connected projects/items. Treat these as secondary summaries, not proof of every original decision or existing implementation.
+
+### Proposed interaction plan — scope each increment before building
+
+| Area | Intended experience | Less typing |
+| --- | --- | --- |
+| Tasks table first | Clear rows, compact columns, complete checkbox, title, optional due date/priority/space | Edit one cell; choose dates, priorities and existing spaces |
+| Record details | Open a row into an accessible detail panel/page | Reuse existing editors and saved values |
+| Relations | Labeled chips linking actual records; searchable picker; clear/unlink control | Choose existing records instead of copying names or pasting IDs |
+| Linked views | Show the same records in a space/dashboard with saved filters and sorting | Create once, display in multiple places |
+| Alternative views | Table/list first; board/calendar/gallery when useful for a specific record type | Switch presentation without duplicating data |
+| Templates and context | Optional starter fields/views and visible preselected space | Start quickly without filling a large form |
+| Summaries later | Related task counts, progress and other clearly labeled rollups | Derive from saved records rather than maintaining totals manually |
+
+Suggested first increment: a Tasks table using the existing task model and real saved data. Preserve the current list/phone experience as needed. Click a cell to edit, choose Space through the shared picker, and open the existing task controls for details. Establish a consistent save/cancel/keyboard contract before expanding inline editing. This is a proposal, not an implemented feature or approval to build the whole table system at once.
+
+Subsequent increments can define Projects as a real record type, connect tasks/notes/pages, add linked filtered views, then introduce optional custom properties/databases and rollups. Projects, arbitrary relation fields, custom schemas, saved table views and rollups are not implemented by this note. Existing task-to-space assignment and note/page links are foundations, not a general relational database builder.
+
+### Relation and table guardrails
+
+- Use record identity, not copied labels. Renames should display consistently; a table and its linked view refer to the same record.
+- Make relation direction, one/many selection and backlinks explicit per relationship. Unlinking must not delete either record. Define deletion/archive behavior before introducing each relation.
+- Preserve private defaults, per-user RLS, same-owner constraints and fresh authorization. A relation never grants sharing access by itself.
+- Keep field labels in everyday language. Hide advanced property setup until requested. Avoid mandatory tags, classifications or long descriptions just to capture an item.
+- Show pending/saved/error/conflict feedback at the edited item. Retain failed drafts and protect stale edits; never suggest an unsaved cell is persisted.
+- Support keyboard navigation, labeled controls, touch targets and readable narrow-screen layouts. Avoid making a wide spreadsheet the only phone interface.
+- Reuse shared field, picker, table/list and record-detail patterns where contracts match. Keep feature validation and write permissions separate; avoid a large generic database framework before one useful table works.
+- Validate real examples: select an existing Space for a task; rename the Space and see its current label; show the task in a filtered view without a duplicate; unlink without deleting the task. Future Project/rollup examples require their own model and tests.
+
+### Acceptance questions for each future increment
+
+Can the owner understand the next action without reading a paragraph? Can an existing value be selected rather than retyped? Is the same information entered only once? Are empty/loading/error states clear? Does the action work on a phone and keyboard? Can the owner safely change the relevant shared component using the editing guide?
+
+This update records direction only. It changes no application code, dependencies, database schemas or permissions.
+
+## Habits priority and interaction decisions — October 27, 2026
+
+Owner-confirmed: habits are a core priority, not a minor optional afterthought. Use the shared visual table/control foundations where useful, but give habits their own recurring schedules and check-in history rather than treating them as tasks that repeatedly reset.
+
+- Support done/not-done habits and measurable counts/amounts with units and targets suited to the habit.
+- Let users choose and later change frequency, schedule and targets. Daily, selected weekdays and times-per-week are candidate presets; exact scheduling rules remain to be scoped.
+- Include habits on the dashboard. Simple habits support one-tap check-ins; measurable habits use quick increment/decrement and amount controls, with detail/edit controls available when needed.
+- Provide preset habits and routines, easy selection, sensible visible defaults and optional customization. Minimize typing, use clear choices and suggestions, and avoid a large mandatory setup form.
+- Multi-step routines are a welcomed direction. Define how steps, routine completion and individual habit history relate before implementation.
+- AI-assisted suggestions are a confirmed future direction. Begin with useful presets and deterministic suggestions; do not imply AI is already connected or understands unsupplied context. Proposed changes to schedules, goals or records require user acceptance.
+- Preserve previous check-ins when editing a habit. Define effective dates, local-day/time-zone behavior, missed days, weekly targets, corrections, pauses/archive and historical target changes within the habit increment. Streaks remain an optional proposal, not a settled scoring rule.
+- Reuse accessible table/field/picker patterns while keeping habit validation, ownership, persistence and history distinct. Verify per-user RLS and stale-edit protection before release.
+
+Proposed build sequence: establish the reusable Tasks table, then scope a first-class Habits table/dashboard with binary and amount check-ins, flexible schedules and preset selection. Broader routines and AI suggestions follow scoped working increments. No habit or AI feature is implemented by these planning notes.
+
+## App-wide interaction principle — owner confirmed October 27, 2026
+
+Apply low-typing, intuitive, suggestion-led interaction throughout Life Planner, not only habits. Every module should favor selecting existing information, presets/templates, quick controls, visible context defaults and optional deeper editing. Offer useful suggestions without forcing setup or inventing user intent. Keep advanced options discoverable and short labels visual. Future AI supports this principle across modules, with user-reviewed changes and explicit privacy boundaries; it is not currently implemented.
+
+## Connected life and unified daily view — owner confirmed October 27, 2026
+
+The owner cites CryBaby's Notion HQ as the desired connected experience: chores, tasks and other life areas should work together, with Obsidian-inspired references, instead of feeling like separate apps. This is the owner's description of the HQ; its exact schema has not been independently recovered.
+
+- Provide one useful Today view across selected life areas: household chores, work/personal tasks and scheduled habits/routines. Keep source/type/space labels and clear actions so a mixed day is understandable at a glance.
+- Reuse the same source records across tables, spaces and the daily dashboard. Completing or editing an item should be reflected wherever it appears; do not create disconnected copies for each view.
+- Support references to related projects, spaces, notes/pages and other relevant records through selectable relation chips and discoverable backlinks. Define allowed relationship types incrementally; do not promise arbitrary relations are already available.
+- Let users open related context without losing their place. Offer optional filters and grouping while retaining a combined view; users should not have to visit every module to plan their day.
+- Distinguish actionable tasks, habit check-ins, routine steps and calendar commitments. A daily presentation can combine them without pretending their completion, recurrence or history rules are identical.
+- Derive daily inclusion from explicit dates/schedules and chosen filters. Show undated captures separately or as explained suggestions; never silently assign deadlines. Define habit local-day behavior before adding check-ins.
+- Keep daily views private and bounded, with honest loading/error states. Relations and aggregation must preserve source ownership and sharing boundaries.
+
+Proposed acceptance example: Today shows a work task, a household chore and a habit together; each opens its source/context, completion updates the same source and applicable habit history, and unrelated modules can stay hidden. This is a future implementation criterion, not current functionality.
+
+## Tasks table foundation — prepared for owner review
+
+The full Tasks page now presents existing records in Task, Date & priority and Space columns. The same shared controls save the original records; phone layouts stack those same rows. Other task lists retain their current presentation. Date and priority share a single revision-protected planning save. No new database migration, custom properties, habit system, general relations or saved table views are added by this increment.
+
+## Pencil and popup editing — prepared for owner review
+
+Owner preference: keep cards/entries visually clean with a small labeled pencil at the top right, opening an editor popup. A shared EditDialog supplies the accessible native modal, explicit Close/Escape behavior and retained in-page drafts. Feature-owned saves and validation stay intact. Applied to task controls, saved note/page editors, calendar entries, selected space settings, dashboard/widget layout settings and timer length. Creation forms and dedicated account Settings keep their form flows; immutable Inbox originals remain read-only. This changes presentation, not database permissions or offline persistence.

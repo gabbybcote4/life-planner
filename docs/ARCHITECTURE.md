@@ -252,3 +252,19 @@ uses explicit date arguments and UTC; no live clock reads enter rendering.
 `lib/inbox/types.ts` validates input and resolves source links. `app/inbox/actions.ts` authenticates each capture/review; migration 020 implements one security-invoker transaction for the source and original Inbox snapshot. A note in a space becomes a space page. Queue review updates only reviewed with owner/id/revision guards. Sources keep their existing editors and permissions. Receipt retries compare the original payload and leave later edits intact.
 
 `app/inbox/page.tsx` paginates owned queue/reviewed snapshots; capture-card.tsx links to existing source controls. Keep original text escaped. Deleting a source cascades its receipt; reviewing never deletes the source. This increment adds no voice, AI or tag service.
+
+## Tasks table foundation
+
+TaskList accepts an optional table presentation. TaskBoard uses it; other callers retain lists. TaskRow composes its existing completion/title controls, TaskPlanning and TaskSpaceAssignment in either semantic table cells or list rows. No duplicated mutation logic or new source records are introduced. Responsive CSS stacks the same mounted rows on phones; explicit table roles preserve structure when display rules change.
+
+Date and priority deliberately share one planning cell and existing revision-protected save. This avoids separate cell forms overwriting each other's planning revision. General database properties, saved views and habit check-ins remain future increments.
+
+## Pencil editors
+
+Saved tasks, calendar events, notes/pages and space settings now use a top-right pencil to open an editor popup. Dashboard and individual widget layout settings use the same pattern; timer length has its own labeled pencil. Completion and timer start/pause stay directly accessible.
+
+Shared popup source: src/components/ui/edit-dialog.tsx. Shared styling: responsive.css, Shared pencil editing section. Each feature keeps its existing form, save buttons, validation, permissions and conflict handling. Task title, planning and assignment remain separate explicit saves inside one popup; closing does not save them.
+
+Close or Escape returns to the card and keeps its mounted draft on this page. A pending save blocks closing. Navigating away, refreshing or changing accounts can discard unsaved drafts; this is not offline draft storage. Read each save message before leaving. Inbox original snapshots remain immutable; open their source to edit it.
+
+Creation forms and Settings remain dedicated forms. Informational disclosures such as Why this? are not editors. The shared pencil does not grant editing to read-only data.

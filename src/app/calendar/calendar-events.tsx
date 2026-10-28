@@ -4,6 +4,7 @@ import { createRequestId } from "@/lib/shared/request-id";
 
 import { runAction, UNCONFIRMED_SAVE } from "@/lib/shared/client-actions";
 
+import {EditDialog} from "@/components/ui/edit-dialog";
 import { FormFeedback } from "@/components/ui/feedback";
 import { TextInput } from "@/components/ui/fields";
 import { Button } from "@/components/ui/button";
@@ -13,11 +14,11 @@ import { saveCalendarEvent } from "./actions";
 import { EVENT_TITLE_LIMIT, formatCalendarDate, type CalendarEvent, type CalendarActionState } from "@/lib/calendar/dates";
 
 export function CalendarEvents({ events, selectedDate }: { events: CalendarEvent[]; selectedDate: string }) {
-  const [editingId, setEditingId] = useState<string | null>(null);
+
   const [notice, setNotice] = useState<CalendarActionState>({});
   const onSaved = (result: CalendarActionState) => {
     setNotice(result);
-    setEditingId(null);
+
   };
 
   return <section className="calendar-agenda" aria-labelledby="agenda-heading">
@@ -32,12 +33,12 @@ export function CalendarEvents({ events, selectedDate }: { events: CalendarEvent
     {events.length === 0 ? <p className="calendar-empty muted">Nothing planned for this date yet. Add an event below when you’re ready.</p> :
       <ul className="calendar-event-list" aria-label="Events for the selected date">
         {events.map((event) => <li key={event.id} className="calendar-event">
-          {editingId === event.id ? <EventForm event={event} selectedDate={selectedDate}
-            onSaved={onSaved} onCancel={() => setEditingId(null)} /> : <div className="calendar-event-summary">
+          <div className="calendar-event-summary">
             <span className="calendar-event-title">{event.title}</span>
-            <Button variant="text" type="button" aria-label={`Edit event: ${event.title}`}
-              onClick={() => { setNotice({}); setEditingId(event.id); }}>Edit</Button>
-          </div>}
+            <EditDialog title={`Edit event: ${event.title}`}>
+             {close=><EventForm event={event} selectedDate={selectedDate} onSaved={onSaved} onCancel={close}/>}
+            </EditDialog>
+          </div>
         </li>)}
       </ul>}
     <div className="calendar-add-event">
@@ -81,9 +82,9 @@ function EventForm({ event, selectedDate, onSaved, onCancel }: {
       <Button variant="primary" type="submit" disabled={pending || !title.trim() || !date}>
         {pending ? "Saving..." : event ? "Save changes" : "Save event"}
       </Button>
-      {onCancel && <Button variant="text" type="button" disabled={pending} onClick={onCancel}>Cancel</Button>}
+      {onCancel && <Button variant="text" type="button" disabled={pending} onClick={onCancel}>Close</Button>}
     </div>
-    <FormFeedback error={state.error} pending={pending} />
+    <FormFeedback {...state} pending={pending} />
   </form>;
 }
 
