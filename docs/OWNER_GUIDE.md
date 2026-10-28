@@ -389,3 +389,17 @@ Refresh Today after changes elsewhere. Returning to the browser tab refreshes da
 Edit the layout/labels in src/app/today/today-view.tsx and its Today CSS section in responsive.css. Validation/page size is in src/lib/today/types.ts; the bounded owner-scoped read is in migration 022. Source editors stay in their existing task/habit/calendar files. Do not change only the JavaScript page size: SQL limits/offset validation and tests must agree.
 
 Apply migration 022 after 001–021. Run tasks_rls.sql plus today_rls.sql and confirm both PASS results. Run npm run test:today after code changes. This is rule-based aggregation, not AI organization, project relations or a replacement for the customizable dashboard.
+
+## Connected Projects
+
+After migration 023 and privacy checks, open Projects (More on phones). Add a project opens the shared popup: choose a name, optional short note, status and Space. Name presets only fill the name; they do not create tasks. A confirmed creation closes the popup and opens the new project.
+
+Link item searches your existing Tasks, Notes or Pages. Find a title, then Link item. No source content is copied. A task/note/page can be linked to several projects. Use the original task controls to edit/complete a task; progress refreshes from all active linked tasks, even beyond the visible twenty-item page. Original titles stay current when renamed.
+
+Unlink keeps the source saved and leaves a revisioned inactive relation. Its row shows Restore link; restore from that row rather than trying to recreate the old relation through search. Items are paginated with active links first. Project status does not complete its tasks, and moving the project's Space does not move linked sources. Deleting a source outside this UI removes its relation through the database constraint; this increment exposes no permanent-delete controls.
+
+Open original leads to the source detail. A Projects section there provides backlinks for tasks, notes and space pages (six shown, with the total labeled). The main Projects page lists twelve projects at a time, alphabetically. Selected project identity is kept in the URL so a rename does not silently switch you to a different project. Refresh updates source changes made elsewhere; save drafts before paging/navigation/refresh.
+
+Edit project fields in src/app/projects/project-form.tsx, relation search in project-item-picker.tsx, and the connected view in project-detail.tsx. Validation and source links live in src/lib/projects/types.ts. ProjectBacklinks is shared by the original task/note/page detail screens. Existing TaskList, SpacePicker, search, fields and EditDialog are reused. Migration 023 owns permissions, counts, relation identity and revision rules.
+
+Run npm run test:projects plus the full checks after changes. Apply only unapplied migrations; after 023 run tasks_rls.sql and projects_rls.sql, verifying both PASS results. No new dependencies. General custom databases, inline project selectors in every task table, habit-to-project relations, project widgets, AI and sharing remain future increments.

@@ -308,3 +308,11 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - Keep due-date, scheduled/logged habit and all-day event inclusion explicit. Never invent urgency for undated work or merge task completion with habit check-in history.
 - Reuse TaskList/HabitCard/EventForm and confirm saves before refreshing counts. Preserve existing source ownership, revisions and draft/error protections.
 - Read local day in effects/events only. Tag responses by day/offsets; failures must not become false zero counters. Preserve saved dashboard layouts and navigation placement.
+
+### Project relation checks
+
+- Run test:projects and full regressions; after migration 023 run tasks_rls.sql and projects_rls.sql before claiming live isolation/progress/retry checks.
+- Keep projects and sources independent. Relations reference verified-owner record IDs; unlink never deletes source content. Preserve inactive relation rows/revisions for explicit restore and stale-write protection.
+- Counts use all active linked tasks, not the paginated preview. Show current titles, complete counts and bounded catalog/item/backlink lists. Project status/Space must not silently alter linked task completion, dates or assignments.
+- Reuse search, TaskList, SpacePicker and EditDialog. Keep creation identity stable until confirmed; close/reset only after success. Preserve selected project identity when catalog sort changes.
+- ProjectBacklinks is source-kind-specific and owner-filtered. General databases, habit relations, inline project selectors everywhere and AI remain separately scoped.

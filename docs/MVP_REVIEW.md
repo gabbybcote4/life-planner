@@ -260,3 +260,13 @@ This increment changes no database schema or permission policies.
 - Check paused/logged habits, selected weekdays, weekly target-met exclusions and original snapshot targets after settings changes.
 - Test more than five items in a section, independent paging, older records and empty pages after completion. Counts must remain global for the selected day.
 - Verify two-account isolation, setup/load failures, retained previous results/drafts, mobile/keyboard/light/dark, local midnight and browser-tab return. No new widget layout/default changes.
+
+## Connected Projects review
+
+- Apply migration 023, then tasks_rls.sql and projects_rls.sql. Verify both PASS results separately from unit tests.
+- Create a project and optional Space; verify confirmed creation closes/reset the popup. Failed saves keep its draft. Rename the selected project without changing the selected identity.
+- Link an existing task, note and page through type/search. Open each original; verify Projects backlinks and current titles after renames.
+- Complete/reopen a task from the project. Counts must update across multiple projects using that task and remain correct beyond twenty visible links.
+- Unlink/restore each source. Original data must remain. Test stale project edits and stale unlink after restore in another tab; no silent overwrites.
+- Status and project Space changes must not complete, move or reschedule sources. Test cross-account parent/target references and anonymous reads/executes.
+- Check catalog/item/backlink bounds, empty/error states, phone/keyboard/light/dark, source editors, pending dismissal guard and original Today/task/habit flows.
