@@ -383,3 +383,30 @@
 .task-table td:last-child { padding-right:60px; }
 @media(max-width:800px) { .task-table .task-table-name { padding-right:60px; } }
 .entry-edit-dialog { inset:0; margin:auto; }
+
+/* Habits: shared palettes, quick checks, focused edit dialogs. */
+.habits-toolbar,.habit-card header,.habit-labels,.habit-amount { display:flex; align-items:center; gap:.6rem; flex-wrap:wrap; }
+.habits-toolbar h2 { flex:1; }
+.habits-toolbar > .edit-pencil { width:auto; }
+.habit-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,20rem),1fr)); gap:1rem; margin:1rem 0; }
+.habit-card { min-width:0; padding:1rem; background:var(--surface); border:1px solid var(--border); border-radius:9px; }
+.habit-card header h3 { flex:1; min-width:0; overflow-wrap:anywhere; margin:.25rem 0; }
+.habit-labels span,.habit-labels a { padding:.25rem .45rem; background:var(--panel); border-radius:5px; font-size:.8rem; overflow-wrap:anywhere; }
+.habit-card .habit-labels { margin:.6rem 0; }
+.habit-progress { font-size:1.1rem; font-weight:600; }
+.habit-progress span { color:var(--primary); }
+.habit-amount .form-control { flex:1; width:5rem; min-width:0; }
+.habit-amount .ui-button { min-width:44px; min-height:44px; }
+.habit-form fieldset { border:0; padding:0; margin:1rem 0; display:grid; gap:.6rem; min-width:0; }
+.habit-presets,.habit-weekdays { display:flex; flex-wrap:wrap; gap:.5rem; }
+.habit-weekdays[hidden] { display:none; }
+.habit-weekdays label,.habit-pause { display:flex; align-items:center; gap:.4rem; min-height:44px; padding:.3rem; }
+.habit-day { display:flex; flex-wrap:wrap; align-items:center; gap:.5rem; }
+.habit-day input { width:auto; }
+.habit-help { margin-top:1rem; }
+.habit-help summary { min-height:44px; cursor:pointer; align-content:center; }
+.widget-body .habit-grid { grid-template-columns:1fr; }
+@media(max-width:800px) { .habit-form input,.habit-form select,.habit-checkin input { font-size:1rem; } }
+.habit-form [hidden] { display:none !important; }
+
+.entry-edit-dialog :is(button,input,textarea,select) { font-family:var(--font-desktop-ui); }

@@ -293,3 +293,10 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - Apply low-typing choices, presets, context defaults and useful suggestions across every module, not only habits. Keep advanced editing discoverable and AI proposals reviewable; do not claim future AI is implemented.
 
 - Keep life areas connected through shared source records, selectable relations and a unified daily view. Do not duplicate records for different views or conflate task completion with habit check-in history.
+
+### Habits checks
+
+- Run test:habits, full regressions and habits_rls.sql after migration 021; confirm the live PASS before claiming isolation/history checks.
+- Keep settings and check-ins separate. Preserve recorded target/unit/type on later settings edits; only amount is mutable in logs. Respect both habit/log revisions and stable creation IDs.
+- Derive local day only in client events/effects. Keep Monday week boundaries, explicit dates, bounded pagination/preview labels, and same-owner Space references. Do not infer deadlines or silently generate tasks.
+- Reuse shared editors/pickers and presets. Keep the optional tenth widget and existing seven-widget defaults/metadata. Multi-step routines, AI, streaks and full Today aggregation remain separately scoped.

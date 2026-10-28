@@ -56,7 +56,7 @@ test("timer is optional and preserves existing defaults, metadata, and layout va
  assert.equal(parseLayout([{id:"timer",width:"half"},{id:"timer",width:"full"}]),null);
  const sql=fs.readFileSync(new URL("../supabase/migrations/20261027001700_focus_timer_widget.sql",import.meta.url),"utf8");
  const ids=sql.match(/widget_id not in \(([^)]+)\)/)[1];
- assert.deepEqual([...ids.matchAll(/'([^']+)'/g)].map(m=>m[1]).sort(),Object.keys(WIDGETS).filter(id=>id!=="guidance").sort());
+ assert.deepEqual([...ids.matchAll(/'([^']+)'/g)].map(m=>m[1]).sort(),Object.keys(WIDGETS).filter(id=>id!=="guidance"&&id!=="habits").sort());
  assert.match(sql,/jsonb_array_length\(candidate\) > 8/);assert.doesNotMatch(sql,/update public\.dashboard_layouts|set default/i);
 });
 test("actual timer can prerender with no clock reads and uses labeled native controls",()=>{

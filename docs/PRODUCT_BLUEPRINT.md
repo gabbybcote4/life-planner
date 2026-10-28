@@ -487,3 +487,9 @@ The full Tasks page now presents existing records in Task, Date & priority and S
 ## Pencil and popup editing — prepared for owner review
 
 Owner preference: keep cards/entries visually clean with a small labeled pencil at the top right, opening an editor popup. A shared EditDialog supplies the accessible native modal, explicit Close/Escape behavior and retained in-page drafts. Feature-owned saves and validation stay intact. Applied to task controls, saved note/page editors, calendar entries, selected space settings, dashboard/widget layout settings and timer length. Creation forms and dedicated account Settings keep their form flows; immutable Inbox originals remain read-only. This changes presentation, not database permissions or offline persistence.
+
+## Habits foundation — prepared for owner/database review
+
+The first habits increment adds editable presets, binary or amount check-ins, daily/selected-weekday/days-per-week schedules, pause, optional Space links and date-based history/corrections. Shared pencil dialogs and quick controls minimize typing. Check-in snapshots preserve original targets/units/types across later setting edits. Same-owner RLS, narrow grants and independent habit/log revision guards protect persistence.
+
+Habits today is an optional tenth dashboard widget; existing seven-widget defaults remain unchanged. Data is paginated and previews labeled. Browser-local day and Monday-start weeks are explicit. Multi-step routines, AI suggestions, streak scoring, map-wide habit relations and the combined Today view are not part of this increment. Live SQL and owner save/refresh checks remain required before release.

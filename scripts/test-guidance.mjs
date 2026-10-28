@@ -55,7 +55,7 @@ test("widget registration expands safely without changing saved defaults",()=>{
  assert.deepEqual(parseLayout([{id:"guidance",width:"full",accent:"yellow"}]),[{id:"guidance",width:"full",accent:"yellow"}]);
  assert.equal(parseLayout([{id:"guidance",width:"full",suggestion:"private"}]),null);
  const sql=fs.readFileSync(new URL("../supabase/migrations/20261027001900_dashboard_guidance.sql",import.meta.url),"utf8");
- const ids=sql.match(/widget_id not in \(([^)]+)\)/)[1];assert.deepEqual([...ids.matchAll(/'([^']+)'/g)].map(m=>m[1]).sort(),Object.keys(WIDGETS).sort());
+ const ids=sql.match(/widget_id not in \(([^)]+)\)/)[1];assert.deepEqual([...ids.matchAll(/'([^']+)'/g)].map(m=>m[1]).sort(),Object.keys(WIDGETS).filter(id=>id!=="habits").sort());
  assert.match(sql,/security invoker/);assert.match(sql,/t.user_id=\(select auth.uid\(\)\) and not t.completed/);assert.doesNotMatch(sql,/update public\.|set default|security definer/i);
 });
 
