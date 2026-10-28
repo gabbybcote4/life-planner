@@ -1,3 +1,4 @@
+import {withTaskProjects} from "@/lib/projects/task-projects";
 import {ProjectBacklinks} from "@/app/projects/project-backlinks";
 import {TASK_SELECT,type Task} from "@/lib/tasks/types";
 import Link from "next/link";
@@ -14,6 +15,7 @@ async function Planner({searchParams}:{searchParams:TaskSearch}) {
   const params=await searchParams;
   if(params.task!==undefined) {
     const selected=await loadSelectedTask(supabase,userId,params.task);
+    if(selected.task)selected.task=(await withTaskProjects(supabase,[selected.task]))[0];
     return <>
       <PlannerHeading eyebrow="One thing at a time" title="Your selected task." description="Edit or complete this task, or return to your task list." email={email}/>
       <Link className="text-link" href="/tasks">Show all tasks</Link>
@@ -26,9 +28,10 @@ async function Planner({searchParams}:{searchParams:TaskSearch}) {
     .order("created_at", { ascending: false })
     .order("id", { ascending: false })
     .limit(201);
+  const visibleTasks=await withTaskProjects(supabase,(tasks??[]).slice(0,200) as unknown as Task[]);
   return <>
     <PlannerHeading eyebrow="Your own little corner" title="One thing at a time." description="Your saved tasks, ready whenever you are." email={email} />
-    {tasksError ? <LoadError title="Your tasks could not be loaded." description="Refresh to try again. Your saved tasks have not been changed." action="/tasks" /> : <TaskBoard key={userId} tasks={((tasks ?? []) as unknown as Task[]).slice(0, 200)} hasMore={(tasks?.length ?? 0) > 200} />}
+    {tasksError ? <LoadError title="Your tasks could not be loaded." description="Refresh to try again. Your saved tasks have not been changed." action="/tasks" /> : <TaskBoard key={userId} tasks={visibleTasks} hasMore={(tasks?.length ?? 0) > 200} />}
   </>;
 }
 export default function TasksPage({searchParams}:{searchParams:TaskSearch}) {

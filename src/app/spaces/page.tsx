@@ -1,3 +1,4 @@
+import {withTaskProjects} from "@/lib/projects/task-projects";
 import {ProjectBacklinks} from "@/app/projects/project-backlinks";
 import {EditDialog} from "@/components/ui/edit-dialog";
 import {MobileSection} from "@/components/ui/mobile-section";
@@ -43,6 +44,7 @@ async function SpacesContent({searchParams}:{searchParams:Search}) {
  }
  const tasksPage=parseNotesPage(params.tasksPage);
  const tasks=space?await supabase.from("tasks").select(TASK_SELECT,{count:"exact"}).eq("user_id",userId).eq("space_id",space.id).order("created_at",{ascending:false}).order("id").range((tasksPage-1)*20,tasksPage*20-1):null;
+ const enrichedTasks=await withTaskProjects(supabase,(tasks?.data??[]) as unknown as Task[]);
  const base=space ? '/spaces?space='+space.id+'&spacesPage='+spacesPage : '/spaces';
  return <>
  <PlannerHeading eyebrow="Room for your life" captureSpace={space&&!unavailable?{id:space.id,title:space.title}:undefined} title="Spaces of your own." description="Gather simple text pages by life area, project, or whatever makes sense to you." email={email}/>
@@ -57,7 +59,7 @@ async function SpacesContent({searchParams}:{searchParams:Search}) {
  <MobileSection className="spaces-library" title="Space appearance and name"><div className="space-hero"><SpaceVisual space={space} description="Your pages, tasks, and ideas — together."/></div><EditDialog key={userId+space.id} title={"Edit space: "+space.title}><SpaceForm space={space}/></EditDialog></MobileSection>
  <MobileSection className="space-task-panel" title={"Tasks in "+space.title}><h2>Tasks in {space.title}</h2>
  <AddTaskForm key={userId+space.id} spaceId={space.id}/>
- {tasks?.error?<LoadError title="Space tasks could not be loaded." description="Check the task-space setup and try again. Saved tasks have not changed." action={base}/>:<><p className="muted">{tasks?.count??0} saved tasks · newest first</p><TaskList tasks={(tasks?.data??[]) as unknown as Task[]}/>{!tasks?.data?.length&&<p className="muted">No tasks here yet. Add one above or assign an existing task from Tasks.</p>}
+ {tasks?.error?<LoadError title="Space tasks could not be loaded." description="Check the task-space setup and try again. Saved tasks have not changed." action={base}/>:<><p className="muted">{tasks?.count??0} saved tasks · newest first</p><TaskList tasks={enrichedTasks}/>{!tasks?.data?.length&&<p className="muted">No tasks here yet. Add one above or assign an existing task from Tasks.</p>}
  <nav className="notes-pagination" aria-label="Tasks in this space">{tasksPage>1&&<Link href={base+'&tasksPage='+(tasksPage-1)+'&pagesPage='+pagesPage+(selected?'&entry='+selected.id:params.entry==='new'?'&entry=new':'')}>Previous tasks</Link>}{(tasks?.count??0)>tasksPage*20&&tasksPage<9999&&<Link href={base+'&tasksPage='+(tasksPage+1)+'&pagesPage='+pagesPage+(selected?'&entry='+selected.id:params.entry==='new'?'&entry=new':'')}>Next tasks</Link>}</nav></>}
  </MobileSection>
  {pages?.error ? <LoadError title="Pages could not be loaded." description="Try again; saved pages have not changed." action={base}/> : <div className="notes-layout">

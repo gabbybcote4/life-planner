@@ -504,4 +504,59 @@ Migration 022 adds only an authenticated, owner-filtered read function under exi
 
 The first project increment links existing tasks, notes and pages to private projects with optional Space context, manual status and automatic linked-task progress. It uses shared search, field controls and pencil popups. Relationships are many-to-many by source identity, not copied content. Unlink is reversible through an inactive relation with a revision baseline. Source detail pages provide bounded project backlinks; current source titles and task completion are read live.
 
-Catalogs and item lists are paginated, while progress counts all active linked tasks. Project status/Space does not move, complete or schedule source items. No new tasks are silently created by presets or relations. This is a typed project hub, not a general custom database builder or AI organizer. Inline project selectors throughout tables, habit-project relations, richer views and project dashboard widgets remain future scope. Migration 023 and live owner/privacy verification are required before release.
+Catalogs and item lists are paginated, while progress counts all active linked tasks. Project status/Space does not move, complete or schedule source items. No new tasks are silently created by presets or relations. This is a typed project hub, not a general custom database builder or AI organizer. Project selectors for non-task records, habit-project relations, richer views and project dashboard widgets remain future scope. Migration 023 and live owner/privacy verification are required before release.
+
+## Task project controls - prepared for owner/database review
+
+Task pencil editors include optional no-typing project browsing with search and link/unlink/restore. Tasks gains a Projects column; shared task cards reuse compact current-title project badges. Up to three names plus a complete count keep the view visual. Sources remain original records, and links do not alter task completion, dates, priorities or Space.
+
+Migration 024 adds only authenticated, owner-filtered, bounded read functions under existing RLS. Writes reuse existing revision-protected relations. General databases, creating projects inside task editors, habit relations and AI are separate increments. Live database and owner checks remain required before release.
+
+
+### Browse-first record pickers
+
+Spaces, project item links and note/page links load existing choices when opened; project type changes load that type. Search is optional, with bounded pages and explicit refresh/error states. Space and project-item pickers share useRecordChoices and browsePlanner. Blank browsing uses verified-owner reads under existing RLS; normal global search still waits for a term. No new migration is needed. Selection does not save or copy source records; existing confirmation flows stay intact.
+
+
+### Compact app layout
+
+The owner requested a denser app, including desktop. Shared sizing lives in src/app/compact.css, imported last by layout.tsx. Start with --density-gap (between panels), --density-panel (inside panels) and --density-control (desktop control height). Body text is 14px by default; smaller headings, narrower sidebars and tighter lists/forms/widgets reduce scrolling. Phone inputs remain 16px and interactive targets retain 44px sizing. Theme colours and saved dashboard order/widths remain independent. No database migration or saved density preference is introduced.
+
+
+### Navigation edges in narrow windows
+
+All four saved positions now retain their chosen edge at every width. Below 801px, Left and Right use a 64px quick-navigation rail and More opens inward; Top and Bottom retain their horizontal bars. This replaces the previous narrow-screen rule that put side choices at the top. Save navigation still confirms the account setting; the small diagram alone is only a preview. No database change is needed.
+
+
+### Settings workspace and display preferences
+
+Settings has six compact keyboard-accessible categories: Appearance, Workspace, Accessibility, Account, Data & privacy, and About. Appearance groups Colours, Background, Fonts & text, and Zoom in expandable sections; Workspace owns navigation and the dashboard shortcut. Panels stay mounted to retain drafts when switching tabs. Existing theme/background/navigation forms keep their own saves.
+
+Migration 025 adds font presets (classic desktop/system/rounded/monospace), 14/16/18px text, 90/100/110/125% app zoom, reduced motion, stronger focus and simpler backgrounds/shadows to existing owner-protected preferences. Text, zoom and accessibility have independent revision checks and narrow update grants. Missing setup permits a local preview but disables these new saves; it does not block existing controls or reset their saved preferences.
+
+DisplayPicker owns preview/cancel/save. ThemeRoot reads saved display options separately from palette/navigation so a missing new column cannot erase the older choices. settings.css applies font roles, reading sizes, app zoom and accessibility attributes. App zoom is separate from browser zoom; very large combined settings can require scrolling. OS reduced motion is respected. About describes the current product without invented versions or AI/offline claims.
+
+Run test:display, full regressions, TypeScript, lint/build. Apply 025 then run planner_preferences_rls.sql and display_preferences_rls.sql, checking both PASS results before claiming live privacy verification. Review font/text/zoom saves across refresh, phone overflow at 125%, keyboard tabs/strong focus and reduced motion; preserve theme/navigation settings.
+
+
+## Settings grouping and remaining scope
+
+Owner correction: fonts, reading size and zoom belong in Appearance. Keep top-level categories compact, with one horizontal scrollable tab row on phones and expandable groups inside categories. Retain mounted drafts and existing separate saves.
+
+Current categories: Appearance (palette/background/font/text/zoom), Workspace (navigation plus dashboard link), Accessibility (motion/focus/decoration), Account (verified email/sign-out), Data & privacy (current private-storage/sharing status), About. Future controls are explicitly labeled and collapsed; they are not functional switches.
+
+Remaining settings to scope alongside their features:
+- Planning: week start, date/time formats, time zone, default views/Space and scheduling defaults.
+- Notifications: optional reminders, quiet hours, channels and permission/status controls; no notification delivery exists yet.
+- Account/security: profile, password recovery/change, connected auth providers, active sessions and account deletion, with appropriate confirmation.
+- Data/privacy: export/import, backups/recovery/history, selective sharing, retention and offline-data controls; AI/microphone consent only when those features are scoped.
+- Integrations: calendar connections, imports and provider permissions/revocation.
+- Optional modules/templates: enabled life areas, routines and presets, including future meals/workouts.
+- Billing only if premium launches; prices and premium boundaries remain undecided.
+
+Do not add settings that cannot affect a real feature. Add new top-level categories only when they contain useful controls.
+
+
+### Consistent font roles
+
+All headings, body text, form controls, legends, charts and desktop chrome use shared font tokens. Monospace, System and Rounded apply to all three roles; Classic desktop keeps its intentional heading/UI/console mix. Theme palette changes do not reset the saved font. Edit font stacks in src/lib/themes/display.ts, not individual cards. Legacy font-family declarations use token fallbacks rather than overriding the preset.

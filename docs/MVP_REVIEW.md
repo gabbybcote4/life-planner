@@ -270,3 +270,20 @@ This increment changes no database schema or permission policies.
 - Unlink/restore each source. Original data must remain. Test stale project edits and stale unlink after restore in another tab; no silent overwrites.
 - Status and project Space changes must not complete, move or reschedule sources. Test cross-account parent/target references and anonymous reads/executes.
 - Check catalog/item/backlink bounds, empty/error states, phone/keyboard/light/dark, source editors, pending dismissal guard and original Today/task/habit flows.
+
+## Task project controls (migration 024)
+
+- Run test:task-projects, full npm test, lint, TypeScript and build. Apply 024 then run tasks_rls.sql and task_project_picker_rls.sql; live PASS is separate from local unit checks.
+- Tasks pencil > Projects: browse without typing, search, link two projects, unlink and restore. Confirm badges/counts after refresh and original title/date/priority/Space/completion remain unchanged.
+- Try stale editors and a failed connection: retain drafts, show conflicts/errors, never claim zero project links on read failure. Verify keyboard/Escape and phone layout, plus Today/Space/dashboard/project task editors.
+
+
+### Settings workspace and display preferences
+
+Settings has six compact keyboard-accessible categories: Appearance, Workspace, Accessibility, Account, Data & privacy, and About. Appearance groups Colours, Background, Fonts & text, and Zoom in expandable sections; Workspace owns navigation and the dashboard shortcut. Panels stay mounted to retain drafts when switching tabs. Existing theme/background/navigation forms keep their own saves.
+
+Migration 025 adds font presets (classic desktop/system/rounded/monospace), 14/16/18px text, 90/100/110/125% app zoom, reduced motion, stronger focus and simpler backgrounds/shadows to existing owner-protected preferences. Text, zoom and accessibility have independent revision checks and narrow update grants. Missing setup permits a local preview but disables these new saves; it does not block existing controls or reset their saved preferences.
+
+DisplayPicker owns preview/cancel/save. ThemeRoot reads saved display options separately from palette/navigation so a missing new column cannot erase the older choices. settings.css applies font roles, reading sizes, app zoom and accessibility attributes. App zoom is separate from browser zoom; very large combined settings can require scrolling. OS reduced motion is respected. About describes the current product without invented versions or AI/offline claims.
+
+Run test:display, full regressions, TypeScript, lint/build. Apply 025 then run planner_preferences_rls.sql and display_preferences_rls.sql, checking both PASS results before claiming live privacy verification. Review font/text/zoom saves across refresh, phone overflow at 125%, keyboard tabs/strong focus and reduced motion; preserve theme/navigation settings.

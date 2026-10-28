@@ -442,7 +442,8 @@
 .today-due-cue[data-overdue="true"] { background:var(--accent-pink); }
 .today-events li { position:relative; padding-right:3.25rem; }
 .today-events li > .edit-pencil { position:absolute; top:.5rem; right:0; }
-.today-events li > span { padding:.2rem .4rem; background:var(--accent-blue); border-radius:5px; font-size:.75rem; }/* Connected projects: shared controls, original source links and real task progress. */
+.today-events li > span { padding:.2rem .4rem; background:var(--accent-blue); border-radius:5px; font-size:.75rem; }
+/* Connected projects: shared controls, original source links and real task progress. */
 .projects-toolbar,.project-detail-heading,.project-linked-item > header,.project-picker-results li,.project-presets { display:flex; flex-wrap:wrap; align-items:center; gap:.6rem; }
 .projects-toolbar h2,.project-detail-heading > div { flex:1; min-width:0; }
 .projects-toolbar > .edit-pencil,.project-detail > .edit-pencil { width:auto; }
@@ -475,4 +476,31 @@
 .project-backlinks { border-top:1px solid var(--border); padding-top:.5rem; margin-top:1rem; }
 .project-backlinks ul { display:flex; flex-wrap:wrap; list-style:none; padding:0; gap:.5rem; }
 .project-backlinks a { display:inline-flex; min-height:44px; align-items:center; padding:.5rem; border:1px solid var(--border); border-radius:6px; background:var(--accent-lilac); overflow-wrap:anywhere; }
-@media(max-width:800px){ .project-form input,.project-form textarea,.project-form select,.project-item-search input { font-size:1rem; } }
+@media(max-width:800px){ .project-form input,.project-form textarea,.project-form select,.project-item-search input { font-size:1rem; } }/* Task-to-project choices reuse canonical relations and preserve source fields. */
+.task-project-assignment { margin:.5rem 0; padding:.65rem; border:1px solid var(--border); border-radius:7px; background:var(--surface); }
+.task-project-assignment summary { min-height:44px; cursor:pointer; align-content:center; color:var(--primary); }
+.task-project-assignment > form { display:grid; gap:.5rem; }
+.task-project-choices { list-style:none; padding:0; }
+.task-project-choices li { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:.5rem; border-bottom:1px solid var(--border); padding:.6rem 0; }
+.task-project-choices li > span { flex:1; min-width:0; overflow-wrap:anywhere; }
+.task-project-choices small { display:block; color:var(--muted); font-size:.8rem; }
+.task-project-badges { display:flex; flex-wrap:wrap; gap:.4rem; }
+.task-project-badges a { display:inline-flex; align-items:center; min-height:44px; padding:.3rem .5rem; border:1px solid var(--border); border-radius:5px; background:var(--accent-lilac); overflow-wrap:anywhere; font-size:.8rem; }
+.task-table thead th:first-child { width:32%; }
+.task-table thead th:nth-child(2) { width:25%; }
+.task-table thead th:nth-child(3) { width:18%; }
+.task-table thead th:nth-child(4) { width:25%; }
+/* A saved side position remains a side rail even in a narrow desktop pane/phone.
+   The More menu opens inward, keeping all routes reachable without a full sidebar. */
+@media(max-width:800px) {
+ .theme-root:is([data-nav-position="left"],[data-nav-position="right"]) .desktop-app { display:grid; grid-template-rows:1fr; padding-bottom:0; }
+ .theme-root[data-nav-position="left"] .desktop-app { grid-template-areas:"nav main"; grid-template-columns:64px minmax(0,1fr); }
+ .theme-root[data-nav-position="right"] .desktop-app { grid-template-areas:"main nav"; grid-template-columns:minmax(0,1fr) 64px; }
+ .theme-root:is([data-nav-position="left"],[data-nav-position="right"]) .desktop-sidebar { position:sticky; top:0; bottom:auto; inset-inline:auto; align-self:start; height:100svh; width:64px; padding:.3rem .2rem; border:0; border-radius:0; box-shadow:none; }
+ .theme-root[data-nav-position="left"] .desktop-sidebar { border-right:1px solid var(--input-border); }
+ .theme-root[data-nav-position="right"] .desktop-sidebar { border-left:1px solid var(--input-border); }
+ .theme-root:is([data-nav-position="left"],[data-nav-position="right"]) .mobile-nav-bar { grid-template-columns:minmax(0,1fr); gap:.25rem; }
+ .theme-root:is([data-nav-position="left"],[data-nav-position="right"]) .desktop-sidebar .planner-route-menu { top:.5rem; bottom:auto; width:min(22rem,calc(100vw - 96px)); max-height:calc(100svh - 1rem); border-radius:8px; }
+ .theme-root[data-nav-position="left"] .desktop-sidebar .planner-route-menu { left:calc(100% + .35rem); right:auto; }
+ .theme-root[data-nav-position="right"] .desktop-sidebar .planner-route-menu { right:calc(100% + .35rem); left:auto; }
+}

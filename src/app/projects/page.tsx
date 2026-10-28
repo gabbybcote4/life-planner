@@ -1,3 +1,5 @@
+import type {Task} from "@/lib/tasks/types";
+import {withTaskProjects} from "@/lib/projects/task-projects";
 import {redirect} from "next/navigation";
 import Link from "next/link";
 import {requireAccount} from "@/lib/auth/account";
@@ -16,6 +18,7 @@ async function Content({searchParams}:{searchParams:Search}){
  const selected=params.project===undefined?catalog?.items[0]?.id:params.project;
  const detailResult=isRecordId(selected)?await supabase.rpc("planner_project_detail",{p_id:selected,p_offset:(itemsPage-1)*20}):null;
  const detail=detailResult&&!detailResult.error&&isProjectDetail(detailResult.data)&&detailResult.data.project.id===selected?detailResult.data:null;
+ if(detail){const linkedTasks=await withTaskProjects(supabase,detail.items.filter(i=>i.kind==="task").map(i=>i.target as Task));const map=new Map(linkedTasks.map(t=>[t.id,t]));detail.items=detail.items.map(i=>i.kind==="task"?{...i,target:{...i.target,...map.get(i.target_id)}}:i);}
  return <><PlannerHeading eyebrow="Ideas into action" title="Projects, connected." description="Tasks · notes · pages · progress" email={email} captureSpace={detail?.project.space_id?{id:detail.project.space_id,title:detail.project.space_title??"Space"}:undefined}/>
  <div className="projects-toolbar"><h2>Your projects</h2><ProjectEditor key={userId}/><ProjectRefreshButton/></div>
  {!catalog?<LoadError title="Projects could not be loaded." description="Apply the projects setup if needed, then refresh. Your saved source items have not changed." action="/projects"/>:<>

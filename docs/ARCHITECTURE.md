@@ -148,7 +148,7 @@ Existing accounts remain left; no row/layout rewrite is performed.
 responsive.css loads after retro.css. Left/right are desktop sidebars, top is a
 sticky horizontal menu, bottom a fixed dock with reserved content/safe-area space.
 At 800px and below, Dashboard/Tasks/Calendar/More replace the full navigation.
-Left/right use a top bar and side-aligned More; top/bottom use their chosen edge.
+Left/right use a compact side rail and side-aligned More; top/bottom use their chosen edge.
 Do not keep persistent sidebars on narrow phones and squeeze the editor.
 
 Dashboard widget phone toggles are local UI state only. The first saved widget and
@@ -292,3 +292,40 @@ Migration 023 stores private project settings and typed project_items relations.
 Authenticated security-invoker RPCs save settings, change relations and read catalog/detail summaries. Progress counts all active related tasks, independently of the twenty-item detail page; metadata joins use current source titles. Catalog pages are twelve records with deterministic title/id ordering. Creation retries confirm matching settings rather than replacing later edits.
 
 Server page reads use fresh verified identity, validate returned shapes and retain exact selected project identity in the URL. Client ProjectEditor/ProjectLinkControl use stable requests, explicit save feedback and router refresh after confirmation. Search reuses planner_search with explicit task/note/page kinds and stale-query hiding. ProjectDetail reuses TaskList and the shared modal/picker primitives. ProjectBacklinks adds bounded owner-filtered reverse navigation to source detail pages. Failed setup/read results stay distinct from empty success; source editors remain usable if project backlinks are unavailable.
+
+## Task project controls
+
+TaskProjectAssignment is a shared lazy disclosure inside TaskList's pencil editor. It calls loadTaskProjects with task/query/offset; migration 024 checks owned task access and returns twenty owned projects with active/inactive relation revisions. ProjectLinkControl retains the existing revisioned mutation and refreshes choices only after confirmed writes. No owner value is accepted from the caller.
+
+withTaskProjects enriches Tasks, selected tasks, Space tasks, recent dashboard tasks, Today and ProjectDetail using one request-scoped batch. It validates exact requested IDs, at most three current project names and full relation counts. Missing/malformed/failed metadata is explicitly unknown, preserving source tasks. TASK_SELECT stays bounded and unchanged; no unrestricted relation arrays or persistent cross-account cache are added.
+
+
+### Browse-first record pickers
+
+Spaces, project item links and note/page links load existing choices when opened; project type changes load that type. Search is optional, with bounded pages and explicit refresh/error states. Space and project-item pickers share useRecordChoices and browsePlanner. Blank browsing uses verified-owner reads under existing RLS; normal global search still waits for a term. No new migration is needed. Selection does not save or copy source records; existing confirmation flows stay intact.
+
+
+### Compact app layout
+
+The owner requested a denser app, including desktop. Shared sizing lives in src/app/compact.css, imported last by layout.tsx. Start with --density-gap (between panels), --density-panel (inside panels) and --density-control (desktop control height). Body text is 14px by default; smaller headings, narrower sidebars and tighter lists/forms/widgets reduce scrolling. Phone inputs remain 16px and interactive targets retain 44px sizing. Theme colours and saved dashboard order/widths remain independent. No database migration or saved density preference is introduced.
+
+
+### Navigation edges in narrow windows
+
+All four saved positions now retain their chosen edge at every width. Below 801px, Left and Right use a 64px quick-navigation rail and More opens inward; Top and Bottom retain their horizontal bars. This replaces the previous narrow-screen rule that put side choices at the top. Save navigation still confirms the account setting; the small diagram alone is only a preview. No database change is needed.
+
+
+### Settings workspace and display preferences
+
+Settings has six compact keyboard-accessible categories: Appearance, Workspace, Accessibility, Account, Data & privacy, and About. Appearance groups Colours, Background, Fonts & text, and Zoom in expandable sections; Workspace owns navigation and the dashboard shortcut. Panels stay mounted to retain drafts when switching tabs. Existing theme/background/navigation forms keep their own saves.
+
+Migration 025 adds font presets (classic desktop/system/rounded/monospace), 14/16/18px text, 90/100/110/125% app zoom, reduced motion, stronger focus and simpler backgrounds/shadows to existing owner-protected preferences. Text, zoom and accessibility have independent revision checks and narrow update grants. Missing setup permits a local preview but disables these new saves; it does not block existing controls or reset their saved preferences.
+
+DisplayPicker owns preview/cancel/save. ThemeRoot reads saved display options separately from palette/navigation so a missing new column cannot erase the older choices. settings.css applies font roles, reading sizes, app zoom and accessibility attributes. App zoom is separate from browser zoom; very large combined settings can require scrolling. OS reduced motion is respected. About describes the current product without invented versions or AI/offline claims.
+
+Run test:display, full regressions, TypeScript, lint/build. Apply 025 then run planner_preferences_rls.sql and display_preferences_rls.sql, checking both PASS results before claiming live privacy verification. Review font/text/zoom saves across refresh, phone overflow at 125%, keyboard tabs/strong focus and reduced motion; preserve theme/navigation settings.
+
+
+### Consistent font roles
+
+All headings, body text, form controls, legends, charts and desktop chrome use shared font tokens. Monospace, System and Rounded apply to all three roles; Classic desktop keeps its intentional heading/UI/console mix. Theme palette changes do not reset the saved font. Edit font stacks in src/lib/themes/display.ts, not individual cards. Legacy font-family declarations use token fallbacks rather than overriding the preset.

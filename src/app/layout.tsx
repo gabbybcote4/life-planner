@@ -5,6 +5,8 @@ import { ThemeRoot } from "./components/theme-root";
 import "./globals.css";
 import "./retro.css";
 import "./responsive.css";
+import "./compact.css";
+import "./settings.css";
 
 export const metadata: Metadata = {
   title: "Life Planner",

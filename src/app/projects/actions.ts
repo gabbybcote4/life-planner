@@ -3,7 +3,7 @@ import {revalidatePath} from "next/cache";
 import {getAccountContext} from "@/lib/auth/account";
 import {isRecordId} from "@/lib/shared/validation";
 import {parseProject,parseProjectRevision,PROJECT_KINDS,type ProjectState} from "@/lib/projects/types";
-function refresh(){for(const p of ["/projects","/tasks","/notes","/spaces","/today"])revalidatePath(p);}
+function refresh(){for(const p of ["/","/projects","/tasks","/notes","/spaces","/today"])revalidatePath(p);}
 export async function saveProject(_previous:ProjectState,form:FormData):Promise<ProjectState>{
  const settings=parseProject(form),id=form.get("id"),revision=parseProjectRevision(form.get("revision"));
  if(!settings||!isRecordId(id)||revision===null)return {error:"Check the project name and settings."};

@@ -1,5 +1,6 @@
 "use client";
 import {EditDialog} from "@/components/ui/edit-dialog";
+import {TaskProjectAssignment} from "./task-project-assignment";
 import {TaskPlanning} from "./task-planning";
 
 import { createRequestId } from "@/lib/shared/request-id";
@@ -79,7 +80,7 @@ function TaskRow({ task, table = false, onChanged, day }: { task: Task; table?: 
        {close=><>
         <EditTaskForm task={task} onCancel={close} onSaved={()=>{setEditMessage("Title saved.");onChanged?.();}} />
         <TaskPlanning task={task} disabled={pending} expanded onSaved={onChanged}/>
-        <TaskSpaceAssignment task={task} disabled={pending} expanded onSaved={onChanged}/>
+        <TaskSpaceAssignment task={task} disabled={pending} expanded onSaved={onChanged}/><TaskProjectAssignment taskId={task.id} onChanged={onChanged}/>
        </>}
       </EditDialog>
     </div>;
@@ -91,12 +92,13 @@ function TaskRow({ task, table = false, onChanged, day }: { task: Task; table?: 
   if (table) return <tr role="row" className={`task-table-row${task.completed ? " is-complete" : ""}`}>
     <th role="rowheader" scope="row" className="task-table-name" data-label="Task">{main}{feedback}</th>
     <td role="cell" data-label="Date & priority"><TaskPlanSummary task={task} day={day}/></td>
-    <td role="cell" data-label="Space">{space}</td>
+    <td role="cell" data-label="Space">{space}</td><td role="cell" data-label="Projects"><TaskProjectBadges task={task}/></td>
   </tr>;
   return <li className={`task-row${task.completed ? " is-complete" : ""}`}>
     {main}
     <TaskPlanSummary task={task} day={day}/>
     {space}
+    {(task.project_count||task.projects_error)?<TaskProjectBadges task={task}/>:null}
     {feedback}
   </li>;
 }
@@ -125,6 +127,12 @@ function EditTaskForm({ task, onCancel, onSaved }: {
   </form>;
 }
 
+function TaskProjectBadges({task}:{task:Task}){
+ if(task.projects_error)return <span className="muted">Project info unavailable</span>;
+ if(!task.projects||task.project_count===undefined)return <span className="muted">Open editor</span>;
+ if(!task.project_count)return <span className="muted" aria-label="No linked projects">—</span>;
+ return <div className="task-project-badges">{task.projects.map(p=><Link key={p.id} href={"/projects?project="+p.id}>{p.title}</Link>)}{task.project_count>task.projects.length&&<Link href={"/tasks?task="+task.id}>＋{task.project_count-task.projects.length} more</Link>}</div>;
+}
 function TaskPlanSummary({task,day}:{task:Task;day?:string}){
  return <div className="task-plan-badges">{day&&task.due_date&&task.due_date<=day&&<span className="today-due-cue" data-overdue={task.due_date<day}>{task.due_date<day?"Overdue":"Today"}</span>}{task.due_date?<time dateTime={task.due_date}>{task.due_date}</time>:<span className="muted">No date</span>}{task.priority&&task.priority!=="none"&&<span className="task-priority" data-priority={task.priority}>{task.priority} priority</span>}</div>;
 }
@@ -132,7 +140,7 @@ function TaskPlanSummary({task,day}:{task:Task;day?:string}){
 export function TaskList({ tasks, table = false, onChanged, day }: { tasks: Task[]; table?: boolean; onChanged?:()=>void; day?:string }) {
   if (table) return <div className="task-table-container"><table className="task-table" role="table">
     <caption>Saved tasks · pencil to edit</caption>
-    <thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">Task</th><th scope="col" role="columnheader">Date &amp; priority</th><th scope="col" role="columnheader">Space</th></tr></thead>
+    <thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">Task</th><th scope="col" role="columnheader">Date &amp; priority</th><th scope="col" role="columnheader">Space</th><th scope="col" role="columnheader">Projects</th></tr></thead>
     <tbody role="rowgroup">{tasks.map(task => <TaskRow key={task.id} task={task} table onChanged={onChanged} day={day}/>)}</tbody>
   </table></div>;
   return <ul className="task-list" aria-label="Saved tasks">
