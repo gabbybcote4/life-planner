@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {Suspense} from "react";
 import {DashboardGuidance,DashboardSpaces,DashboardConnections,DashboardUpcoming} from "./dashboard/workspace-data";
 import {TASK_SELECT,type Task} from "@/lib/tasks/types";
@@ -25,6 +26,7 @@ async function Dashboard() {
 
   return <>
     <PlannerHeading eyebrow="A little clarity, a little breathing room" title="A little room for your day." description="Plan · focus · capture · make it yours." email={email} className="dashboard-intro" />
+    <p className="today-shortcut"><Link className="primary-button" href="/today">Open Today →</Link></p>
     {loadFailed ? <LoadError title="Your dashboard could not be loaded." description="Refresh to try again. Your saved tasks have not been changed." action="/" /> : <>
       {layoutFailed && <div className="form-error" role="alert">Your layout settings could not be loaded. You can still use the dashboard; reload before customizing.
         <form action="/" method="get"><Button variant="text" type="submit">Reload layout settings</Button></form></div>}

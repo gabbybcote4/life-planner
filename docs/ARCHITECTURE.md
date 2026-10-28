@@ -276,3 +276,11 @@ Habits are independent from task completion. Migration 021 stores settings/revis
 HabitsView loads explicit browser-local dates through a bounded owner-scoped RPC, retaining previous matching-page results on read errors. It validates response shape, guards day/page tags, and keeps drafts within the account-keyed page/widget tree. Week totals count target-met days using recorded snapshots, with Monday boundaries. Due cues stay deterministic; no AI, recurrence-generated tasks or notification service is involved.
 
 The habits widget is optional and expands the registry to ten while retaining seven-widget defaults. Migration 021 updates the allowlist only; no existing layout rows are rewritten. Server pages, proxy and navigation registry expose the protected module. Existing shared fields, SpacePicker and EditDialog supply presentation.
+
+## Connected Today
+
+The account-keyed TodayView loads an explicit client-local day with independent task/habit/event offsets through loadToday. Migration 022 provides a read-only stable security-invoker RPC, with explicit owner filters and existing RLS. Counts aggregate complete relevant sources before five-item pagination; source IDs and original record types are preserved. Undated tasks remain a separate organizing count.
+
+TaskList accepts optional onChanged/day inputs; confirmed completion/title/planning/assignment changes notify Today. HabitCard is extracted from HabitsView and reused with its original check-in actions and snapshot rules. Calendar EventForm is exported for the shared popup. No save permissions, source validation or mutation implementations are merged.
+
+Client state is tagged by day and all offsets to avoid displaying another date/page's results. Same-page read failures retain labeled previous results; fresh auth is checked per call. Visibility/local-day refresh uses browser effects, never a render-time live clock. The dashboard shortcut and protected navigation register the page; saved dashboard layouts remain unchanged.

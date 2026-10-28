@@ -48,7 +48,7 @@ export function CalendarEvents({ events, selectedDate }: { events: CalendarEvent
   </section>;
 }
 
-function EventForm({ event, selectedDate, onSaved, onCancel }: {
+export function EventForm({ event, selectedDate, onSaved, onCancel }: {
   event?: CalendarEvent; selectedDate: string;
   onSaved: (result: CalendarActionState) => void; onCancel?: () => void;
 }) {

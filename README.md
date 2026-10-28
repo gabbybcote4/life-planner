@@ -82,6 +82,7 @@ edit applied migrations, or drop tables to get past setup errors.
 | 019 dashboard_guidance | Owned guidance + widget | dashboard_guidance_rls.sql |
 | 020 inbox_capture | Atomic quick capture + review queue | inbox_capture_rls.sql |
 | 021 habits | Habits, check-in snapshots, optional widget | habits_rls.sql |
+| 022 today | Connected daily read + complete counts | today_rls.sql |
 
 Review SQL before running it; use a disposable/test database where possible.
 Assertions create fictional users/records and roll back changes. Confirm every
@@ -166,3 +167,7 @@ Run npm run test:inbox and the Inbox SQL privacy assertions. See OWNER_GUIDE for
 ## Habits
 
 After migration 021, choose Habits for presets, flexible schedules and binary/amount check-ins. Dates open history; saved check-ins retain their recorded targets. Add the optional Habits today widget through the dashboard pencil and Save layout. Run test:habits and the live SQL checks. Multi-step routines and AI remain future work.
+
+## Connected Today
+
+After migration 022, Today combines original due tasks, scheduled/logged habits and same-day all-day events. It reuses source editors and saves; counts cover all matching records with independent five-item pages. Open Today from navigation or the dashboard. Run test:today and the live SQL privacy/count checks.

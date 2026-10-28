@@ -59,10 +59,10 @@ export function AddTaskForm({spaceId}:{spaceId?:string} = {}) {
   </form>;
 }
 
-function TaskRow({ task, table = false }: { task: Task; table?: boolean }) {
+function TaskRow({ task, table = false, onChanged, day }: { task: Task; table?: boolean; onChanged?:()=>void; day?:string }) {
   const [editing, setEditing] = useState(false);
   const [editMessage, setEditMessage] = useState("");
-  const [state, action, pending] = useActionState<TaskActionState, FormData>((previous, data) => runAction(() => setTaskCompleted(previous, data), { error: "We could not confirm this change. Check your connection and try again." }), {});
+  const [state, action, pending] = useActionState<TaskActionState, FormData>(async(previous, data) => {const result=await runAction(() => setTaskCompleted(previous, data), { error: "We could not confirm this change. Check your connection and try again." });if(!result.error)onChanged?.();return result;}, {});
 
   const main = <div className="task-main">
       <form action={action} aria-busy={pending} onSubmit={() => setEditMessage("")}>
@@ -77,9 +77,9 @@ function TaskRow({ task, table = false }: { task: Task; table?: boolean }) {
       <span className="task-title">{task.title}</span>
       <EditDialog title={`Edit task: ${task.title}`} disabled={pending} onOpen={()=>{setEditMessage("");setEditing(true);}} onClose={()=>setEditing(false)}>
        {close=><>
-        <EditTaskForm task={task} onCancel={close} onSaved={()=>setEditMessage("Title saved.")} />
-        <TaskPlanning task={task} disabled={pending} expanded/>
-        <TaskSpaceAssignment task={task} disabled={pending} expanded/>
+        <EditTaskForm task={task} onCancel={close} onSaved={()=>{setEditMessage("Title saved.");onChanged?.();}} />
+        <TaskPlanning task={task} disabled={pending} expanded onSaved={onChanged}/>
+        <TaskSpaceAssignment task={task} disabled={pending} expanded onSaved={onChanged}/>
        </>}
       </EditDialog>
     </div>;
@@ -90,12 +90,12 @@ function TaskRow({ task, table = false }: { task: Task; table?: boolean }) {
   </>;
   if (table) return <tr role="row" className={`task-table-row${task.completed ? " is-complete" : ""}`}>
     <th role="rowheader" scope="row" className="task-table-name" data-label="Task">{main}{feedback}</th>
-    <td role="cell" data-label="Date & priority"><TaskPlanSummary task={task}/></td>
+    <td role="cell" data-label="Date & priority"><TaskPlanSummary task={task} day={day}/></td>
     <td role="cell" data-label="Space">{space}</td>
   </tr>;
   return <li className={`task-row${task.completed ? " is-complete" : ""}`}>
     {main}
-    <TaskPlanSummary task={task}/>
+    <TaskPlanSummary task={task} day={day}/>
     {space}
     {feedback}
   </li>;
@@ -125,17 +125,17 @@ function EditTaskForm({ task, onCancel, onSaved }: {
   </form>;
 }
 
-function TaskPlanSummary({task}:{task:Task}){
- return <div className="task-plan-badges">{task.due_date?<time dateTime={task.due_date}>{task.due_date}</time>:<span className="muted">No date</span>}{task.priority&&task.priority!=="none"&&<span className="task-priority" data-priority={task.priority}>{task.priority} priority</span>}</div>;
+function TaskPlanSummary({task,day}:{task:Task;day?:string}){
+ return <div className="task-plan-badges">{day&&task.due_date&&task.due_date<=day&&<span className="today-due-cue" data-overdue={task.due_date<day}>{task.due_date<day?"Overdue":"Today"}</span>}{task.due_date?<time dateTime={task.due_date}>{task.due_date}</time>:<span className="muted">No date</span>}{task.priority&&task.priority!=="none"&&<span className="task-priority" data-priority={task.priority}>{task.priority} priority</span>}</div>;
 }
 
-export function TaskList({ tasks, table = false }: { tasks: Task[]; table?: boolean }) {
+export function TaskList({ tasks, table = false, onChanged, day }: { tasks: Task[]; table?: boolean; onChanged?:()=>void; day?:string }) {
   if (table) return <div className="task-table-container"><table className="task-table" role="table">
     <caption>Saved tasks · pencil to edit</caption>
     <thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">Task</th><th scope="col" role="columnheader">Date &amp; priority</th><th scope="col" role="columnheader">Space</th></tr></thead>
-    <tbody role="rowgroup">{tasks.map(task => <TaskRow key={task.id} task={task} table />)}</tbody>
+    <tbody role="rowgroup">{tasks.map(task => <TaskRow key={task.id} task={task} table onChanged={onChanged} day={day}/>)}</tbody>
   </table></div>;
   return <ul className="task-list" aria-label="Saved tasks">
-    {tasks.map((task) => <TaskRow key={task.id} task={task} />)}
+    {tasks.map((task) => <TaskRow key={task.id} task={task} onChanged={onChanged} day={day}/>)}
   </ul>;
 }
