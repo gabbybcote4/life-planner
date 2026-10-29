@@ -173,9 +173,16 @@
 .week-entry-title { font-weight:600; }
 .week-entry[data-kind="repeat"] { border-style:dashed; }
 .week-entry[data-completed="true"] .week-entry-title { text-decoration:line-through; }
+.week-entry-link { display:flex; flex-direction:column; gap:.1rem; color:inherit; text-decoration:none; }
+.week-entry[draggable="true"] { cursor:grab; }
+.week-grid td[data-drop-target="true"] { outline:2px dashed var(--focus); outline-offset:-3px; background:var(--selected); }
+.week-entry .week-move-button { min-height:24px; padding:.1rem .25rem; align-self:flex-end; font-size:.7rem; }
+.task-move-form fieldset { display:grid; gap:.4rem; min-width:0; }
+.move-scope label { display:flex; align-items:center; gap:.4rem; min-height:44px; }
 @media(max-width:800px) {
  .calendar-view-switch a { min-height:44px; }
  .calendar-layout[data-view="week"] .calendar-selected-day { grid-template-columns:minmax(0,1fr); }
+ .week-entry .week-move-button { min-height:44px; }
 }
 
 @media(max-width:800px),(pointer:coarse) {

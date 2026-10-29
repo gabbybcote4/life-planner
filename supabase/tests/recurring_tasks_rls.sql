@@ -71,7 +71,7 @@ begin
  exception when invalid_parameter_value then null;end;
  if not exists(select 1 from public.tasks where id='c928eb33-8222-4b11-8900-000000000014' and not completed) or (select count(*) from public.tasks)<>4 then raise exception 'FAIL atomic rollback';end if;
  r=public.planner_export_data();
- if (r->>'format_version')::integer not in(2,3,4,5) or r::text like '%FOREIGN_REPEAT%' or not exists(select 1 from jsonb_array_elements(r->'data'->'tasks') t where t->>'id'=next_id::text and t->>'repeat_parent_id'='c928eb33-8222-4b11-8900-000000000011' and t->>'repeat_anchor_day'='31') then raise exception 'FAIL repeat export';end if;
+ if (r->>'format_version')::integer not in(2,3,4,5,6) or r::text like '%FOREIGN_REPEAT%' or not exists(select 1 from jsonb_array_elements(r->'data'->'tasks') t where t->>'id'=next_id::text and t->>'repeat_parent_id'='c928eb33-8222-4b11-8900-000000000011' and t->>'repeat_anchor_day'='31') then raise exception 'FAIL repeat export';end if;
 end;$$;
 select set_config('request.jwt.claims','{"sub":"c928eb33-8222-4b11-8900-000000000002","role":"authenticated"}',true);
 do $$begin

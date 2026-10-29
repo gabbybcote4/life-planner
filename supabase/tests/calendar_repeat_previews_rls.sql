@@ -43,7 +43,7 @@ begin
  update public.planner_preferences set show_task_timezones=false where user_id=auth.uid() and planning_revision=rev;get diagnostics n=row_count;if n<>0 then raise exception 'FAIL stale zone setting';end if;
  if not exists(select 1 from public.tasks where id='f932eb33-8222-4b11-8900-000000000011' and due_timezone='America/Edmonton') then raise exception 'FAIL setting rewrote task zones';end if;
  r=public.planner_export_data();
- if (r->>'format_version')::integer<>5 or r->'data'->'planner_preferences'->0->>'show_task_timezones' is distinct from 'true' then raise exception 'FAIL optional zone export';end if;
+ if (r->>'format_version')::integer not in(5,6) or r->'data'->'planner_preferences'->0->>'show_task_timezones' is distinct from 'true' then raise exception 'FAIL optional zone export';end if;
  -- The source bound fails instead of returning a partial calendar.
  insert into public.tasks(id,title) select gen_random_uuid(),'Bound fixture' from generate_series(1,201);
  update public.tasks set due_date='2026-11-01',repeat_frequency='daily' where title='Bound fixture';

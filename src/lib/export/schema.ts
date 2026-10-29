@@ -147,17 +147,19 @@ export const EXPORT_COLUMNS_V2={...EXPORT_COLUMNS,tasks:[...EXPORT_COLUMNS.tasks
 export const EXPORT_COLUMNS_V3={...EXPORT_COLUMNS_V2,tasks:[...EXPORT_COLUMNS_V2.tasks,"repeat_rule","repeat_anchor_date","repeat_index","repeat_finished"]} as const;
 export const EXPORT_COLUMNS_V4={...EXPORT_COLUMNS_V3,tasks:[...EXPORT_COLUMNS_V3.tasks,"due_time","due_timezone"]} as const;
 export const EXPORT_COLUMNS_V5={...EXPORT_COLUMNS_V4,planner_preferences:[...EXPORT_COLUMNS_V4.planner_preferences,"show_task_timezones"]} as const;
-export type ExportCollection=keyof typeof EXPORT_COLUMNS;
-export type PlannerExport={format:"life-planner-export";format_version:1|2|3|4|5;exported_at:string;total_records:number;counts:Record<ExportCollection,number>;data:Record<ExportCollection,Record<string,unknown>[]>};
+export const EXPORT_COLUMNS_V6={...EXPORT_COLUMNS_V5,tasks:[...EXPORT_COLUMNS_V5.tasks,"repeat_series_id","repeat_scheduled_date"],task_repeat_changes:["series_id","occurrence_index","kind","source_id","target_id","scheduled_date","scheduled_time","scheduled_timezone","created_at"],task_reschedule_receipts:["id","payload","target_id","created_at"]} as const;
+export type ExportCollection=keyof typeof EXPORT_COLUMNS_V6;
+export type PlannerExport={format:"life-planner-export";format_version:1|2|3|4|5|6;exported_at:string;total_records:number;counts:Record<ExportCollection,number>;data:Record<ExportCollection,Record<string,unknown>[]>};
 export function validExport(value:unknown):value is PlannerExport{
  if(!value||typeof value!=="object")return false;const d=value as PlannerExport;
- if(d.format!=="life-planner-export"||![1,2,3,4,5].includes(d.format_version)||typeof d.exported_at!=="string"||!/^\d{4}-\d{2}-\d{2}T.*Z$/.test(d.exported_at)||!Number.isFinite(Date.parse(d.exported_at))||!Number.isSafeInteger(d.total_records)||d.total_records<0||d.total_records>EXPORT_MAX_RECORDS||!d.counts||!d.data)return false;
- const keys=Object.keys(EXPORT_COLUMNS) as ExportCollection[];
+ if(d.format!=="life-planner-export"||![1,2,3,4,5,6].includes(d.format_version)||typeof d.exported_at!=="string"||!/^\d{4}-\d{2}-\d{2}T.*Z$/.test(d.exported_at)||!Number.isFinite(Date.parse(d.exported_at))||!Number.isSafeInteger(d.total_records)||d.total_records<0||d.total_records>EXPORT_MAX_RECORDS||!d.counts||!d.data)return false;
+ const contract:Record<string,readonly string[]>=d.format_version===6?EXPORT_COLUMNS_V6:d.format_version===5?EXPORT_COLUMNS_V5:d.format_version===4?EXPORT_COLUMNS_V4:d.format_version===3?EXPORT_COLUMNS_V3:d.format_version===2?EXPORT_COLUMNS_V2:EXPORT_COLUMNS;
+ const keys=Object.keys(contract) as ExportCollection[];
  if(Object.keys(d).sort().join()!==["format","format_version","exported_at","total_records","counts","data"].sort().join()||Object.keys(d.counts).sort().join()!==[...keys].sort().join()||Object.keys(d.data).sort().join()!==[...keys].sort().join())return false;
  let total=0;
  for(const key of keys){const rows=d.data[key],count=d.counts[key];if(!Number.isSafeInteger(count)||count<0||!Array.isArray(rows)||rows.length!==count||count>EXPORT_MAX_RECORDS)return false;
  if((key==="planner_preferences"||key==="dashboard_layouts")&&count>1)return false;
- const columns:readonly string[]=(d.format_version===5?EXPORT_COLUMNS_V5:d.format_version===4?EXPORT_COLUMNS_V4:d.format_version===3?EXPORT_COLUMNS_V3:d.format_version===2?EXPORT_COLUMNS_V2:EXPORT_COLUMNS)[key];if(rows.some(row=>!row||typeof row!=="object"||Array.isArray(row)||Object.keys(row).length!==columns.length||Object.keys(row).some(k=>!columns.includes(k))))return false;total+=count;
+ const columns:readonly string[]=contract[key];if(rows.some(row=>!row||typeof row!=="object"||Array.isArray(row)||Object.keys(row).length!==columns.length||Object.keys(row).some(k=>!columns.includes(k))))return false;total+=count;
  }
  return total===d.total_records;
 }
