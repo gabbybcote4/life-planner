@@ -13,7 +13,7 @@ import { useActionState, useId, useRef, useState } from "react";
 import { saveCalendarEvent } from "./actions";
 import { EVENT_TITLE_LIMIT, formatCalendarDate, type CalendarEvent, type CalendarActionState } from "@/lib/calendar/dates";
 
-export function CalendarEvents({ events, selectedDate }: { events: CalendarEvent[]; selectedDate: string }) {
+export function CalendarEvents({ events, selectedDate,view="month" }: { events: CalendarEvent[]; selectedDate: string;view?:"month"|"week" }) {
 
   const [notice, setNotice] = useState<CalendarActionState>({});
   const onSaved = (result: CalendarActionState) => {
@@ -27,7 +27,7 @@ export function CalendarEvents({ events, selectedDate }: { events: CalendarEvent
     <p className="muted calendar-date-note">All-day events · {events.length} saved</p>
     <div className="calendar-notice" role="status">
       {notice.message && <p className="form-message">{notice.message}
-        {notice.savedDate && notice.savedDate !== selectedDate && <> <Link className="text-link" href={`/calendar?date=${notice.savedDate}`}>View {formatCalendarDate(notice.savedDate)}</Link></>}
+        {notice.savedDate && notice.savedDate !== selectedDate && <> <Link className="text-link" href={`/calendar?date=${notice.savedDate}${view==="week"?"&view=week":""}`}>View {formatCalendarDate(notice.savedDate)}</Link></>}
       </p>}
     </div>
     {events.length === 0 ? <p className="calendar-empty muted">Nothing planned for this date yet. Add an event below when you’re ready.</p> :
