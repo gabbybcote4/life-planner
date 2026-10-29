@@ -13,7 +13,9 @@ function load(path,deps={}){const code=ts.transpileModule(fs.readFileSync(new UR
 const windows=load('../src/components/ui/desktop-window.tsx');
 const art=load('../src/components/ui/space-artwork.tsx');
 const visual=load('../src/components/ui/space-visual.tsx',{'./space-artwork':art,'@/lib/spaces/appearance':appearance});
-const previews=load('../src/app/dashboard/workspace-previews.tsx',{'@/components/ui/desktop-window':windows,'@/components/ui/space-visual':visual,'@/lib/knowledge/links':links,'@/lib/calendar/dates':dates});
+const planning=load('../src/lib/calendar/preferences.ts');
+const mini=load('../src/app/dashboard/mini-month.tsx',{'@/lib/calendar/dates':dates,'@/lib/calendar/preferences':planning,'@/app/components/planning-preferences':{usePlanning:()=>planning.DEFAULT_PLANNING},'next/link':({children,...props})=>React.createElement('a',props,children)});
+const previews=load('../src/app/dashboard/workspace-previews.tsx',{'./mini-month':mini,'@/app/components/planning-preferences':{DateLabel:({date})=>date},'@/components/ui/desktop-window':windows,'@/components/ui/space-visual':visual,'@/lib/knowledge/links':links,'@/lib/calendar/dates':dates});
 const render=(component,props)=>renderToStaticMarkup(React.createElement(component,props));
 const id='ae66172a-f871-43b3-a610-a838d8b7c001',other='ae66172a-f871-43b3-a610-a838d8b7c002';
 test('window chrome is decorative and titles are accessible escaped text',()=>{const html=render(windows.DesktopWindow,{title:'<script>Title</script>',children:'Content'});assert.match(html,/aria-label="&lt;script&gt;/);assert.doesNotMatch(html,/<script>/);assert.equal((html.match(/<i/g)||[]).length,3);});

@@ -1,15 +1,19 @@
+"use client";
+import {usePlanning} from "@/app/components/planning-preferences";
+import {calendarWeekdays} from "@/lib/calendar/preferences";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { formatCalendarDate, monthCells, shiftMonth } from "@/lib/calendar/dates";
 import { CalendarTodayButton } from "./calendar-today";
 
 export function MonthView({ selectedDate, events }: { selectedDate: string; events: { event_date: string }[] }) {
+  const {week_start}=usePlanning();
   const previous = shiftMonth(selectedDate, -1);
   const next = shiftMonth(selectedDate, 1);
-  const cells = monthCells(selectedDate);
+  const cells = monthCells(selectedDate,week_start);
   const counts = new Map<string, number>();
   for (const event of events) counts.set(event.event_date, (counts.get(event.event_date) ?? 0) + 1);
-  const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const weekdays = calendarWeekdays(week_start);
 
   return <section className="calendar-month" aria-labelledby="calendar-month-heading">
     <div className="calendar-toolbar">

@@ -329,3 +329,14 @@ Run test:display, full regressions, TypeScript, lint/build. Apply 025 then run p
 ### Consistent font roles
 
 All headings, body text, form controls, legends, charts and desktop chrome use shared font tokens. Monospace, System and Rounded apply to all three roles; Classic desktop keeps its intentional heading/UI/console mix. Theme palette changes do not reset the saved font. Edit font stacks in src/lib/themes/display.ts, not individual cards. Legacy font-family declarations use token fallbacks rather than overriding the preset.
+
+
+### Planning defaults foundation (migration 026)
+
+Workspace > Planning offers Sunday/Monday calendar starts and ISO, day/month/year or month/day/year short dates. Both the full calendar and dashboard mini-calendar use the chosen start; compact task due dates (including reused Today/Space/project lists) and upcoming event dates use DateLabel. Long spoken/full date headings and native date-input formats stay independent. No stored task/event dates are rewritten.
+
+Existing Sunday-first/ISO behavior remains the default. Habit weekly goals remain Monday-based; this control is explicitly labelled Calendar week starts on. Time zones, habit week-policy changes, default views and reminders are future increments.
+
+PlanningProvider carries fresh account-scoped preferences from ThemeRoot, with an independent read so unapplied setup cannot reset existing themes/fonts/navigation. PlanningPicker keeps local drafts, preview/cancel and confirmed-only saves. It reuses saveDisplay with an allowlisted planning group and planning_revision guard; unrelated settings revisions do not change. Missing setup permits previews but disables saves.
+
+Run test:calendar, test:display, full regressions, TypeScript, lint/build. Apply only unapplied migration 026, then planner_preferences_rls.sql and planning_preferences_rls.sql; confirm both live PASS results before claiming privacy verification. Verify save/refresh, Monday alignment (November 2026), short labels, mobile layout and failed/stale drafts. Live DB checks remain pending until owner confirmation.

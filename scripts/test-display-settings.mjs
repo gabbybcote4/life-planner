@@ -7,7 +7,8 @@ import React from "react";
 import {renderToStaticMarkup} from "react-dom/server";
 const require=createRequire(import.meta.url);
 function load(path,deps={}){const code=ts.transpileModule(fs.readFileSync(new URL(path,import.meta.url),"utf8"),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX,esModuleInterop:true}}).outputText,m={exports:{}};new Function("require","exports",code)(name=>Object.hasOwn(deps,name)?deps[name]:require(name),m.exports);return m.exports;}
-const display=load("../src/lib/themes/display.ts");
+const planning=load("../src/lib/calendar/preferences.ts");
+const display=load("../src/lib/themes/display.ts",{"../calendar/preferences":planning});
 function form(values={}){const f=new FormData();for(const[k,v]of Object.entries({group:"text",revision:"1",font_preset:"system",text_size:"16",...values}))f.set(k,v);return f;}
 function harness(responses=[{data:{text_revision:2}}],signed=true){const queue=[...responses],calls=[],invalidations=[];const client={from(table){calls.push(["from",table]);return {update(v){calls.push(["update",v]);return this;},insert(v){calls.push(["insert",v]);return this;},eq(...v){calls.push(["eq",...v]);return this;},select(v){calls.push(["select",v]);return this;},maybeSingle:async()=>queue.shift(),single:async()=>queue.shift()};}};return {...load("../src/app/settings/display-actions.ts",{"@/lib/themes/display":display,"@/lib/auth/account":{getAccountContext:async()=>signed?{userId:"verified",supabase:client}:null},"next/cache":{revalidatePath:(...v)=>invalidations.push(v)}}),calls,invalidations};}
 test("display options validate exact font, size, zoom and boolean allowlists",()=>{
@@ -45,4 +46,23 @@ test("migration preserves existing RLS and uses independent narrow revision grou
 test("font presets map reading, heading and chrome roles consistently without raw legacy overrides",()=>{
  for(const font of ["system","rounded","mono"]){const vars=display.displayVariables({...display.DEFAULT_DISPLAY,font_preset:font});assert.equal(vars["--font-desktop-ui"],display.FONT_STACKS[font].ui);assert.equal(vars["--font-desktop-display"],display.FONT_STACKS[font].display);assert.equal(vars["--font-desktop-mono"],display.FONT_STACKS[font].ui);}
  const css=fs.readFileSync(new URL("../src/app/globals.css",import.meta.url),"utf8");assert.doesNotMatch(css,/font-family:\s*(?:Georgia|Arial)/);assert.match(css,/theme-form legend \{ font-family: var\(--font-desktop-display/);assert.match(css,/progress-value span \{ font-family: var\(--font-desktop-ui/);
+});
+
+test("planning saves use allowlisted dates/week starts with an independent revision",async()=>{
+ for(const values of [{group:"planning",week_start:"other",date_format:"iso"},{group:"planning",week_start:"monday",date_format:"other"}])assert.equal(display.parseDisplayForm(form(values)),null);
+ const h=harness([{data:{planning_revision:2}}]);assert.equal((await h.saveDisplay({},form({group:"planning",week_start:"monday",date_format:"dmy"}))).revision,2);assert.deepEqual(h.calls.find(c=>c[0]==="update")[1],{week_start:"monday",date_format:"dmy"});assert.ok(h.calls.some(c=>c[0]==="eq"&&c[1]==="planning_revision"&&c[2]===1));
+});
+test("planning date formats are explicit and deterministic without time-zone conversion",()=>{
+ assert.equal(planning.shortDate("2028-02-29","dmy"),"29/02/2028");assert.equal(planning.shortDate("2028-02-29","mdy"),"02/29/2028");assert.equal(planning.shortDate("2028-02-29","iso"),"2028-02-29");assert.equal(planning.calendarWeekdays("monday")[0],"Monday");assert.equal(planning.calendarWeekdays("sunday")[0],"Sunday");
+});
+
+test("both calendar grids render Monday-first weeks when the account preference changes",()=>{
+ const dates=load("../src/lib/calendar/dates.ts"),usePlanning=()=>({week_start:"monday",date_format:"dmy"}),link=({children,...props})=>React.createElement("a",props,children),buttons=load("../src/components/ui/button.tsx");
+ const {MonthView}=load("../src/app/calendar/month-view.tsx",{"next/link":link,"@/components/ui/button":buttons,"@/lib/calendar/dates":dates,"@/app/components/planning-preferences":{usePlanning},"@/lib/calendar/preferences":planning,"./calendar-today":{CalendarTodayButton:()=>null}});
+ const html=renderToStaticMarkup(React.createElement(MonthView,{selectedDate:"2026-11-01",events:[]}));assert.ok(html.indexOf('title="Monday"')<html.indexOf('title="Sunday"'));assert.match(html,/<tr><td[^>]*><\/td><td[^>]*><\/td>/);assert.match(html,/November 1, 2026/);
+ const {MiniMonth}=load("../src/app/dashboard/mini-month.tsx",{"next/link":link,"@/lib/calendar/dates":dates,"@/app/components/planning-preferences":{usePlanning},"@/lib/calendar/preferences":planning});const mini=renderToStaticMarkup(React.createElement(MiniMonth,{today:"2026-11-01"}));assert.match(mini,/mini-weekdays[^>]*><span>M<\/span>/);assert.match(mini,/calendar\?date=2026-11-01/);
+});
+test("date labels read their account provider and never retain another render's format",()=>{
+ const {PlanningProvider,DateLabel}=load("../src/app/components/planning-preferences.tsx",{"@/lib/calendar/preferences":planning});const date="2028-02-29";
+ const html=renderToStaticMarkup(React.createElement(PlanningProvider,{value:{week_start:"monday",date_format:"dmy"}},React.createElement(DateLabel,{date})));assert.equal(html,"29/02/2028");assert.equal(renderToStaticMarkup(React.createElement(DateLabel,{date})),"2028-02-29");
 });

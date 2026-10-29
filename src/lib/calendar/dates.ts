@@ -41,9 +41,9 @@ export function shiftMonth(date: string, amount: number) {
   return `${targetYear}-${String(targetMonth + 1).padStart(2, "0")}-${String(Math.min(day, lastDay)).padStart(2, "0")}`;
 }
 
-export function monthCells(date: string) {
+export function monthCells(date: string, weekStart: "sunday"|"monday" = "sunday") {
   const [year, month] = date.split("-").map(Number);
-  const leading = new Date(Date.UTC(year, month - 1, 1)).getUTCDay();
+  const leading = (new Date(Date.UTC(year, month - 1, 1)).getUTCDay() - (weekStart === "monday" ? 1 : 0) + 7) % 7;
   const days = new Date(Date.UTC(year, month, 0)).getUTCDate();
   return Array.from({ length: Math.ceil((leading + days) / 7) * 7 }, (_, index) => {
     const day = index - leading + 1;
