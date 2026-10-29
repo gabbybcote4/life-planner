@@ -239,3 +239,8 @@ Apply migration 032 after 031. Run task_due_times_rls.sql and calendar_repeat_pr
 ### Calendar week view
 
 Calendar now has Month/Week links. Week uses existing task times, all-day events and read-only repeat previews; no new migration is needed after 032. npm run test:calendar-week verifies date boundaries, cross-month owner-filtered reads, partial-failure handling, hourly buckets and view navigation.
+
+
+### Calendar move setup
+
+Apply supabase/migrations/20261029003300_calendar_reschedule.sql after 032. Run calendar_repeat_previews_rls.sql and calendar_reschedule_rls.sql for two PASS results. npm run test:calendar-moves covers input/action boundaries, modal scopes, retry identity, move eligibility, restricted database writes and export v6. Try Save move and refresh before committing. No changes are written on drag alone.

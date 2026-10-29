@@ -44,7 +44,7 @@ begin
  if not exists(select 1 from public.tasks where id=t.repeat_next_id and due_time is null and due_timezone is null) then raise exception 'FAIL all-day successor';end if;
  update public.tasks set due_date='2026-12-01',due_time='12:00',due_timezone='UTC' where id='e931eb33-8222-4b11-8900-000000000021';get diagnostics n=row_count;if n<>0 then raise exception 'FAIL foreign clock edit';end if;
  r=public.planner_export_data();
- if (r->>'format_version')::integer not in(4,5) or r::text like '%FOREIGN CLOCK%' or not exists(select 1 from jsonb_array_elements(r->'data'->'tasks') x where x->>'id'='e931eb33-8222-4b11-8900-000000000011' and x->>'due_time'='09:00:00' and x->>'due_timezone'='America/Edmonton') then raise exception 'FAIL clock export';end if;
+ if (r->>'format_version')::integer not in(4,5,6) or r::text like '%FOREIGN CLOCK%' or not exists(select 1 from jsonb_array_elements(r->'data'->'tasks') x where x->>'id'='e931eb33-8222-4b11-8900-000000000011' and x->>'due_time'='09:00:00' and x->>'due_timezone'='America/Edmonton') then raise exception 'FAIL clock export';end if;
 end;$$;
 select set_config('request.jwt.claims','{"sub":"e931eb33-8222-4b11-8900-000000000002","role":"authenticated"}',true);
 do $$begin

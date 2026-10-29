@@ -16,6 +16,8 @@ export type Task = {
   repeat_anchor_date?: string | null;
   repeat_index?: number;
   repeat_finished?: boolean;
+  repeat_series_id?: string | null;
+  repeat_scheduled_date?: string | null;
   space_id?: string | null;
   space?: {title:string} | null;
   projects?: {id:string;title:string}[];
@@ -38,7 +40,7 @@ export function parseTaskTitle(value: FormDataEntryValue | null) {
 }
 
 
-export const TASK_SELECT = "id,title,completed,created_at,due_date,due_time,due_timezone,priority,planning_revision,repeat_frequency,repeat_anchor_day,repeat_next_id,repeat_parent_id,repeat_rule,repeat_anchor_date,repeat_index,repeat_finished,space_id,space:spaces(title)";
+export const TASK_SELECT = "id,title,completed,created_at,due_date,due_time,due_timezone,priority,planning_revision,repeat_frequency,repeat_anchor_day,repeat_next_id,repeat_parent_id,repeat_rule,repeat_anchor_date,repeat_index,repeat_finished,repeat_series_id,repeat_scheduled_date,space_id,space:spaces(title)";
 
 export const TASK_REPEATS = {none:"Does not repeat",daily:"Daily",weekdays:"Weekdays",weekly:"Weekly",monthly:"Monthly",yearly:"Yearly",custom:"Custom…"} as const;
 export type TaskRepeat = keyof typeof TASK_REPEATS;

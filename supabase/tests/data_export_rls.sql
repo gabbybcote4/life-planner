@@ -40,10 +40,11 @@ do $$
 declare r jsonb;key text;total bigint=0;
 begin
  r=public.planner_export_data();
- if r->>'format'<>'life-planner-export' or (r->>'format_version')::integer not in(1,2,3,4,5) or (select count(*) from jsonb_object_keys(r->'data'))<>14 then raise exception 'EXPORT-V3 FAIL export contract';end if;
+ if r->>'format'<>'life-planner-export' or (r->>'format_version')::integer not in(1,2,3,4,5,6) or (select count(*) from jsonb_object_keys(r->'data'))<>case when (r->>'format_version')::integer>=6 then 16 else 14 end then raise exception 'EXPORT-V3 FAIL export contract';end if;
  if r::text like '%FOREIGN_SECRET%' then raise exception 'EXPORT-V3 FAIL foreign content exposed';end if;
  if (r->'counts'->>'tasks')::integer<>1006 then raise exception 'EXPORT-V3 FAIL truncated beyond 1000 records';end if;
  for key in select jsonb_object_keys(r->'data') loop
+  if key in('task_repeat_changes','task_reschedule_receipts') then if (r->'counts'->>key)::integer<>0 then raise exception 'EXPORT-V3 FAIL unexpected move fixture';end if;continue;end if;
   if jsonb_array_length(r->'data'->key)<>(r->'counts'->>key)::integer then raise exception 'EXPORT-V3 FAIL incomplete collection';end if;
   if key<>'tasks' and (r->'counts'->>key)::integer<>1 then raise exception 'EXPORT-V3 FAIL missing or foreign collection: %',key;end if;
   total=total+(r->'counts'->>key)::bigint;
@@ -68,6 +69,7 @@ begin
  r=public.planner_export_data();
  if r::text like '%OWN_A%' then raise exception 'EXPORT-V3 FAIL reverse isolation';end if;
  for key in select jsonb_object_keys(r->'data') loop
+  if key in('task_repeat_changes','task_reschedule_receipts') then if (r->'counts'->>key)::integer<>0 then raise exception 'EXPORT-V3 FAIL unexpected move fixture';end if;continue;end if;
   if (r->'counts'->>key)::integer<>1 then raise exception 'EXPORT-V3 FAIL reverse collection isolation';end if;
  end loop;
 end;$$;

@@ -512,3 +512,15 @@ Calendar > Week shows all seven days, with all-day items above and timed tasks b
 Scroll inside the grid for hours. On phones, swipe the grid sideways; the rest of the page stays within the screen. No SQL setup is needed. This view labels due times rather than durations; dragging/resizing is not available.
 
 Edit grid presentation in src/app/calendar/week-view.tsx, UTC range/grouping helpers in src/lib/calendar/week.ts, and theme-based styles in compact.css. calendar/page.tsx owns authorized reads for both Month and Week. Keep it connected to the existing recurrence RPC rather than copying recurrence rules.
+### Move a task on the week calendar
+
+Drag an unfinished task to another day/hour, or choose its Move button. Review the date/time, choose a repeat scope if offered, then Save move. Dropping keeps the minute part of the time; you can adjust it in the popup. The all-day lane clears its time.
+
+- This occurrence moves one date and leaves the original repeating pattern alone.
+- This and future shifts the schedule from that point, keeping completed history and remaining occurrence count.
+- Previously moved standalone tasks/split branches stay independent.
+- For another week, use Move and choose the date in the popup.
+
+On a failed save, the popup keeps your choices. Refresh if it reports a changed schedule. Repeated saves with the same request do not create duplicate tasks. Completed cards and event cards use their existing controls; they are not draggable.
+
+UI: calendar/task-reschedule-dialog.tsx and week-view.tsx. Shared input validation: src/lib/calendar/reschedule.ts. Authorized save: calendar/reschedule-actions.ts. Database rules: migration 033; add a new migration to change applied rules. Move history is included in export v6.

@@ -54,7 +54,7 @@ begin
  if n<>3 or exists(select 1 from public.tasks where user_id<>auth.uid()) then raise exception 'FAIL calendar range/isolation';end if;
  if exists(select 1 from public.calendar_events) then raise exception 'FAIL copied calendar events';end if;
  r=public.planner_export_data();
- if (r->>'format_version')::integer not in(3,4,5) or r::text like '%PRIVATE CUSTOM B%' or not exists(select 1 from jsonb_array_elements(r->'data'->'tasks') x where x->>'id'=third_id::text and (x->>'repeat_finished')::boolean and x->'repeat_rule'=rule) then raise exception 'FAIL custom export';end if;
+ if (r->>'format_version')::integer not in(3,4,5,6) or r::text like '%PRIVATE CUSTOM B%' or not exists(select 1 from jsonb_array_elements(r->'data'->'tasks') x where x->>'id'=third_id::text and (x->>'repeat_finished')::boolean and x->'repeat_rule'=rule) then raise exception 'FAIL custom export';end if;
 end;$$;
 select set_config('request.jwt.claims','{"sub":"d929eb33-8222-4b11-8900-000000000002","role":"authenticated"}',true);
 do $$begin
