@@ -504,7 +504,8 @@ Calendar now shows ↻ Planned repeats before you complete the current task. Sel
 
 Time-zone controls are now hidden by default. To show them: Settings > Workspace > Planning > Show time-zone controls on tasks > Save planning defaults. Saved times/zones stay unchanged when this is off.
 
-Preview logic: migration 032, planner_calendar_repeats; rendering: calendar/month-view.tsx and calendar/page.tsx; validation: src/lib/calendar/repeats.ts. The setting uses PlanningPicker and PlanningProvider. Keep the shared recurrence calculator as the source of truth rather than duplicating repeat rules in calendar UI.### Calendar week view
+Preview logic: migration 032, planner_calendar_repeats; rendering: calendar/month-view.tsx and calendar/page.tsx; validation: src/lib/calendar/repeats.ts. The setting uses PlanningPicker and PlanningProvider. Keep the shared recurrence calculator as the source of truth rather than duplicating repeat rules in calendar UI.
+### Calendar week view
 
 Calendar > Week shows all seven days, with all-day items above and timed tasks below. Use the arrows or Today; these keep Week selected. Choose a day or card to see its existing edit/completion controls underneath. Planned repeats keep their ↻ label and edit their source task.
 
