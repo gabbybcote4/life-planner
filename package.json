@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "npm run test:tasks && npm run test:calendar && npm run test:notes && npm run test:themes && npm run test:dashboard && npm run test:components && npm run test:client && npm run test:spaces && npm run test:links && npm run test:search && npm run test:templates && npm run test:task-spaces && npm run test:desktop && npm run test:space-appearance && npm run test:background && npm run test:navigation && npm run test:timer && npm run test:task-planning && npm run test:guidance && npm run test:inbox && npm run test:habits && npm run test:today && npm run test:projects && npm run test:task-projects && npm run test:display && npm run test:export",
+    "test": "npm run test:tasks && npm run test:calendar && npm run test:notes && npm run test:themes && npm run test:dashboard && npm run test:components && npm run test:client && npm run test:spaces && npm run test:links && npm run test:search && npm run test:templates && npm run test:task-spaces && npm run test:desktop && npm run test:space-appearance && npm run test:background && npm run test:navigation && npm run test:timer && npm run test:task-planning && npm run test:guidance && npm run test:inbox && npm run test:habits && npm run test:today && npm run test:projects && npm run test:task-projects && npm run test:display && npm run test:export && npm run test:recurring && npm run test:task-time",
     "test:tasks": "node --experimental-strip-types --test scripts/test-task-validation.mjs",
     "test:calendar": "node --experimental-strip-types --test scripts/test-calendar.mjs",
     "test:notes": "node --experimental-strip-types --test scripts/test-notes.mjs",
@@ -33,7 +33,9 @@
     "test:inbox": "node --experimental-strip-types --test scripts/test-inbox.mjs",
     "test:task-projects": "node --experimental-strip-types --test scripts/test-task-projects.mjs",
     "test:display": "node --experimental-strip-types --test scripts/test-display-settings.mjs",
-    "test:export": "node --experimental-strip-types --test scripts/test-data-export.mjs"
+    "test:export": "node --experimental-strip-types --test scripts/test-data-export.mjs",
+    "test:recurring": "node --experimental-strip-types --test scripts/test-recurring-tasks.mjs",
+    "test:task-time": "node --experimental-strip-types --test scripts/test-task-time.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",

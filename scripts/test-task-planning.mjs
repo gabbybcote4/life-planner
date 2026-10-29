@@ -13,10 +13,12 @@ function compile(path,deps={}){
  const code=ts.transpileModule(fs.readFileSync(new URL(path,import.meta.url),"utf8"),{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX,esModuleInterop:true}}).outputText,loaded={exports:{}};
  new Function("require","exports",code)(name=>Object.hasOwn(deps,name)?deps[name]:require(name),loaded.exports);return loaded.exports;
 }
+const taskTime=compile("../src/lib/tasks/time.ts");
+const recurrence=compile("../src/lib/tasks/recurrence.ts",{"../calendar/dates":dates});
 function harness(result={data:{planning_revision:2}},{signedIn=true}={}){
  const calls=[],invalidations=[];
  const supabase={from(table){calls.push(["from",table]);return {update(value){calls.push(["update",value]);return this;},eq(k,v){calls.push(["eq",k,v]);return this;},select(value){calls.push(["select",value]);return this;},maybeSingle:async()=>result};}};
- const actions=compile("../src/app/tasks/planning-actions.ts",{"next/cache":{revalidatePath:path=>invalidations.push(path)},"@/lib/auth/account":{getAccountContext:async()=>signedIn?{supabase,userId:"owner-a"}:null},"@/lib/shared/validation":validation,"@/lib/calendar/dates":dates,"@/lib/tasks/types":types});
+ const actions=compile("../src/app/tasks/planning-actions.ts",{"next/cache":{revalidatePath:path=>invalidations.push(path)},"@/lib/auth/account":{getAccountContext:async()=>signedIn?{supabase,userId:"owner-a"}:null},"@/lib/shared/validation":validation,"@/lib/calendar/dates":dates,"@/lib/tasks/time":taskTime,"@/lib/tasks/types":types,"@/lib/tasks/recurrence":recurrence,"./repeat-rule-fields":{RepeatRuleFields:()=>null}});
  return {...actions,calls,invalidations};
 }
 function form(extra={}){const f=new FormData();for(const[k,v]of Object.entries({id,due_date:"2028-02-29",priority:"high",revision:"1",...extra}))f.set(k,v);return f;}
@@ -29,7 +31,7 @@ test("planning saves only date/priority with owner and revision guards",async()=
  const h=harness();assert.equal((await h.saveTaskPlanning({},form())).revision,2);
  assert.deepEqual(h.calls.find(c=>c[0]==="update")[1],{due_date:"2028-02-29",priority:"high"});
  for(const [key,value] of [["id",id],["user_id","owner-a"],["planning_revision",1]])assert.ok(h.calls.some(c=>c[0]==="eq"&&c[1]===key&&c[2]===value));
- assert.deepEqual(h.invalidations,["/","/tasks","/spaces","/search"]);
+ assert.deepEqual(h.invalidations,["/","/tasks","/spaces","/search","/calendar","/today","/projects"]);
 });
 test("clearing planning is explicit and writes null date with none priority",async()=>{
  const h=harness();assert.ok((await h.saveTaskPlanning({},form({due_date:"",priority:"none"}))).message);
@@ -51,7 +53,7 @@ test("task projections carry planning into all existing shared list destinations
  const board=fs.readFileSync(new URL("../src/app/tasks/task-board.tsx",import.meta.url),"utf8");assert.match(board,/<TaskPlanning task=\{task\}/);
 });
 test("actual planning controls render optional labeled fields and date-only metadata",()=>{
- const deps={"@/components/ui/edit-dialog":editDialogs,"@/components/ui/button":compile("../src/components/ui/button.tsx"),"@/components/ui/fields":compile("../src/components/ui/fields.tsx"),"@/components/ui/feedback":compile("../src/components/ui/feedback.tsx"),"@/lib/shared/client-actions":{},"@/lib/tasks/types":types,"@/lib/calendar/dates":dates,"./planning-actions":{}};
+ const deps={"@/components/ui/edit-dialog":editDialogs,"@/components/ui/button":compile("../src/components/ui/button.tsx"),"@/components/ui/fields":compile("../src/components/ui/fields.tsx"),"@/components/ui/feedback":compile("../src/components/ui/feedback.tsx"),"@/lib/shared/client-actions":{},"@/lib/tasks/time":taskTime,"@/lib/tasks/types":types,"@/lib/tasks/recurrence":recurrence,"./repeat-rule-fields":{RepeatRuleFields:()=>null},"@/lib/calendar/dates":dates,"@/app/components/planning-preferences":{usePlanning:()=>({show_task_timezones:false})},"./planning-actions":{},"./actions":{}};
  const {TaskPlanning}=compile("../src/app/tasks/task-planning.tsx",deps);
  const html=renderToStaticMarkup(React.createElement(TaskPlanning,{task:{id,title:"Task",completed:false,due_date:"2028-02-29",priority:"high",planning_revision:4},disabled:false}));
  assert.match(html,/dateTime="2028-02-29"/i);assert.match(html,/February 29, 2028/);assert.match(html,/High priority/);assert.match(html,/type="date"/);assert.match(html,/min="1900-01-01"/);assert.match(html,/max="2100-12-31"/);
@@ -67,8 +69,8 @@ test("database priorities match app and migration leaves old rows and ownership 
 });
 
 test("task table reuses real completion, planning and relation controls without copying source records",()=>{
- const planning=compile("../src/app/tasks/task-planning.tsx",{"@/components/ui/button":compile("../src/components/ui/button.tsx"),"@/components/ui/fields":compile("../src/components/ui/fields.tsx"),"@/components/ui/feedback":compile("../src/components/ui/feedback.tsx"),"@/lib/shared/client-actions":{},"@/lib/tasks/types":types,"@/lib/calendar/dates":dates,"./planning-actions":{}});
- const board=compile("../src/app/tasks/task-board.tsx",{"@/components/ui/edit-dialog":editDialogs,"./task-planning":planning,"@/lib/shared/request-id":{},"@/lib/shared/client-actions":{},"next/link":({children,...props})=>React.createElement("a",props,children),"@/app/components/planning-preferences":{DateLabel:({date})=>date},"./task-project-assignment":{TaskProjectAssignment:()=>React.createElement("button",null,"Choose projects")},"./task-space-assignment":{TaskSpaceAssignment:()=>React.createElement("button",null,"Assign a space")},"@/components/ui/empty-state":compile("../src/components/ui/empty-state.tsx"),"@/components/ui/feedback":compile("../src/components/ui/feedback.tsx"),"@/components/ui/fields":compile("../src/components/ui/fields.tsx"),"@/components/ui/button":compile("../src/components/ui/button.tsx"),"./actions":{},"@/lib/tasks/types":types});
+ const planning=compile("../src/app/tasks/task-planning.tsx",{"@/components/ui/button":compile("../src/components/ui/button.tsx"),"@/components/ui/fields":compile("../src/components/ui/fields.tsx"),"@/components/ui/feedback":compile("../src/components/ui/feedback.tsx"),"@/lib/shared/client-actions":{},"@/lib/tasks/time":taskTime,"@/lib/tasks/types":types,"@/lib/tasks/recurrence":recurrence,"./repeat-rule-fields":{RepeatRuleFields:()=>null},"@/lib/calendar/dates":dates,"@/app/components/planning-preferences":{usePlanning:()=>({show_task_timezones:false})},"./planning-actions":{},"./actions":{}});
+ const board=compile("../src/app/tasks/task-board.tsx",{"@/components/ui/edit-dialog":editDialogs,"./task-planning":planning,"@/lib/shared/request-id":{},"@/lib/shared/client-actions":{},"next/link":({children,...props})=>React.createElement("a",props,children),"@/app/components/planning-preferences":{usePlanning:()=>({show_task_timezones:false}),DateLabel:({date})=>date},"./task-project-assignment":{TaskProjectAssignment:()=>React.createElement("button",null,"Choose projects")},"./task-space-assignment":{TaskSpaceAssignment:()=>React.createElement("button",null,"Assign a space")},"@/components/ui/empty-state":compile("../src/components/ui/empty-state.tsx"),"@/components/ui/feedback":compile("../src/components/ui/feedback.tsx"),"@/components/ui/fields":compile("../src/components/ui/fields.tsx"),"@/components/ui/button":compile("../src/components/ui/button.tsx"),"./actions":{},"@/lib/tasks/time":taskTime,"@/lib/tasks/types":types,"@/lib/tasks/recurrence":recurrence,"./repeat-rule-fields":{RepeatRuleFields:()=>null}});
  const task={id,title:"<b>Saved task</b>",completed:true,due_date:"2028-02-29",priority:"high",planning_revision:4,space_id:id,space:{title:"Work"},projects:[{id,title:"<b>Project</b>"}],project_count:4};
  const html=renderToStaticMarkup(React.createElement(board.TaskList,{tasks:[task],table:true}));
  assert.match(html,/<table[^>]+role="table"/);assert.match(html,/scope="col"/);assert.match(html,/scope="row"/);

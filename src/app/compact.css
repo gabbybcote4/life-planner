@@ -44,6 +44,20 @@
 .desktop-main .today-counts strong { font-size:1.4rem; }
 .desktop-main .notes-pagination { margin-top:.5rem; gap:.5rem; }
 .desktop-main .calendar-day { min-height:60px; padding:.35rem; }
+.calendar-task-count { font-size:.75rem; font-weight:600; }
+.calendar-task-preview { display:flex; flex-direction:column; gap:.1rem; width:100%; min-width:0; max-width:100%; font-size:.75rem; }
+.calendar-entry-title { display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:3; overflow:hidden; overflow-wrap:anywhere; white-space:normal; line-height:1.2; font-weight:600; }
+.calendar-entry-time { font-size:.7rem; white-space:nowrap; }
+.calendar-month-summary { margin:.35rem 0; font-size:.8rem; }
+.desktop-main .calendar-day { justify-content:flex-start; gap:.2rem; }
+.calendar-month-controls .calendar-arrow { width:auto; padding-inline:.4rem; white-space:nowrap; }
+.calendar-task-preview[data-completed="true"] { text-decoration:line-through; }
+.calendar-repeat-preview { border-inline-start:2px dashed var(--border); padding-inline-start:.3rem; }
+.calendar-table { table-layout:fixed; width:100%; }
+.repeat-custom { display:grid; gap:.4rem; padding:.5rem; border:1px solid var(--border); min-width:0; }
+.repeat-interval { display:grid; grid-template-columns:auto 5rem minmax(0,1fr); align-items:center; gap:.4rem; }
+.repeat-weekdays { display:flex; flex-wrap:wrap; gap:.4rem; border:0; padding:0; }
+.repeat-weekdays label { display:flex; align-items:center; gap:.2rem; min-height:44px; padding:.25rem; }
 .desktop-main .calendar-table th { padding:.35rem .2rem; }
 .desktop-main .note-form textarea { min-height:15rem; line-height:1.6; }
 .desktop-main .guidance-counts { gap:.4rem; margin:.5rem 0; }

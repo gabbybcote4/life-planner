@@ -1,5 +1,6 @@
 "use client";
-import {DateLabel} from "@/app/components/planning-preferences";
+import {DateLabel,usePlanning} from "@/app/components/planning-preferences";
+import {formatTaskTime} from "@/lib/tasks/time";
 import {EditDialog} from "@/components/ui/edit-dialog";
 import {TaskProjectAssignment} from "./task-project-assignment";
 import {TaskPlanning} from "./task-planning";
@@ -16,7 +17,7 @@ import { TextInput } from "@/components/ui/fields";
 import { Button } from "@/components/ui/button";
 import { useActionState, useId, useRef, useState } from "react";
 import { addTask, renameTask, setTaskCompleted } from "./actions";
-import { TASK_TITLE_LIMIT, type Task, type TaskActionState } from "@/lib/tasks/types";
+import { TASK_TITLE_LIMIT, TASK_REPEATS, type Task, type TaskActionState } from "@/lib/tasks/types";
 
 export function TaskBoard({ tasks, hasMore }: { tasks: Task[]; hasMore: boolean }) {
   const remaining = tasks.filter((task) => !task.completed).length;
@@ -135,7 +136,8 @@ function TaskProjectBadges({task}:{task:Task}){
  return <div className="task-project-badges">{task.projects.map(p=><Link key={p.id} href={"/projects?project="+p.id}>{p.title}</Link>)}{task.project_count>task.projects.length&&<Link href={"/tasks?task="+task.id}>＋{task.project_count-task.projects.length} more</Link>}</div>;
 }
 function TaskPlanSummary({task,day}:{task:Task;day?:string}){
- return <div className="task-plan-badges">{day&&task.due_date&&task.due_date<=day&&<span className="today-due-cue" data-overdue={task.due_date<day}>{task.due_date<day?"Overdue":"Today"}</span>}{task.due_date?<time dateTime={task.due_date}><DateLabel date={task.due_date}/></time>:<span className="muted">No date</span>}{task.priority&&task.priority!=="none"&&<span className="task-priority" data-priority={task.priority}>{task.priority} priority</span>}</div>;
+ const {show_task_timezones}=usePlanning();
+ return <div className="task-plan-badges">{task.repeat_frequency&&task.repeat_frequency!=="none"&&<span>↻ {task.repeat_frequency==="custom"?"Custom repeat":TASK_REPEATS[task.repeat_frequency]}{task.repeat_finished?" · ended":""}</span>}{task.completed&&task.repeat_frequency&&task.repeat_frequency!=="none"&&task.repeat_next_id&&!task.repeat_finished&&<Link className="text-link" href={"/tasks?task="+task.repeat_next_id}>Next task →</Link>}{day&&task.due_date&&task.due_date<=day&&<span className="today-due-cue" data-overdue={task.due_date<day}>{task.due_date<day?"Overdue":"Today"}</span>}{task.due_date?<time dateTime={task.due_date}><DateLabel date={task.due_date}/></time>:<span className="muted">No date</span>}{task.due_time&&<span>{formatTaskTime(task.due_time)}{show_task_timezones&&task.due_timezone?" · "+task.due_timezone.replaceAll("_"," "):""}</span>}{task.priority&&task.priority!=="none"&&<span className="task-priority" data-priority={task.priority}>{task.priority} priority</span>}</div>;
 }
 
 export function TaskList({ tasks, table = false, onChanged, day }: { tasks: Task[]; table?: boolean; onChanged?:()=>void; day?:string }) {
