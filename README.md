@@ -213,3 +213,24 @@ planner_export_data() is a stable security-invoker function with verified auth.u
 POST /settings/export requires matching Origin plus fresh getAccountContext, returns attachment JSON with private/no-store headers, validates the complete v1 manifest, and never returns a downloadable partial file on failure. ExportPanel offers retry and a direct download link, uses only transient account-keyed browser memory and revokes object URLs on replacement/unmount; no export payload is logged or cached. The route uses the normal account Supabase client, never a service-role key.
 
 Run test:export, full regressions, TypeScript and lint/build. Apply only unapplied 027, then planner_preferences_rls.sql and data_export_rls.sql; verify both live PASS results. The latter rolls back fictional records, checks every collection for both accounts, includes over 1,000 tasks, preserves histories/inactive links, and exercises oversized/anonymous failures. Check a real download's counts, multiline/Unicode text, relations and settings; live SQL/download success remain pending until owner confirmation.
+
+### Recurring task setup
+
+After migrations 001–027, apply `supabase/migrations/20261029002800_recurring_tasks.sql` once. It extends tasks and replaces Today/export functions; it keeps existing RLS and one-off task defaults. Run `supabase/tests/tasks_rls.sql`, `supabase/tests/recurring_tasks_rls.sql` and `supabase/tests/data_export_rls.sql`; each rolls back fictional fixtures. Confirm their final PASS results. `npm run test:recurring` tests controls, save boundaries, v1/v2 export compatibility and migration contracts. Try a real repeating task through its pencil editor before committing.
+
+### Custom repeat setup
+
+After 028, apply supabase/migrations/20261029002900_custom_repeats_calendar.sql once. Run recurring_tasks_rls.sql and custom_repeats_calendar_rls.sql for two PASS results. Refresh the app, test Custom repeat, then check Tasks on Calendar. Export now uses v3; older v1/v2 manifests remain supported by the app.
+
+
+Migration 030 repairs the custom-repeat validator’s field count (seven fields). Apply it after 029, then rerun recurring_tasks_rls.sql and custom_repeats_calendar_rls.sql. It replaces only the validation function and preserves tasks, RLS and grants. test:recurring now checks the SQL field count and allowlist against DEFAULT_REPEAT_RULE.
+
+
+### Optional task time setup
+
+Apply supabase/migrations/20261029003100_task_due_times.sql after 030. Run custom_repeats_calendar_rls.sql and task_due_times_rls.sql for two PASS results. Refresh, save a clock time/zone through the task pencil, complete a repeat and check its successor and calendar entry. npm run test:task-time covers input, actions, UI, inheritance contracts and v1–v4 export compatibility.
+
+
+### Calendar repeat previews
+
+Apply migration 032 after 031. Run task_due_times_rls.sql and calendar_repeat_previews_rls.sql for two PASS results. Refresh Calendar to see future repeat previews. Time-zone controls are hidden by default and available under Settings > Workspace > Planning. Export uses v5 and retains compatibility with earlier versions.

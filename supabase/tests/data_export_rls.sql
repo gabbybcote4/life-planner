@@ -40,7 +40,7 @@ do $$
 declare r jsonb;key text;total bigint=0;
 begin
  r=public.planner_export_data();
- if r->>'format'<>'life-planner-export' or (r->>'format_version')::integer<>1 or (select count(*) from jsonb_object_keys(r->'data'))<>14 then raise exception 'EXPORT-V3 FAIL export contract';end if;
+ if r->>'format'<>'life-planner-export' or (r->>'format_version')::integer not in(1,2,3,4,5) or (select count(*) from jsonb_object_keys(r->'data'))<>14 then raise exception 'EXPORT-V3 FAIL export contract';end if;
  if r::text like '%FOREIGN_SECRET%' then raise exception 'EXPORT-V3 FAIL foreign content exposed';end if;
  if (r->'counts'->>'tasks')::integer<>1006 then raise exception 'EXPORT-V3 FAIL truncated beyond 1000 records';end if;
  for key in select jsonb_object_keys(r->'data') loop

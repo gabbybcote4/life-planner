@@ -29,6 +29,8 @@ export async function ThemeRoot({ children }: { children: ReactNode }) {
         if(!displayRead.error&&validDisplay(displayRead.data))display=displayRead.data;
         const planningRead=await account.supabase.from("planner_preferences").select("week_start,date_format").eq("user_id",account.userId).maybeSingle();
         if(!planningRead.error&&validPlanning(planningRead.data))planning=planningRead.data;
+        const clockRead=await account.supabase.from("planner_preferences").select("show_task_timezones").eq("user_id",account.userId).maybeSingle();
+        if(!clockRead.error&&typeof clockRead.data?.show_task_timezones==="boolean")planning={...planning,show_task_timezones:clockRead.data.show_task_timezones};
       }
     } catch {
       // Keep the planner usable; Settings reports preference-service errors.

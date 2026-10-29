@@ -467,3 +467,41 @@ planner_export_data() is a stable security-invoker function with verified auth.u
 POST /settings/export requires matching Origin plus fresh getAccountContext, returns attachment JSON with private/no-store headers, validates the complete v1 manifest, and never returns a downloadable partial file on failure. ExportPanel offers retry and a direct download link, uses only transient account-keyed browser memory and revokes object URLs on replacement/unmount; no export payload is logged or cached. The route uses the normal account Supabase client, never a service-role key.
 
 Run test:export, full regressions, TypeScript and lint/build. Apply only unapplied 027, then planner_preferences_rls.sql and data_export_rls.sql; verify both live PASS results. The latter rolls back fictional records, checks every collection for both accounts, includes over 1,000 tasks, preserves histories/inactive links, and exercises oversized/anonymous failures. Check a real download's counts, multiline/Unicode text, relations and settings; live SQL/download success remain pending until owner confirmation.
+
+### Repeat a chore or bill
+
+1. Tasks > pencil > pick a due date.
+2. Repeat > Daily / Weekdays / Weekly / Monthly > Save task plan.
+3. Complete the task: the next scheduled task appears. The completed one stays saved.
+
+| Change | Where |
+| --- | --- |
+| Stop a repeat | Open the next task > Repeat > Does not repeat > Save |
+| Change its date or schedule | Pencil on the next open occurrence |
+| Find the next task | Next task link beside a completed repeat |
+| Change preset labels | src/lib/tasks/types.ts: TASK_REPEATS |
+| Change the shared editor | src/app/tasks/task-planning.tsx |
+| Change repeat rules | Add a new SQL migration; do not edit applied migration 028 |
+
+Weekdays skips Saturday/Sunday. Monthly keeps the original day (Jan 31 > Feb 28 > Mar 31). Missed dates advance one interval at a time. Reopening a completed occurrence keeps its already-created next task. Reminders/notifications are not included. Export JSON now includes repeat settings and occurrence IDs in format v2.
+### Custom repeat and calendar
+
+Tasks > pencil > Repeat > Custom: choose Every + number/unit, weekdays or monthly pattern, then Never / On a date / After a number of occurrences. Save task plan. The first task counts as occurrence 1; changing a schedule restarts its count from that task. Yearly is also a one-click preset.
+
+Calendar now shows saved dated tasks with events. Select a day to complete or pencil-edit those same tasks. No duplicated event records. Completed tasks remain visible; undated tasks remain in Tasks. Future repeats appear after the current occurrence is completed.
+
+Edit the custom fields in src/app/tasks/repeat-rule-fields.tsx, shared validation in src/lib/tasks/recurrence.ts, and calendar composition in src/app/calendar/page.tsx and month-view.tsx. Add a new migration to change persisted recurrence rules; leave applied migrations intact. Advanced rules use migration 029 and export format v3.
+### Give a task or repeat a time
+
+Pencil > due date > Due time > check the suggested Time zone > Save task plan. Repeating tasks keep that same clock time and zone. Make all-day clears the time after you save. Changing only the time keeps the current repeat count.
+
+Times appear in task lists and Calendar; select a date for the full list. These are planning times, without alerts or notifications. They stay in the task’s saved zone when you travel; they do not automatically convert to your device zone.
+
+Edit shared parsing/labels in src/lib/tasks/time.ts, controls in src/app/tasks/task-planning.tsx, and list presentation in task-board.tsx or calendar/month-view.tsx. Saved rules are migration-owned: add a new migration rather than changing applied 031. Export format v4 preserves time and zone.
+### See repeats ahead; hide time zones
+
+Calendar now shows ↻ Planned repeats before you complete the current task. Select a future day to see them. Edit repeat opens the current source task; completing it saves the next occurrence and replaces that preview. Browsing does not create extra tasks.
+
+Time-zone controls are now hidden by default. To show them: Settings > Workspace > Planning > Show time-zone controls on tasks > Save planning defaults. Saved times/zones stay unchanged when this is off.
+
+Preview logic: migration 032, planner_calendar_repeats; rendering: calendar/month-view.tsx and calendar/page.tsx; validation: src/lib/calendar/repeats.ts. The setting uses PlanningPicker and PlanningProvider. Keep the shared recurrence calculator as the source of truth rather than duplicating repeat rules in calendar UI.

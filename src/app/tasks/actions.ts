@@ -36,7 +36,7 @@ export async function addTask(_previous: TaskActionState, formData: FormData): P
   }
   revalidatePath("/");
   revalidatePath("/tasks");
-  revalidatePath("/spaces");
+  revalidatePath("/spaces"); revalidatePath("/calendar");
   return { message: "Task saved." };
 }
 
@@ -57,7 +57,7 @@ export async function renameTask(_previous: TaskActionState, formData: FormData)
   }
   revalidatePath("/");
   revalidatePath("/tasks");
-  revalidatePath("/spaces");
+  revalidatePath("/spaces"); revalidatePath("/calendar");
   return { message: "Changes saved." };
 }
 
@@ -73,14 +73,16 @@ export async function setTaskCompleted(_previous: TaskActionState, formData: For
     const { supabase, userId } = context;
     const { data, error } = await supabase.from("tasks").update({ completed: completed === "true" })
       .eq("id", id).eq("user_id", userId).select("id").maybeSingle();
-    if (error) return { error: "We couldn't confirm this change. Refresh to check the saved status, then try again." };
+    if (error) return { error: error.code==="22023" ? "The next repeat is beyond 2100. Turn off Repeat on this task before completing it." : "We couldn't confirm this change. Refresh to check the saved status, then try again." };
     if (!data) return unavailableError;
   } catch {
     return { error: "We couldn't confirm this change. Refresh to check the saved status, then try again." };
   }
   revalidatePath("/");
   revalidatePath("/tasks");
-  revalidatePath("/spaces");
+  revalidatePath("/spaces"); revalidatePath("/calendar");
+  revalidatePath("/today");
+  revalidatePath("/projects");
   return { message: completed === "true" ? "Task completed and saved." : "Task reopened and saved." };
 }
 
