@@ -1,4 +1,5 @@
 "use client";
+import {DateLabel} from "@/app/components/planning-preferences";
 import {EditDialog} from "@/components/ui/edit-dialog";
 import {TaskProjectAssignment} from "./task-project-assignment";
 import {TaskPlanning} from "./task-planning";
@@ -134,7 +135,7 @@ function TaskProjectBadges({task}:{task:Task}){
  return <div className="task-project-badges">{task.projects.map(p=><Link key={p.id} href={"/projects?project="+p.id}>{p.title}</Link>)}{task.project_count>task.projects.length&&<Link href={"/tasks?task="+task.id}>＋{task.project_count-task.projects.length} more</Link>}</div>;
 }
 function TaskPlanSummary({task,day}:{task:Task;day?:string}){
- return <div className="task-plan-badges">{day&&task.due_date&&task.due_date<=day&&<span className="today-due-cue" data-overdue={task.due_date<day}>{task.due_date<day?"Overdue":"Today"}</span>}{task.due_date?<time dateTime={task.due_date}>{task.due_date}</time>:<span className="muted">No date</span>}{task.priority&&task.priority!=="none"&&<span className="task-priority" data-priority={task.priority}>{task.priority} priority</span>}</div>;
+ return <div className="task-plan-badges">{day&&task.due_date&&task.due_date<=day&&<span className="today-due-cue" data-overdue={task.due_date<day}>{task.due_date<day?"Overdue":"Today"}</span>}{task.due_date?<time dateTime={task.due_date}><DateLabel date={task.due_date}/></time>:<span className="muted">No date</span>}{task.priority&&task.priority!=="none"&&<span className="task-priority" data-priority={task.priority}>{task.priority} priority</span>}</div>;
 }
 
 export function TaskList({ tasks, table = false, onChanged, day }: { tasks: Task[]; table?: boolean; onChanged?:()=>void; day?:string }) {

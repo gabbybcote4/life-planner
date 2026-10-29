@@ -46,3 +46,7 @@ test("event titles reject blank, non-text, and oversized input", () => {
   assert.equal(parseEventTitle("🌿".repeat(200)), "🌿".repeat(200));
   for (const title of [null, "", "\n\t ", "x".repeat(201), new File(["event"], "event.txt")]) assert.equal(parseEventTitle(title), null);
 });
+
+test("Monday and Sunday calendar alignment preserve leap days and complete rows",()=>{
+ const sunday=monthCells("2026-11-01"),monday=monthCells("2026-11-01","monday");assert.equal(sunday[0],"2026-11-01");assert.deepEqual(monday.slice(0,6),Array(6).fill(null));assert.equal(monday[6],"2026-11-01");assert.equal(monday.length%7,0);assert.ok(monthCells("2028-02-29","monday").includes("2028-02-29"));
+});
